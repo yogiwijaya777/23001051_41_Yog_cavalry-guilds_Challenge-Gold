@@ -1,21 +1,12 @@
-const express = require('express');
-const app = express();
-// const userRouter = require('./routes/user.route');
-const knex = require('./db/knex/knex');
+const app = require('./app');
+const config = require('./configs/config');
+const knex = require('./db/knex');
 
+let server;
 console.log(knex);
-app.use(express.json());
-
-// app.use('/users', userRouter);
-
-const start = async () => {
-  try {
-    await knex.migrate.latest();
-    console.log('Database connected successfully');
-    app.listen(3000, () => {
-      console.log('Server is running on port 3000');
-    });
-  } catch (error) {
-    console.log(error);
-  }
-};
+if (knex) {
+  console.log('Connected to Database');
+  server = app.listen(config.port, () => {
+    console.log(`Listening to port ${config.port}`);
+  });
+}
