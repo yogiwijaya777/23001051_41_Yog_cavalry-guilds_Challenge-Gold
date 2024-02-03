@@ -6,6 +6,7 @@ dotenv.config({
 });
 
 module.exports = {
+  env: process.env.NODE_ENV || 'development',
   development: {
     DB_HOST: process.env.DB_HOST,
     DB_USER: process.env.DB_USER,

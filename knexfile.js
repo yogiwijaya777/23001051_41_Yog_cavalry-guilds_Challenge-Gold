@@ -15,6 +15,9 @@ module.exports = {
     migrations: {
       directory: './src/db/migrations',
     },
+    seeds: {
+      directory: __dirname + '/knex/seeds',
+    },
   },
   production: {
     client: 'postgresql',
