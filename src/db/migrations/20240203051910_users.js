@@ -4,9 +4,10 @@ exports.up = function (knex) {
     table.string('name');
     table.string('email').unique();
     table.string('password');
-    table.string('role');
+    table.string('role').defaultTo('user');
     table.boolean('isEmailVerified').defaultTo(false);
-    table.timestamps(true, true); // Adds createdAt and updatedAt columns
+    table.timestamp('createdAt').defaultTo(knex.fn.now());
+    table.timestamp('updatedAt').defaultTo(knex.fn.now());
   });
 };
 
