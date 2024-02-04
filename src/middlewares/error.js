@@ -1,8 +1,7 @@
 const httpStatus = require('http-status');
-const config = require('../config/config');
-const logger = require('../config/logger');
+const config = require('../configs/config');
+const logger = require('../configs/logger');
 const ApiError = require('../utils/ApiError');
-const { Prisma } = require('@prisma/client');
 
 const errorConverter = (err, req, res, next) => {
   let error = err;
@@ -14,10 +13,10 @@ const errorConverter = (err, req, res, next) => {
 
       logger.info('handleAxiosError');
       error = new ApiError(statusCode, message, false, err.stack);
-    } else if (err instanceof Prisma.PrismaClientKnownRequestError) {
-      // Handling Prisma Error
-      logger.info('handlePrismaError');
-      error = handlePrismaError(err);
+    } else if (err instanceof DatabaseError) {
+      // Handling Database Error
+      logger.info('handleDatabaseError');
+      error = handleDatabaseError(err);
     } else {
       // Handling Global Error
       const statusCode = error.statusCode;
@@ -28,7 +27,7 @@ const errorConverter = (err, req, res, next) => {
   next(error);
 };
 
-const handlePrismaError = (err) => {
+const handleDatabaseError = (err) => {
   switch (err.code) {
     case 'P2002':
       // handling duplicate key errors

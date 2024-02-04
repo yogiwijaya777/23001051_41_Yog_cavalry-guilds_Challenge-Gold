@@ -9,7 +9,7 @@ const config = require('./configs/config');
 const morgan = require('./configs/morgan');
 const { jwtStrategy } = require('./configs/passport');
 const { authLimiter } = require('./middlewares/rateLimiter');
-const routes = require('./routes/v1');
+// const routes = require('./routes/v1');
 const { errorConverter, errorHandler } = require('./middlewares/error');
 const ApiError = require('./utils/ApiError');
 
