@@ -2,6 +2,7 @@ const httpStatus = require('http-status');
 const config = require('../configs/config');
 const logger = require('../configs/logger');
 const ApiError = require('../utils/ApiError');
+const knex = require('../db/knex');
 
 const errorConverter = (err, req, res, next) => {
   let error = err;
@@ -13,15 +14,16 @@ const errorConverter = (err, req, res, next) => {
 
       logger.info('handleAxiosError');
       error = new ApiError(statusCode, message, false, err.stack);
-    } else if (err instanceof DatabaseError) {
-      // Handling Database Error
-      logger.info('handleDatabaseError');
-      error = handleDatabaseError(err);
     } else {
-      // Handling Global Error
-      const statusCode = error.statusCode;
-      const message = error.message || httpStatus[statusCode];
-      error = new ApiError(statusCode, message, false, err.stack);
+      // Handling Database Error
+      if (err.code) {
+        error = handleDatabaseError(err);
+      } else {
+        // Handling Global Error
+        const statusCode = error.statusCode || 500;
+        const message = error.message || httpStatus[statusCode];
+        error = new ApiError(statusCode, message, false, err.stack);
+      }
     }
   }
   next(error);
