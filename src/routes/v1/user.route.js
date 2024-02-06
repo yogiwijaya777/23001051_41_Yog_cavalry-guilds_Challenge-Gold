@@ -1,9 +1,10 @@
 const express = require('express');
 const userController = require('../../controllers/user.controller');
+const auth = require('../../middlewares/auth');
+const validate = require('../../middlewares/validate');
+const { userValidation } = require('../../validations');
 const router = express.Router();
 
-router.route('/').post(userController.create).get(userController.getAlls);
-
-router.route('/:id').get(userController.get).patch(userController.update).delete(userController.del);
+router.route('/').post(auth('manageUsers'), validate(userValidation.create), userController.create);
 
 module.exports = router;

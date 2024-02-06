@@ -35,14 +35,20 @@ const generateToken = (userId, expires, type, secret = config.jwt.secret) => {
  * @returns {Promise<Token>}
  */
 const saveToken = async (token, userId, expires, type, blacklisted = false) => {
-  const tokenDoc = await knex('tokens').insert({
-    token,
-    userId,
-    expires: expires.toDate(),
-    type,
-    blacklisted,
-  });
-  return tokenDoc;
+  const tokenDoc = await knex('tokens').insert(
+    {
+      token,
+      userId,
+      expires: expires.toDate(),
+      type,
+      blacklisted,
+    },
+    '*'
+  );
+
+  const [tokenObj] = tokenDoc;
+
+  return tokenObj;
 };
 
 /**
@@ -53,15 +59,12 @@ const saveToken = async (token, userId, expires, type, blacklisted = false) => {
  */
 const verifyToken = async (token, type) => {
   const payload = jwt.verify(token, config.jwt.secret);
-  const tokenDoc = await knex
-    .select('*')
-    .from('tokens')
-    .where({ token, type, userId: payload.sub, blacklisted: false })
-    .first();
+  const tokenDoc = await knex('tokens').where({ token, type, userId: payload.sub, blacklisted: false }).first();
 
   if (!tokenDoc) {
-    throw new Error('Token not found');
+    throw new ApiError(httpStatus.NOT_FOUND, 'Token not found');
   }
+
   return tokenDoc;
 };
 
