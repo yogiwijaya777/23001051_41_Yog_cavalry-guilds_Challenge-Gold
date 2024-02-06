@@ -14,13 +14,11 @@ const jwtVerify = async (payload, done) => {
       throw new Error('Invalid token type');
     }
     const user = await knex('users').where({ id: payload.sub }).first();
-    if (user.length === 0) {
+    if (!user) {
       return done(null, false);
     }
 
-    const [resultObj] = user;
-
-    done(null, resultObj);
+    done(null, user);
   } catch (error) {
     done(error, false);
   }

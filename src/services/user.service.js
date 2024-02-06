@@ -6,22 +6,19 @@ const bcrypt = require('bcryptjs');
 const create = async (body) => {
   body.password = bcrypt.hashSync(body.password, 8);
 
-  const user = await knex('users').insert(body, '*');
+  const user = await knex('users').insert(body, '*').returning('*');
 
-  const [resultObj] = user;
-
-  return resultObj;
+  return user;
 };
 
 const getByEmail = async (email) => {
-  const user = await knex('users').where({ email });
+  const user = await knex('users').where({ email }).first();
 
-  if (user.length === 0) {
+  if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
-  const [resultObj] = user;
 
-  return resultObj;
+  return user;
 };
 
 module.exports = {

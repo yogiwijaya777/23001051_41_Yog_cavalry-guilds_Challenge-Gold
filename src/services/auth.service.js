@@ -1,7 +1,9 @@
 const httpStatus = require('http-status');
 const userService = require('./user.service');
+const knex = require('../db/knex');
 const ApiError = require('../utils/ApiError');
 const bcrypt = require('bcryptjs');
+const tokenTypes = require('../configs/tokens');
 
 /**
  * Login with username and password
@@ -20,6 +22,17 @@ const loginUserWithEmailAndPassword = async (email, password) => {
   return user;
 };
 
+const logout = async (refreshToken) => {
+  const refreshTokenDoc = await knex('tokens').where({ token: refreshToken, type: 'refresh', blacklisted: false }).first();
+
+  if (!refreshTokenDoc) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Not found');
+  }
+
+  await knex('tokens').delete().where({ id: refreshTokenDoc.id });
+};
+
 module.exports = {
   loginUserWithEmailAndPassword,
+  logout,
 };
