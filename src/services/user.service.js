@@ -9,9 +9,9 @@ const create = async (body) => {
 };
 
 const getByEmail = async (email) => {
-  const user = knex('users').where({ email }).first();
+  const user = await knex('users').where({ email });
 
-  if (!user) {
+  if (user.length === 0) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
 
