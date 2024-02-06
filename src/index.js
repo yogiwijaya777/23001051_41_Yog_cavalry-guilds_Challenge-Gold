@@ -4,6 +4,7 @@ const logger = require('./configs/logger');
 const knex = require('./db/knex');
 
 let server;
+
 if (knex) {
   logger.info('Connected to Database');
   server = app.listen(config.port, () => {
