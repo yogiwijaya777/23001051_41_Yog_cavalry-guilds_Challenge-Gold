@@ -35,22 +35,20 @@ const generateToken = (userId, expires, type, secret = config.jwt.secret) => {
  * @returns {Promise<Token>}
  */
 const saveToken = async (token, userId, expires, type, blacklisted = false) => {
-  const tokenDoc = await knex('tokens')
-    .insert(
-      {
-        token,
-        userId,
-        expires: expires.toDate(),
-        type,
-        blacklisted,
-      },
-      '*'
-    )
-    .returning('*');
+  const tokenDoc = await knex('tokens').insert(
+    {
+      token,
+      userId,
+      expires: expires.toDate(),
+      type,
+      blacklisted,
+    },
+    '*'
+  );
 
-  console.log(tokenDoc);
+  const [tokenObj] = tokenDoc;
 
-  return tokenDoc;
+  return tokenObj;
 };
 
 /**

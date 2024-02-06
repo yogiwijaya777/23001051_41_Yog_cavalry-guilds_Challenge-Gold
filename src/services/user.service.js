@@ -6,17 +6,15 @@ const bcrypt = require('bcryptjs');
 const create = async (body) => {
   body.password = bcrypt.hashSync(body.password, 8);
 
-  const user = await knex('users').insert(body, '*').returning('*');
+  const user = await knex('users').insert(body, '*');
 
-  return user;
+  const [userObj] = user;
+
+  return userObj;
 };
 
 const getByEmail = async (email) => {
   const user = await knex('users').where({ email }).first();
-
-  if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
-  }
 
   return user;
 };
