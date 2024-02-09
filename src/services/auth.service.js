@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const userService = require('./user.service');
+const { userService, tokenService } = require('../services');
 const knex = require('../db/knex');
 const ApiError = require('../utils/ApiError');
 const bcrypt = require('bcryptjs');
@@ -32,7 +32,23 @@ const logout = async (refreshToken) => {
   await knex('tokens').delete().where({ id: refreshTokenDoc.id });
 };
 
+const refreshAuth = async (refreshToken) => {
+  try {
+    const refreshTokenDoc = await tokenService.verifyToken(refreshToken, tokenTypes.REFRESH);
+    const user = await knex('users').where({ id: refreshTokenDoc.userId }).first();
+    if (!user) {
+      throw new Error();
+    }
+    await knex('tokens').delete().where('id', refreshTokenDoc.userId);
+    return tokenService.generateAuthTokens(user);
+  } catch (error) {
+    console.log(error);
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Please authenticate');
+  }
+};
+
 module.exports = {
   loginUserWithEmailAndPassword,
   logout,
+  refreshAuth,
 };
