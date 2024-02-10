@@ -6,6 +6,9 @@ const archetypeController = require('../../controllers/archetype.controller');
 
 const router = express.Router();
 
-router.route('/').post(auth(), validate(archetypeValidation.create), archetypeController.create);
+router
+  .route('/')
+  .post(auth(), validate(archetypeValidation.create), archetypeController.create)
+  .get(auth(), archetypeController.queryArchetypes);
 
 module.exports = router;

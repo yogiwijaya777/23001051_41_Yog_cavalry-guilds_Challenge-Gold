@@ -13,6 +13,17 @@ const create = catchAsync(async (req, res) => {
   });
 });
 
+const queryArchetypes = catchAsync(async (req, res) => {
+  const archetypes = await archetypeService.queryArchetypes();
+
+  res.status(httpStatus.OK).json({
+    status: httpStatus.OK,
+    message: 'Get All Archetypes Success',
+    data: archetypes,
+  });
+});
+
 module.exports = {
   create,
+  queryArchetypes,
 };

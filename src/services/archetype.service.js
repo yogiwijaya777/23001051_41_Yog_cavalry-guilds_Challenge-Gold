@@ -13,7 +13,13 @@ const create = async (body) => {
 
   return resultObj;
 };
+const queryArchetypes = async () => {
+  const archetypes = await knex('archetypes');
+
+  return archetypes;
+};
 
 module.exports = {
   create,
+  queryArchetypes,
 };
