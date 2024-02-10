@@ -9,8 +9,8 @@ exports.up = function (knex) {
     table.string('description');
     table.uuid('archetypeId').references('id').inTable('archetypes');
     table.uuid('userId').references('id').inTable('users');
-    table.timestamp('createdAt').defaultTo(knex.fn.now());
-    table.timestamp('updatedAt').defaultTo(knex.fn.now());
+    table.timestamp('createdAt').defaultTo(knex.raw('CURRENT_TIMESTAMP'));
+    table.timestamp('updatedAt').defaultTo(knex.raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
   });
 };
 

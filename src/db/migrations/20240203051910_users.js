@@ -6,8 +6,8 @@ exports.up = function (knex) {
     table.string('password');
     table.string('role').defaultTo('user');
     table.boolean('isEmailVerified').defaultTo(false);
-    table.timestamp('createdAt').defaultTo(knex.fn.now());
-    table.timestamp('updatedAt').defaultTo(knex.fn.now());
+    table.timestamp('createdAt').defaultTo(knex.raw('CURRENT_TIMESTAMP'));
+    table.timestamp('updatedAt').defaultTo(knex.raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
   });
 };
 

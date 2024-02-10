@@ -41,8 +41,19 @@ const getById = catchAsync(async (req, res) => {
   });
 });
 
+const update = catchAsync(async (req, res) => {
+  const userUpdated = await userService.update(req.params.userId, req.body);
+
+  res.status(httpStatus.OK).json({
+    status: httpStatus.OK,
+    message: 'Update User Success',
+    data: userUpdated,
+  });
+});
+
 module.exports = {
   create,
   queryUsers,
   getById,
+  update,
 };

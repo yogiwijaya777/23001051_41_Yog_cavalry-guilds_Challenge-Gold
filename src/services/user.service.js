@@ -38,9 +38,18 @@ const getById = async (id) => {
   return user;
 };
 
+const update = async (id, body) => {
+  await getById(id);
+
+  const updatedUser = await knex('users').update(body).where({ id }).returning('*');
+
+  return updatedUser;
+};
+
 module.exports = {
   create,
   queryUsers,
   getByEmail,
   getById,
+  update,
 };

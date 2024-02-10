@@ -10,5 +10,8 @@ router
   .post(auth('manageUsers'), validate(userValidation.create), userController.create)
   .get(auth('getUsers'), userController.queryUsers);
 
-router.route('/:userId').get(auth('getUsers'), validate(userValidation.getById), userController.getById);
+router
+  .route('/:userId')
+  .get(auth('getUsers'), validate(userValidation.getById), userController.getById)
+  .patch(auth('manageUsers'), validate(userValidation.update), userController.update);
 module.exports = router;
