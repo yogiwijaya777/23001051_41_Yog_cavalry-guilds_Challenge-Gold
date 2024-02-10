@@ -2,10 +2,10 @@ const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
 const knex = require('../db/knex');
 
-const create = async (body) => {
+const create = async (archetype) => {
   const newArchetype = await knex('archetypes')
     .insert({
-      ...body,
+      ...archetype,
     })
     .returning('*');
 

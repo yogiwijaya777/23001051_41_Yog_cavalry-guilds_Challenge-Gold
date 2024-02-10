@@ -2,10 +2,10 @@ const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
 const knex = require('../db/knex');
 
-const create = async (body) => {
+const create = async (deck) => {
   const newDeck = await knex('decks')
     .insert({
-      ...body,
+      ...deck,
     })
     .returning('*');
 
