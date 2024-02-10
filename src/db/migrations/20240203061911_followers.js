@@ -7,7 +7,7 @@ exports.up = function (knex) {
     table.uuid('id').defaultTo(knex.fn.uuid()).primary();
     table.uuid('userId').references('id').inTable('users').onDelete('CASCADE');
     table.uuid('followerId').references('id').inTable('users').onDelete('CASCADE');
-    table.timestamp('createdAt').defaultTo(knex.fn.now());
+    table.timestamp('createdAt').defaultTo(knex.raw('CURRENT_TIMESTAMP'));
   });
 };
 

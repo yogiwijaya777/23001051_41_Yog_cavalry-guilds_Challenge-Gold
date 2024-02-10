@@ -5,6 +5,13 @@ const validate = require('../../middlewares/validate');
 const { userValidation } = require('../../validations');
 const router = express.Router();
 
-router.route('/').post(auth('manageUsers'), validate(userValidation.create), userController.create);
+router
+  .route('/')
+  .post(auth('manageUsers'), validate(userValidation.create), userController.create)
+  .get(auth('getUsers'), userController.queryUsers);
 
+router
+  .route('/:userId')
+  .get(auth('getUsers'), validate(userValidation.getById), userController.getById)
+  .patch(auth('manageUsers'), validate(userValidation.update), userController.update);
 module.exports = router;

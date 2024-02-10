@@ -21,6 +21,39 @@ const create = catchAsync(async (req, res) => {
   });
 });
 
+const queryUsers = catchAsync(async (req, res) => {
+  const users = await userService.queryUsers();
+
+  res.status(httpStatus.OK).json({
+    status: httpStatus.OK,
+    message: 'Get All Users Success',
+    data: users,
+  });
+});
+
+const getById = catchAsync(async (req, res) => {
+  const user = await userService.getById(req.params.userId);
+
+  res.status(httpStatus.OK).json({
+    status: httpStatus.OK,
+    message: 'Get User By Id Success',
+    data: user,
+  });
+});
+
+const update = catchAsync(async (req, res) => {
+  const userUpdated = await userService.update(req.params.userId, req.body);
+
+  res.status(httpStatus.OK).json({
+    status: httpStatus.OK,
+    message: 'Update User Success',
+    data: userUpdated,
+  });
+});
+
 module.exports = {
   create,
+  queryUsers,
+  getById,
+  update,
 };
