@@ -16,6 +16,10 @@ const create = async (archetype) => {
 const queryArchetypes = async () => {
   const archetypes = await knex('archetypes');
 
+  if (!archetypes) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Archetype not found');
+  }
+
   return archetypes;
 };
 

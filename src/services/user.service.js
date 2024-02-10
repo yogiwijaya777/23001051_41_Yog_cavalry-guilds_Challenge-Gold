@@ -13,6 +13,16 @@ const create = async (body) => {
   return userObj;
 };
 
+const queryUsers = async () => {
+  const users = await knex('users');
+
+  if (!users) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Users not found');
+  }
+
+  return users;
+};
+
 const getByEmail = async (email) => {
   const user = await knex('users').where({ email }).first();
 
@@ -30,6 +40,7 @@ const getById = async (id) => {
 
 module.exports = {
   create,
+  queryUsers,
   getByEmail,
   getById,
 };

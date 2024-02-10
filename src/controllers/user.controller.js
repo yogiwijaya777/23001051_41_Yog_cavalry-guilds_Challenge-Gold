@@ -21,6 +21,16 @@ const create = catchAsync(async (req, res) => {
   });
 });
 
+const queryUsers = catchAsync(async (req, res) => {
+  const users = await userService.queryUsers();
+
+  res.status(httpStatus.OK).json({
+    status: httpStatus.OK,
+    message: 'Get All Users Success',
+    data: users,
+  });
+});
+
 const getById = catchAsync(async (req, res) => {
   const user = await userService.getById(req.params.userId);
 
@@ -31,22 +41,8 @@ const getById = catchAsync(async (req, res) => {
   });
 });
 
-const getByEmail = catchAsync(async (req, res) => {
-  const user = await userService.getByEmail(req.body.email);
-
-  if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
-  }
-
-  res.status(httpStatus.OK).json({
-    status: httpStatus.OK,
-    message: 'Get User By Email Success',
-    data: user,
-  });
-});
-
 module.exports = {
   create,
+  queryUsers,
   getById,
-  getByEmail,
 };
