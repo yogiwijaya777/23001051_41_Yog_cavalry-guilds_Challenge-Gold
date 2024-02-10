@@ -2,6 +2,7 @@ const { Strategy: JwtStrategy, ExtractJwt } = require('passport-jwt');
 const config = require('./config');
 const { tokenTypes } = require('./tokens');
 const knex = require('../db/knex');
+const ApiError = require('../utils/ApiError');
 
 const jwtOptions = {
   secretOrKey: config.jwt.secret,
@@ -11,7 +12,7 @@ const jwtOptions = {
 const jwtVerify = async (payload, done) => {
   try {
     if (payload.type !== tokenTypes.ACCESS) {
-      throw new Error('Invalid token type');
+      throw new ApiError(httpStatus.UNAUTHORIZED, 'Invalid token type');
     }
     const user = await knex('users').where({ id: payload.sub }).first();
     if (!user) {

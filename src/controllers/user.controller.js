@@ -22,12 +22,15 @@ const create = catchAsync(async (req, res) => {
 });
 
 const queryUsers = catchAsync(async (req, res) => {
+  const { size, skip, page } = req.query;
+
   const users = await userService.queryUsers();
 
   res.status(httpStatus.OK).json({
     status: httpStatus.OK,
     message: 'Get All Users Success',
     data: users,
+    page: 1,
   });
 });
 
