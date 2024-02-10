@@ -18,8 +18,18 @@ const getByEmail = async (email) => {
 
   return user;
 };
+const getById = async (id) => {
+  const user = await knex('users').where({ id }).first();
+
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+
+  return user;
+};
 
 module.exports = {
   create,
   getByEmail,
+  getById,
 };

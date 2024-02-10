@@ -19,7 +19,18 @@ const queryArchetypes = async () => {
   return archetypes;
 };
 
+const getById = async (archetypeId) => {
+  const archetype = await knex('archetypes').where({ archetypeId }).first();
+
+  if (!archetype) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Archetype not found');
+  }
+
+  return archetype;
+};
+
 module.exports = {
   create,
   queryArchetypes,
+  getById,
 };
