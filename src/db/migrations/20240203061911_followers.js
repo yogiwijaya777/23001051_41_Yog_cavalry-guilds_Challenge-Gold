@@ -8,7 +8,6 @@ exports.up = function (knex) {
     table.uuid('userId').references('id').inTable('users').onDelete('CASCADE');
     table.uuid('followerId').references('id').inTable('users').onDelete('CASCADE');
     table.timestamp('createdAt').defaultTo(knex.raw('CURRENT_TIMESTAMP'));
-    table.timestamp('updatedAt').defaultTo(knex.raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
   });
 };
 

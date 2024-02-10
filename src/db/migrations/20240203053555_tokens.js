@@ -11,7 +11,6 @@ exports.up = function (knex) {
     table.dateTime('expires');
     table.boolean('blacklisted').defaultTo(false);
     table.timestamp('createdAt').defaultTo(knex.raw('CURRENT_TIMESTAMP'));
-    table.timestamp('updatedAt').defaultTo(knex.raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
   });
 };
 
