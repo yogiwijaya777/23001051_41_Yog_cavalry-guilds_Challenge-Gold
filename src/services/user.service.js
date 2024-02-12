@@ -43,7 +43,7 @@ const del = async (id) => {
 };
 
 const queryUsers = async (filters, options) => {
-  let query = knex('users');
+  const query = knex('users');
 
   const { name, role } = filters;
   const { page, limit, sort, skip } = options;
@@ -70,7 +70,19 @@ const queryUsers = async (filters, options) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Users not found');
   }
 
-  return users;
+  const countQuery = knex('users').count('id as count').first();
+  if (name) countQuery.where('name', 'like', `%${name}%`);
+  if (role) countQuery.where('role', 'like', `%${role}%`);
+  const { count } = await countQuery;
+
+  return {
+    users,
+    meta: {
+      currentPage: page,
+      totalPage: Math.ceil(count / limit),
+      totalUsers: +count,
+    },
+  };
 };
 
 module.exports = {

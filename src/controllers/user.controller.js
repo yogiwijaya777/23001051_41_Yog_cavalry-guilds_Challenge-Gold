@@ -37,13 +37,13 @@ const queryUsers = catchAsync(async (req, res) => {
   };
   options.skip = (options.page - 1) * options.limit;
 
-  const users = await userService.queryUsers(filters, options);
+  const result = await userService.queryUsers(filters, options);
 
   res.status(httpStatus.OK).json({
     status: httpStatus.OK,
     message: 'Get All Users Success',
-    data: users,
-    page: 1,
+    data: result.users,
+    meta: result.meta,
   });
 });
 
