@@ -54,9 +54,19 @@ const update = catchAsync(async (req, res) => {
   });
 });
 
+const del = catchAsync(async (req, res) => {
+  await userService.del(req.params.userId);
+
+  res.status(httpStatus.OK).json({
+    status: httpStatus.OK,
+    message: 'Delete User Success',
+  });
+});
+
 module.exports = {
   create,
   queryUsers,
   getById,
   update,
+  del,
 };

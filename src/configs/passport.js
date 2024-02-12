@@ -3,6 +3,7 @@ const config = require('./config');
 const { tokenTypes } = require('./tokens');
 const knex = require('../db/knex');
 const ApiError = require('../utils/ApiError');
+const httpStatus = require('http-status');
 
 const jwtOptions = {
   secretOrKey: config.jwt.secret,

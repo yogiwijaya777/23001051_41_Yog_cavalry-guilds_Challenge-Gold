@@ -46,10 +46,17 @@ const update = async (id, body) => {
   return updatedUser;
 };
 
+const del = async (id) => {
+  await getById(id);
+
+  await knex('users').delete().where({ id });
+};
+
 module.exports = {
   create,
   queryUsers,
   getByEmail,
   getById,
   update,
+  del,
 };
