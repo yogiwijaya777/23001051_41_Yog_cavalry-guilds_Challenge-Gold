@@ -64,9 +64,6 @@ const update = catchAsync(async (req, res) => {
     status: httpStatus.OK,
     message: 'Update User Success',
     data: userUpdated,
-    meta: {
-      page: 1,
-    },
   });
 });
 

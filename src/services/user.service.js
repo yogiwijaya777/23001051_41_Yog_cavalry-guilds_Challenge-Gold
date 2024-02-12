@@ -19,7 +19,10 @@ const getByEmail = async (email) => {
   return user;
 };
 const getById = async (id) => {
-  const user = await knex('users').where({ id }).first();
+  const user = await knex('users')
+    .select(['id', 'name', 'email', 'role', 'isEmailVerified', 'createdAt'])
+    .where({ id })
+    .first();
 
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
@@ -31,7 +34,10 @@ const getById = async (id) => {
 const update = async (id, body) => {
   await getById(id);
 
-  const updatedUser = await knex('users').update(body).where({ id }).returning('*');
+  const updatedUser = await knex('users')
+    .update(body)
+    .where({ id })
+    .returning(['id', 'name', 'email', 'role', 'isEmailVerified', 'createdAt']);
 
   return updatedUser;
 };
@@ -43,7 +49,7 @@ const del = async (id) => {
 };
 
 const queryUsers = async (filters, options) => {
-  const query = knex('users');
+  const query = knex('users').select(['id', 'name', 'email', 'role', 'isEmailVerified', 'createdAt']);
 
   const { name, role } = filters;
   const { page, limit, sort, skip } = options;
