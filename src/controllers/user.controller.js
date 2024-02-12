@@ -22,15 +22,28 @@ const create = catchAsync(async (req, res) => {
 });
 
 const queryUsers = catchAsync(async (req, res) => {
-  const { size, skip, page } = req.query;
+  const { name, role, page, limit, sort } = req.query;
 
-  const users = await userService.queryUsers();
+  const filters = {
+    name,
+    role,
+  };
+
+  console.log(sort);
+  const options = {
+    page: Number(page) || 1,
+    limit: Number(limit) || 10,
+    sort,
+  };
+  options.skip = (options.page - 1) * options.limit;
+
+  const result = await userService.queryUsers(filters, options);
 
   res.status(httpStatus.OK).json({
     status: httpStatus.OK,
     message: 'Get All Users Success',
-    data: users,
-    page: 1,
+    data: result.users,
+    meta: result.meta,
   });
 });
 

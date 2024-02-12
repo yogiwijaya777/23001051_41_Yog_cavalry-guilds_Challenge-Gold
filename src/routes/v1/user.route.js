@@ -7,7 +7,7 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(auth('manageUsers'), validate(userValidation.create), userController.create)
+  .post(validate(userValidation.create), userController.create)
   .get(auth('getUsers'), userController.queryUsers);
 
 router
