@@ -36,9 +36,16 @@ const update = {
     .min(1),
 };
 
+const del = {
+  params: Joi.object().keys({
+    userId: Joi.required().custom(objectId),
+  }),
+};
+
 module.exports = {
   create,
   getById,
   getByEmail,
   update,
+  del,
 };

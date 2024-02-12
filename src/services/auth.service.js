@@ -37,7 +37,7 @@ const refreshAuth = async (refreshToken) => {
     const refreshTokenDoc = await tokenService.verifyToken(refreshToken, tokenTypes.REFRESH);
     const user = await knex('users').where({ id: refreshTokenDoc.userId }).first();
     if (!user) {
-      throw new Error();
+      throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
     }
     await knex('tokens').delete().where('id', refreshTokenDoc.userId);
     return tokenService.generateAuthTokens(user);
