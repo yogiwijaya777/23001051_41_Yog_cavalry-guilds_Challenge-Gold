@@ -13,16 +13,6 @@ const create = async (body) => {
   return userObj;
 };
 
-const queryUsers = async () => {
-  const users = await knex('users');
-
-  if (!users) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Users not found');
-  }
-
-  return users;
-};
-
 const getByEmail = async (email) => {
   const user = await knex('users').where({ email }).first();
 
@@ -50,6 +40,23 @@ const del = async (id) => {
   await getById(id);
 
   await knex('users').delete().where({ id });
+};
+
+const queryUsers = async (filters, options) => {
+  let query = knex('users');
+
+  const { name, role } = filters;
+
+  if (name) query.where('name', 'like', `%${name}%`);
+  if (role) query.where('role', 'like', `%${role}%`);
+
+  const users = await query;
+
+  if (!users) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Users not found');
+  }
+
+  return users;
 };
 
 module.exports = {

@@ -22,9 +22,21 @@ const create = catchAsync(async (req, res) => {
 });
 
 const queryUsers = catchAsync(async (req, res) => {
-  const { size, skip, page } = req.query;
+  const { name, role, page, limit, sort } = req.query;
+  const filters = {
+    name,
+    role,
+  };
 
-  const users = await userService.queryUsers();
+  const options = {
+    page: Number(page) || 1,
+    limit: Number(limit) || 10,
+    sort,
+  };
+
+  options.skip = (options.page - 1) * options.take;
+
+  const users = await userService.queryUsers(filters, options);
 
   res.status(httpStatus.OK).json({
     status: httpStatus.OK,
@@ -51,6 +63,9 @@ const update = catchAsync(async (req, res) => {
     status: httpStatus.OK,
     message: 'Update User Success',
     data: userUpdated,
+    meta: {
+      page: 1,
+    },
   });
 });
 
