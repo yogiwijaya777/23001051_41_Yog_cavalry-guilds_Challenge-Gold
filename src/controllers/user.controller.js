@@ -28,6 +28,7 @@ const queryUsers = catchAsync(async (req, res) => {
     role,
   };
 
+  console.log(sort);
   const options = {
     page: Number(page) || 1,
     limit: Number(limit) || 10,

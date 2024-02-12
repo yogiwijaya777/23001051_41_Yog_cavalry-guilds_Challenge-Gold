@@ -46,9 +46,20 @@ const queryUsers = async (filters, options) => {
   let query = knex('users');
 
   const { name, role } = filters;
+  const { page, limit, sort, skip } = options;
 
   if (name) query.where('name', 'like', `%${name}%`);
   if (role) query.where('role', 'like', `%${role}%`);
+
+  if (Array.isArray(sort)) {
+    sort.forEach((sortParam) => {
+      const [sortBy, sortOrder] = sortParam.split(':');
+      query.orderBy(sortBy, sortOrder);
+    });
+  } else if (sort) {
+    const [sortBy, sortOrder] = sort.split(':');
+    query.orderBy(sortBy, sortOrder);
+  }
 
   const users = await query;
 
