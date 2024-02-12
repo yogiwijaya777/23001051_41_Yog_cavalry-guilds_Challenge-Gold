@@ -61,6 +61,9 @@ const queryUsers = async (filters, options) => {
     query.orderBy(sortBy, sortOrder);
   }
 
+  query.limit(limit);
+  query.offset(skip);
+
   const users = await query;
 
   if (!users) {

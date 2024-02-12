@@ -23,6 +23,7 @@ const create = catchAsync(async (req, res) => {
 
 const queryUsers = catchAsync(async (req, res) => {
   const { name, role, page, limit, sort } = req.query;
+
   const filters = {
     name,
     role,
@@ -34,8 +35,7 @@ const queryUsers = catchAsync(async (req, res) => {
     limit: Number(limit) || 10,
     sort,
   };
-
-  options.skip = (options.page - 1) * options.take;
+  options.skip = (options.page - 1) * options.limit;
 
   const users = await userService.queryUsers(filters, options);
 
