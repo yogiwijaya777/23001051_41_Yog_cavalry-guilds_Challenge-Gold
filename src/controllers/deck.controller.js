@@ -13,6 +13,17 @@ const create = catchAsync(async (req, res) => {
   });
 });
 
+const queryDecks = catchAsync(async (req, res) => {
+  const decks = await deckService.queryDecks();
+
+  res.status(httpStatus.OK).json({
+    status: httpStatus.OK,
+    message: 'Get All Decks Success',
+    data: decks,
+  });
+});
+
 module.exports = {
   create,
+  queryDecks,
 };

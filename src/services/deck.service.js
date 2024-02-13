@@ -31,6 +31,17 @@ const create = async (deck) => {
   return resultObj;
 };
 
+const queryDecks = async () => {
+  const decks = await knex('decks');
+
+  if (!decks) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Deck not found');
+  }
+
+  return decks;
+};
+
 module.exports = {
   create,
+  queryDecks,
 };
