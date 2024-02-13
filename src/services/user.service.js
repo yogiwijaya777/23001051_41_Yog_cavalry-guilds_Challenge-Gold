@@ -77,8 +77,9 @@ const queryUsers = async (filters, options) => {
   }
 
   const countQuery = knex('users').count('id as count').first();
-  if (name) countQuery.where('name', 'like', `%${name}%`);
-  if (role) countQuery.where('role', 'like', `%${role}%`);
+  if (name) countQuery.where('name', 'ilike', `%${name}%`);
+  if (role) countQuery.where('role', 'ilike', `%${role}%`);
+
   const { count } = await countQuery;
 
   return {

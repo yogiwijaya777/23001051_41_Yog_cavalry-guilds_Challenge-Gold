@@ -13,6 +13,31 @@ const create = catchAsync(async (req, res) => {
   });
 });
 
+const queryDecks = catchAsync(async (req, res) => {
+  const { name, page, limit, sort } = req.query;
+
+  const filters = {
+    name,
+  };
+
+  const options = {
+    page: Number(page) || 1,
+    limit: Number(limit) || 10,
+    sort,
+  };
+  options.skip = (options.page - 1) * options.limit;
+
+  const results = await deckService.queryDecks(filters, options);
+
+  res.status(httpStatus.OK).json({
+    status: httpStatus.OK,
+    message: 'Get All Decks Success',
+    data: results.decks,
+    meta: results.meta,
+  });
+});
+
 module.exports = {
   create,
+  queryDecks,
 };
