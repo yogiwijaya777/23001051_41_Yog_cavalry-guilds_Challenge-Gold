@@ -58,7 +58,19 @@ const queryDecks = async (filters, options) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Deck not found');
   }
 
-  return { decks };
+  const countQuery = knex('decks').count('id as count').first();
+  if (name) countQuery.where('name', 'ilike', `%${name}%`);
+
+  const { count } = await countQuery;
+
+  return {
+    decks,
+    meta: {
+      currentPage: 1,
+      totalPage: Math.ceil(count / limit),
+      totalDecks: +count,
+    },
+  };
 };
 
 module.exports = {
