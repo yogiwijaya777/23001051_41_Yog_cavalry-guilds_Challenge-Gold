@@ -31,14 +31,34 @@ const create = async (deck) => {
   return resultObj;
 };
 
-const queryDecks = async () => {
-  const decks = await knex('decks');
+const queryDecks = async (filters, options) => {
+  const query = knex('decks');
+
+  const { name } = filters;
+  const { page, limit, sort, skip } = options;
+
+  if (name) query.where('name', 'ilike', `%${name}%`);
+
+  if (Array.isArray(sort)) {
+    sort.forEach((sortParam) => {
+      const [sortBy, sortOrder] = sortParam.split(':');
+      query.orderBy(sortBy, sortOrder);
+    });
+  } else if (sort) {
+    const [sortBy, sortOrder] = sort.split(':');
+    query.orderBy(sortBy, sortOrder);
+  }
+
+  query.limit(limit);
+  query.offset(skip);
+
+  const decks = await query;
 
   if (!decks) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Deck not found');
   }
 
-  return decks;
+  return { decks };
 };
 
 module.exports = {
