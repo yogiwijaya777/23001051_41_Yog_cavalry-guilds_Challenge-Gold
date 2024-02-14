@@ -99,12 +99,15 @@ const del = async (user, deckId) => {
 };
 
 const query = async (filters, options) => {
-  const query = knex('decks');
+  const query = knex('decks')
+    .join('users', 'decks.userId', '=', 'users.id')
+    .join('archetypes', 'decks.archetypeId', '=', 'archetypes.id')
+    .select('decks.*', 'archetypes.name as archetypeName', 'users.name as userName');
 
   const { name } = filters;
   const { page, limit, sort, skip } = options;
 
-  if (name) query.where('name', 'ilike', `%${name}%`);
+  if (name) query.where('decks.name', 'ilike', `%${name}%`);
 
   if (Array.isArray(sort)) {
     sort.forEach((sortParam) => {
