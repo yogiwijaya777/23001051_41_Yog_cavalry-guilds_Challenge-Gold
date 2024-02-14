@@ -65,6 +65,29 @@ const getByUser = catchAsync(async (req, res) => {
   });
 });
 
+const getDecksByArchetype = catchAsync(async (req, res) => {
+  const { name, page, limit, sort } = req.query;
+  const filters = {
+    name,
+  };
+
+  const options = {
+    page: Number(page) || 1,
+    limit: Number(limit) || 10,
+    sort,
+  };
+  options.skip = (options.page - 1) * options.limit;
+
+  const results = await deckService.getDecksByArchetype(req.params.archetypeId, filters, options);
+
+  res.status(httpStatus.OK).json({
+    status: httpStatus.OK,
+    message: 'Get Decks By Archetype Success',
+    data: results.decks,
+    meta: results.meta,
+  });
+});
+
 const query = catchAsync(async (req, res) => {
   const { name, page, limit, sort } = req.query;
   const filters = {
@@ -94,5 +117,6 @@ module.exports = {
   update,
   del,
   getByUser,
+  getDecksByArchetype,
   query,
 };

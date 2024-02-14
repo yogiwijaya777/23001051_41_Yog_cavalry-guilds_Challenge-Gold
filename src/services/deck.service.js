@@ -144,6 +144,52 @@ const getByUser = async (userId, filters, options) => {
   };
 };
 
+const getDecksByArchetype = async (archetypeId, filters, options) => {
+  const query = knex('decks')
+    .where({ archetypeId })
+    .leftJoin('users', 'decks.userId', '=', 'users.id')
+    .leftJoin('archetypes', 'decks.archetypeId', '=', 'archetypes.id')
+    .select('decks.*', 'archetypes.name as archetypeName', 'users.name as userName');
+
+  const { name } = filters;
+  const { page, limit, sort, skip } = options;
+
+  if (name) query.where('decks.name', 'ilike', `%${name}%`);
+
+  if (Array.isArray(sort)) {
+    sort.forEach((sortParam) => {
+      const [sortBy, sortOrder] = sortParam.split(':');
+      query.orderBy(sortBy, sortOrder);
+    });
+  } else if (sort) {
+    const [sortBy, sortOrder] = sort.split(':');
+    query.orderBy(sortBy, sortOrder);
+  }
+
+  query.limit(limit);
+  query.offset(skip);
+
+  const decks = await query;
+
+  if (!decks) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Deck not found');
+  }
+
+  const countQuery = knex('decks').count('id as count').where({ archetypeId }).first();
+  if (name) countQuery.where('name', 'ilike', `%${name}%`);
+
+  const { count } = await countQuery;
+
+  return {
+    decks,
+    meta: {
+      currentPage: page,
+      totalPages: Math.ceil(count / limit),
+      totaklDecks: +count,
+    },
+  };
+};
+
 const query = async (filters, options) => {
   const query = knex('decks')
     .join('users', 'decks.userId', '=', 'users.id')
@@ -195,5 +241,6 @@ module.exports = {
   update,
   del,
   getByUser,
+  getDecksByArchetype,
   query,
 };

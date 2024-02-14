@@ -13,29 +13,6 @@ const create = catchAsync(async (req, res) => {
   });
 });
 
-const query = catchAsync(async (req, res) => {
-  const { name, page, limit, sort } = req.query;
-  const filters = {
-    name,
-  };
-
-  const options = {
-    page: Number(page) || 1,
-    limit: Number(limit) || 10,
-    sort,
-  };
-  options.skip = (options.page - 1) * options.limit;
-
-  const results = await archetypeService.query(filters, options);
-
-  res.status(httpStatus.OK).json({
-    status: httpStatus.OK,
-    message: 'Get All Archetypes Success',
-    data: results.archetypes,
-    meta: results.meta,
-  });
-});
-
 const getById = catchAsync(async (req, res) => {
   const archetype = await archetypeService.getById(req.params.archetypeId);
 
@@ -65,10 +42,33 @@ const del = catchAsync(async (req, res) => {
   });
 });
 
+const query = catchAsync(async (req, res) => {
+  const { name, page, limit, sort } = req.query;
+  const filters = {
+    name,
+  };
+
+  const options = {
+    page: Number(page) || 1,
+    limit: Number(limit) || 10,
+    sort,
+  };
+  options.skip = (options.page - 1) * options.limit;
+
+  const results = await archetypeService.query(filters, options);
+
+  res.status(httpStatus.OK).json({
+    status: httpStatus.OK,
+    message: 'Get All Archetypes Success',
+    data: results.archetypes,
+    meta: results.meta,
+  });
+});
+
 module.exports = {
   create,
-  query,
   getById,
   update,
   del,
+  query,
 };
