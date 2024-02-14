@@ -3,8 +3,8 @@ const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
 const knex = require('../db/knex');
 
-const isDeckExist = async (deckId) => {
-  const isDeckExist = await knex('decks').where({ id: deckId }).first();
+const isDeckExist = async (deckId, user) => {
+  const isDeckExist = await knex('decks').where({ id: deckId, userId: user.id }).first();
   if (!isDeckExist) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Deck is not exist');
   }
@@ -67,16 +67,16 @@ const getById = async (id) => {
   return deck;
 };
 
-const update = async (id, body) => {
-  await isDeckExist(id);
+const update = async (user, deckId, updateBody) => {
+  await isDeckExist(deckId, user);
 
-  const { userId, archetypeId } = body;
+  const { userId, archetypeId } = updateBody;
 
   if (userId || archetypeId) {
     await checkExist(userId, archetypeId);
   }
 
-  const updatedDeck = await knex('decks').update(body).where({ id }).returning('*');
+  const updatedDeck = await knex('decks').update(updateBody).where({ id: deckId }).returning('*');
 
   return updatedDeck;
 };
