@@ -11,4 +11,6 @@ router
   .post(auth(), validate(archetypeValidation.create), archetypeController.create)
   .get(auth(), archetypeController.query);
 
+router.route('/:archetypeId').get(auth(), validate(archetypeValidation.getById), archetypeController.getById);
+
 module.exports = router;

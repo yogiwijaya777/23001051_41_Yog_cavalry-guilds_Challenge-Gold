@@ -2,6 +2,15 @@ const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
 const knex = require('../db/knex');
 
+const checkExist = async ({ archetypeId }) => {
+  const archetype = await knex('archetypes').where({ id: archetypeId }).first();
+  if (!archetype) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Archetype not found');
+  }
+
+  return;
+};
+
 const create = async (archetype) => {
   const isArchetypeExist = await knex('archetypes').where({ name: archetype.name }).first();
 
@@ -66,7 +75,13 @@ const query = async (filters, options) => {
 };
 
 const getById = async (archetypeId) => {
-  const archetype = await knex('archetypes').where({ archetypeId }).first();
+  const archetype = await knex('archetypes')
+    .select('archetypes.*')
+    .leftJoin('decks', 'decks.archetypeId', '=', 'archetypes.id')
+    .where({ archetypeId })
+    .count('decks.id', { as: 'totalDecks' })
+    .groupBy('archetypes.id')
+    .first();
 
   if (!archetype) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Archetype not found');
@@ -75,8 +90,15 @@ const getById = async (archetypeId) => {
   return archetype;
 };
 
+const del = async (archetypeId) => {
+  await checkExist({ archetypeId });
+
+  await knex('archetypes').delete().where({ archetypeId });
+};
+
 module.exports = {
   create,
   query,
   getById,
+  del,
 };

@@ -36,7 +36,28 @@ const query = catchAsync(async (req, res) => {
   });
 });
 
+const getById = catchAsync(async (req, res) => {
+  const archetype = await archetypeService.getById(req.params.archetypeId);
+
+  res.status(httpStatus.OK).json({
+    status: httpStatus.OK,
+    message: 'Get Archetype By Id Success',
+    data: archetype,
+  });
+});
+
+const del = catchAsync(async (req, res) => {
+  await archetypeService.del(req.params.archetypeId);
+
+  res.status(httpStatus.OK).json({
+    status: httpStatus.OK,
+    message: 'Delete Archetype Success',
+  });
+});
+
 module.exports = {
   create,
   query,
+  getById,
+  del,
 };
