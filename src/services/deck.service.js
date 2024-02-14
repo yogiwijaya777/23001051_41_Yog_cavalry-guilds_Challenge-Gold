@@ -3,18 +3,45 @@ const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
 const knex = require('../db/knex');
 
-const isUserAndArchetypeExist = async (userId, archetypeId) => {
-  const isUserExist = await userService.getById(userId);
+const isDeckExist = async ({ deckId, user }) => {
+  if (deckId && user) {
+    const isDeckExist = await knex('decks').where({ id: deckId, userId: user.id }).first();
 
-  const isArchetypeExist = await archetypeService.getById(archetypeId);
-};
+    if (!isDeckExist) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Deck is not exist');
+    }
+  } else if (deckId) {
+    const isDeckExist = await knex('decks').where({ id: deckId }).first();
 
-const create = async (deck) => {
-  const isUserExist = await knex('users').where({ id: deck.userId }).first();
-  if (!isUserExist) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User is not exist');
+    if (!isDeckExist) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Deck is not exist');
+    }
   }
 
+  return;
+};
+
+const checkExist = async ({ userId, archetypeId }) => {
+  if (userId) {
+    const isUserExist = await knex('users').where({ id: userId }).first();
+
+    if (!isUserExist) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'User is not exist');
+    }
+  }
+
+  if (archetypeId) {
+    const isArchetypeExist = await knex('archetypes').where({ id: archetypeId }).first();
+
+    if (!isArchetypeExist) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Archetype are not exist');
+    }
+  }
+
+  return;
+};
+
+const create = async (user, deck) => {
   const isArchetypeExist = await knex('archetypes').where({ id: deck.archetypeId }).first();
   if (!isArchetypeExist) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Archetype are not exist');
@@ -23,6 +50,7 @@ const create = async (deck) => {
   const newDeck = await knex('decks')
     .insert({
       ...deck,
+      userId: user.id,
     })
     .returning('*');
 
@@ -31,13 +59,55 @@ const create = async (deck) => {
   return resultObj;
 };
 
-const queryDecks = async (filters, options) => {
-  const query = knex('decks');
+const getById = async (id) => {
+  const deck = await knex('decks')
+    .join('users', 'decks.userId', '=', 'users.id')
+    .join('archetypes', 'decks.archetypeId', '=', 'archetypes.id')
+    .select('decks.*', 'archetypes.name as archetypeName', 'users.name as userName')
+    .where('decks.id', id)
+    .first();
+
+  if (!deck) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'deck not found');
+  }
+
+  return deck;
+};
+
+const update = async (user, deckId, updateBody) => {
+  await isDeckExist({ deckId, user });
+
+  const { archetypeId } = updateBody;
+
+  if (archetypeId) {
+    await checkExist({ archetypeId });
+  }
+
+  const updatedDeck = await knex('decks').update(updateBody).where({ id: deckId }).returning('*');
+
+  return updatedDeck;
+};
+
+const del = async (user, deckId) => {
+  if (user.role !== 'admin') {
+    await isDeckExist({ deckId, user });
+  } else {
+    await isDeckExist({ deckId });
+  }
+
+  await knex('decks').delete().where({ id: deckId });
+};
+
+const query = async (filters, options) => {
+  const query = knex('decks')
+    .join('users', 'decks.userId', '=', 'users.id')
+    .join('archetypes', 'decks.archetypeId', '=', 'archetypes.id')
+    .select('decks.*', 'archetypes.name as archetypeName', 'users.name as userName');
 
   const { name } = filters;
   const { page, limit, sort, skip } = options;
 
-  if (name) query.where('name', 'ilike', `%${name}%`);
+  if (name) query.where('decks.name', 'ilike', `%${name}%`);
 
   if (Array.isArray(sort)) {
     sort.forEach((sortParam) => {
@@ -75,5 +145,8 @@ const queryDecks = async (filters, options) => {
 
 module.exports = {
   create,
-  queryDecks,
+  getById,
+  update,
+  del,
+  query,
 };

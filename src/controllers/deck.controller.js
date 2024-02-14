@@ -4,7 +4,7 @@ const catchAsync = require('../utils/catchAsync');
 const ApiError = require('../utils/ApiError');
 
 const create = catchAsync(async (req, res) => {
-  const deckCreated = await deckService.create(req.body);
+  const deckCreated = await deckService.create(req.user, req.body);
 
   res.status(httpStatus.CREATED).json({
     status: httpStatus.CREATED,
@@ -13,9 +13,38 @@ const create = catchAsync(async (req, res) => {
   });
 });
 
-const queryDecks = catchAsync(async (req, res) => {
-  const { name, page, limit, sort } = req.query;
+const getById = catchAsync(async (req, res) => {
+  const deck = await deckService.getById(req.params.deckId);
 
+  res.status(httpStatus.OK).json({
+    status: httpStatus.OK,
+    message: 'Get Deck By Id Success',
+    data: deck,
+  });
+});
+
+const update = catchAsync(async (req, res) => {
+  const deckUpdated = await deckService.update(req.user, req.params.deckId, req.body);
+
+  res.status(httpStatus.OK).json({
+    status: httpStatus.OK,
+    message: 'Update Deck Success',
+    data: deckUpdated,
+  });
+});
+
+const del = catchAsync(async (req, res) => {
+  await deckService.del(req.user, req.params.deckId);
+
+  res.status(httpStatus.OK).json({
+    status: httpStatus.OK,
+    message: 'Delete Deck Success',
+  });
+});
+
+const query = catchAsync(async (req, res) => {
+  const { name, page, limit, sort } = req.query;
+  console.log(req.user);
   const filters = {
     name,
   };
@@ -27,7 +56,7 @@ const queryDecks = catchAsync(async (req, res) => {
   };
   options.skip = (options.page - 1) * options.limit;
 
-  const results = await deckService.queryDecks(filters, options);
+  const results = await deckService.query(filters, options);
 
   res.status(httpStatus.OK).json({
     status: httpStatus.OK,
@@ -39,5 +68,8 @@ const queryDecks = catchAsync(async (req, res) => {
 
 module.exports = {
   create,
-  queryDecks,
+  getById,
+  update,
+  del,
+  query,
 };
