@@ -12,7 +12,7 @@ const create = {
 
 const getById = {
   params: Joi.object().keys({
-    deckId: Joi.string().custom(objectId),
+    deckId: Joi.required().custom(objectId),
   }),
 };
 
