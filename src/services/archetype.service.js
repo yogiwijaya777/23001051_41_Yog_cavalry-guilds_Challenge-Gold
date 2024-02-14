@@ -93,7 +93,7 @@ const getById = async (archetypeId) => {
 const del = async (archetypeId) => {
   await checkExist({ archetypeId });
 
-  await knex('archetypes').delete().where({ archetypeId });
+  await knex('archetypes').delete().where({ id: archetypeId });
 };
 
 module.exports = {

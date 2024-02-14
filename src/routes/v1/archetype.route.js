@@ -8,9 +8,12 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(auth(), validate(archetypeValidation.create), archetypeController.create)
+  .post(auth('manageArchetypes'), validate(archetypeValidation.create), archetypeController.create)
   .get(auth(), archetypeController.query);
 
-router.route('/:archetypeId').get(auth(), validate(archetypeValidation.getById), archetypeController.getById);
+router
+  .route('/:archetypeId')
+  .get(auth(), validate(archetypeValidation.getById), archetypeController.getById)
+  .delete(auth('manageArchetypes'), validate(archetypeValidation.del), archetypeController.del);
 
 module.exports = router;
