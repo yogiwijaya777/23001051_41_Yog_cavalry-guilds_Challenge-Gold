@@ -23,7 +23,7 @@ API Specification for Cavalry Guilds
    - Get Deck by ID: `GET /v1/decks{deckId}`
    - Update Deck: `PUT /v1/decks{deckId}`
    - Delete Deck: `DELETE /v1/decks{deckId}}`
-   - Get Products by User: `GET /v1/users/{userId}/decks`
+   - Get Decks by User: `GET /v1/users/{userId}/decks`
    - Get Decks by Archetype: `GET /v1/archetypes/{archetypeId}/decks`
 
 4. **Archetype API:**

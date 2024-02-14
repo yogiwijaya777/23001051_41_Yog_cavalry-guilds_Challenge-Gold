@@ -34,9 +34,16 @@ const del = {
   }),
 };
 
+const getByUser = {
+  params: Joi.object().keys({
+    userId: Joi.required().custom(objectId),
+  }),
+};
+
 module.exports = {
   create,
   getById,
   update,
   del,
+  getByUser,
 };
