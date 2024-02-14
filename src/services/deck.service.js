@@ -41,12 +41,7 @@ const checkExist = async ({ userId, archetypeId }) => {
   return;
 };
 
-const create = async (deck) => {
-  const isUserExist = await knex('users').where({ id: deck.userId }).first();
-  if (!isUserExist) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User is not exist');
-  }
-
+const create = async (user, deck) => {
   const isArchetypeExist = await knex('archetypes').where({ id: deck.archetypeId }).first();
   if (!isArchetypeExist) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Archetype are not exist');
@@ -55,6 +50,7 @@ const create = async (deck) => {
   const newDeck = await knex('decks')
     .insert({
       ...deck,
+      userId: user.id,
     })
     .returning('*');
 

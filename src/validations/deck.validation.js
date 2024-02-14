@@ -6,7 +6,6 @@ const create = {
     name: Joi.string().required(),
     description: Joi.string().required(),
     archetypeId: Joi.string().custom(objectId),
-    userId: Joi.string().custom(objectId),
   }),
 };
 

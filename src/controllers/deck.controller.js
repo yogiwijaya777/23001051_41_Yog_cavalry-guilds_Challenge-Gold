@@ -4,7 +4,7 @@ const catchAsync = require('../utils/catchAsync');
 const ApiError = require('../utils/ApiError');
 
 const create = catchAsync(async (req, res) => {
-  const deckCreated = await deckService.create(req.body);
+  const deckCreated = await deckService.create(req.user, req.body);
 
   res.status(httpStatus.CREATED).json({
     status: httpStatus.CREATED,
