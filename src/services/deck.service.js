@@ -98,6 +98,98 @@ const del = async (user, deckId) => {
   await knex('decks').delete().where({ id: deckId });
 };
 
+const getByUser = async (userId, filters, options) => {
+  const query = knex('decks')
+    .join('users', 'decks.userId', '=', 'users.id')
+    .join('archetypes', 'decks.archetypeId', '=', 'archetypes.id')
+    .select('decks.*', 'archetypes.name as archetypeName', 'users.name as userName')
+    .where('decks.userId', userId);
+
+  const { name } = filters;
+  const { page, limit, sort, skip } = options;
+
+  if (name) query.where('decks.name', 'ilike', `%${name}%`);
+
+  if (Array.isArray(sort)) {
+    sort.forEach((sortParam) => {
+      const [sortBy, sortOrder] = sortParam.split(':');
+      query.orderBy(sortBy, sortOrder);
+    });
+  } else if (sort) {
+    const [sortBy, sortOrder] = sort.split(':');
+    query.orderBy(sortBy, sortOrder);
+  }
+
+  query.limit(limit);
+  query.offset(skip);
+
+  const decks = await query;
+
+  if (!decks) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Deck not found');
+  }
+
+  const countQuery = knex('decks').where('decks.userId', userId).count('id as count').first();
+  if (name) countQuery.where('decks.name', 'ilike', `%${name}%`);
+
+  const { count } = await countQuery;
+
+  return {
+    decks,
+    meta: {
+      currentPage: 1,
+      totalPage: Math.ceil(count / limit),
+      totalDecks: +count,
+    },
+  };
+};
+
+const getDecksByArchetype = async (archetypeId, filters, options) => {
+  const query = knex('decks')
+    .where({ archetypeId })
+    .leftJoin('users', 'decks.userId', '=', 'users.id')
+    .leftJoin('archetypes', 'decks.archetypeId', '=', 'archetypes.id')
+    .select('decks.*', 'archetypes.name as archetypeName', 'users.name as userName');
+
+  const { name } = filters;
+  const { page, limit, sort, skip } = options;
+
+  if (name) query.where('decks.name', 'ilike', `%${name}%`);
+
+  if (Array.isArray(sort)) {
+    sort.forEach((sortParam) => {
+      const [sortBy, sortOrder] = sortParam.split(':');
+      query.orderBy(sortBy, sortOrder);
+    });
+  } else if (sort) {
+    const [sortBy, sortOrder] = sort.split(':');
+    query.orderBy(sortBy, sortOrder);
+  }
+
+  query.limit(limit);
+  query.offset(skip);
+
+  const decks = await query;
+
+  if (!decks) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Deck not found');
+  }
+
+  const countQuery = knex('decks').count('id as count').where({ archetypeId }).first();
+  if (name) countQuery.where('name', 'ilike', `%${name}%`);
+
+  const { count } = await countQuery;
+
+  return {
+    decks,
+    meta: {
+      currentPage: page,
+      totalPages: Math.ceil(count / limit),
+      totaklDecks: +count,
+    },
+  };
+};
+
 const query = async (filters, options) => {
   const query = knex('decks')
     .join('users', 'decks.userId', '=', 'users.id')
@@ -148,5 +240,7 @@ module.exports = {
   getById,
   update,
   del,
+  getByUser,
+  getDecksByArchetype,
   query,
 };

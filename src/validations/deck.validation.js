@@ -34,9 +34,22 @@ const del = {
   }),
 };
 
+const getByUser = {
+  params: Joi.object().keys({
+    userId: Joi.required().custom(objectId),
+  }),
+};
+
+const getDecksByArchetype = {
+  params: Joi.object().keys({
+    archetypeId: Joi.string().required(),
+  }),
+};
 module.exports = {
   create,
   getById,
   update,
   del,
+  getByUser,
+  getDecksByArchetype,
 };
