@@ -14,6 +14,7 @@ router
 router
   .route('/:archetypeId')
   .get(auth(), validate(archetypeValidation.getById), archetypeController.getById)
+  .patch(auth('manageArchetypes'), validate(archetypeValidation.update), archetypeController.update)
   .delete(auth('manageArchetypes'), validate(archetypeValidation.del), archetypeController.del);
 
 module.exports = router;

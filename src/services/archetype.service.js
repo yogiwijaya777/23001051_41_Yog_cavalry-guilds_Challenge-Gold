@@ -28,6 +28,37 @@ const create = async (archetype) => {
 
   return resultObj;
 };
+
+const getById = async (archetypeId) => {
+  const archetype = await knex('archetypes')
+    .select('archetypes.*')
+    .leftJoin('decks', 'decks.archetypeId', '=', 'archetypes.id')
+    .where({ archetypeId })
+    .count('decks.id', { as: 'totalDecks' })
+    .groupBy('archetypes.id')
+    .first();
+
+  if (!archetype) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Archetype not found');
+  }
+
+  return archetype;
+};
+
+const update = async (archetypeId, updateBody) => {
+  await checkExist({ archetypeId });
+
+  const updatedArchetype = await knex('archetypes').update(updateBody).where({ id: archetypeId }).returning('*');
+
+  return updatedArchetype;
+};
+
+const del = async (archetypeId) => {
+  await checkExist({ archetypeId });
+
+  await knex('archetypes').delete().where({ id: archetypeId });
+};
+
 const query = async (filters, options) => {
   const query = knex('archetypes')
     .select('archetypes.*')
@@ -74,31 +105,10 @@ const query = async (filters, options) => {
   };
 };
 
-const getById = async (archetypeId) => {
-  const archetype = await knex('archetypes')
-    .select('archetypes.*')
-    .leftJoin('decks', 'decks.archetypeId', '=', 'archetypes.id')
-    .where({ archetypeId })
-    .count('decks.id', { as: 'totalDecks' })
-    .groupBy('archetypes.id')
-    .first();
-
-  if (!archetype) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Archetype not found');
-  }
-
-  return archetype;
-};
-
-const del = async (archetypeId) => {
-  await checkExist({ archetypeId });
-
-  await knex('archetypes').delete().where({ id: archetypeId });
-};
-
 module.exports = {
   create,
-  query,
   getById,
+  update,
   del,
+  query,
 };

@@ -46,6 +46,16 @@ const getById = catchAsync(async (req, res) => {
   });
 });
 
+const update = catchAsync(async (req, res) => {
+  const archetypeUpdated = await archetypeService.update(req.params.archetypeId, req.body);
+
+  res.status(httpStatus.OK).json({
+    status: httpStatus.OK,
+    message: 'Update Archetype Success',
+    data: archetypeUpdated,
+  });
+});
+
 const del = catchAsync(async (req, res) => {
   await archetypeService.del(req.params.archetypeId);
 
@@ -59,5 +69,6 @@ module.exports = {
   create,
   query,
   getById,
+  update,
   del,
 };
