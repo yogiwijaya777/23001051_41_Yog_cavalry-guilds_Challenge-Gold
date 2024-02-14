@@ -3,7 +3,7 @@ const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
 const knex = require('../db/knex');
 
-const isUserAndArchetypeExist = async (userId, archetypeId) => {
+const isExist = async (deckId, userId, archetypeId) => {
   const isUserExist = await userService.getById(userId);
 
   const isArchetypeExist = await archetypeService.getById(archetypeId);
@@ -44,6 +44,14 @@ const getById = async (id) => {
   }
 
   return deck;
+};
+
+const update = async (id, body) => {
+  const { userId, archetypeId } = body;
+
+  const updatedDeck = await knex('decks').update(body).where({ id });
+
+  return updatedDeck;
 };
 
 const query = async (filters, options) => {
@@ -91,5 +99,6 @@ const query = async (filters, options) => {
 module.exports = {
   create,
   getById,
+  update,
   query,
 };

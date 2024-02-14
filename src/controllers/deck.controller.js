@@ -23,6 +23,16 @@ const getById = catchAsync(async (req, res) => {
   });
 });
 
+const update = catchAsync(async (req, res) => {
+  const deckUpdated = await deckService.update(req.params.deckId, req.body);
+
+  res.status(httpStatus.OK).json({
+    status: httpStatus.OK,
+    message: 'Update Deck Success',
+    data: deckUpdated,
+  });
+});
+
 const query = catchAsync(async (req, res) => {
   const { name, page, limit, sort } = req.query;
 
@@ -50,5 +60,6 @@ const query = catchAsync(async (req, res) => {
 module.exports = {
   create,
   getById,
+  update,
   query,
 };

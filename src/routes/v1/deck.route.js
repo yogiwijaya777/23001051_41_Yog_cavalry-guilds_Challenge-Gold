@@ -8,6 +8,9 @@ const router = express.Router();
 
 router.route('/').post(auth(), validate(deckValidation.create), deckController.create).get(auth(), deckController.query);
 
-router.route('/:deckId').get(auth(), deckController.getById);
+router
+  .route('/:deckId')
+  .get(auth(), validate(deckValidation.getById), deckController.getById)
+  .patch(auth(), validate(deckValidation.update), deckController.update);
 
 module.exports = router;
