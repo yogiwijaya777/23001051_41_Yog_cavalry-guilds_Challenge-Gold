@@ -6,9 +6,8 @@ const deckController = require('../../controllers/deck.controller');
 
 const router = express.Router();
 
-router
-  .route('/')
-  .post(auth(), validate(deckValidation.create), deckController.create)
-  .get(auth(), deckController.queryDecks);
+router.route('/').post(auth(), validate(deckValidation.create), deckController.create).get(auth(), deckController.query);
+
+router.route('/:deckId').get(auth(), deckController.getById);
 
 module.exports = router;

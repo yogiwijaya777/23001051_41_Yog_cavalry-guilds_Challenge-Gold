@@ -13,7 +13,17 @@ const create = catchAsync(async (req, res) => {
   });
 });
 
-const queryDecks = catchAsync(async (req, res) => {
+const getById = catchAsync(async (req, res) => {
+  const deck = await deckService.getById(req.params.deckId);
+
+  res.status(httpStatus.OK).json({
+    status: httpStatus.OK,
+    message: 'Get Deck By Id Success',
+    data: deck,
+  });
+});
+
+const query = catchAsync(async (req, res) => {
   const { name, page, limit, sort } = req.query;
 
   const filters = {
@@ -27,7 +37,7 @@ const queryDecks = catchAsync(async (req, res) => {
   };
   options.skip = (options.page - 1) * options.limit;
 
-  const results = await deckService.queryDecks(filters, options);
+  const results = await deckService.query(filters, options);
 
   res.status(httpStatus.OK).json({
     status: httpStatus.OK,
@@ -39,5 +49,6 @@ const queryDecks = catchAsync(async (req, res) => {
 
 module.exports = {
   create,
-  queryDecks,
+  getById,
+  query,
 };

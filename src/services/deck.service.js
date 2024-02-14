@@ -31,7 +31,22 @@ const create = async (deck) => {
   return resultObj;
 };
 
-const queryDecks = async (filters, options) => {
+const getById = async (id) => {
+  const deck = await knex('decks')
+    .join('users', 'decks.userId', '=', 'users.id')
+    .join('archetypes', 'decks.archetypeId', '=', 'archetypes.id')
+    .select('decks.*', 'archetypes.name as archetypeName', 'users.name as userName')
+    .where('decks.id', id)
+    .first();
+
+  if (!deck) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'deck not found');
+  }
+
+  return deck;
+};
+
+const query = async (filters, options) => {
   const query = knex('decks');
 
   const { name } = filters;
@@ -75,5 +90,6 @@ const queryDecks = async (filters, options) => {
 
 module.exports = {
   create,
-  queryDecks,
+  getById,
+  query,
 };
