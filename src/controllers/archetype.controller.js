@@ -13,17 +13,30 @@ const create = catchAsync(async (req, res) => {
   });
 });
 
-const queryArchetypes = catchAsync(async (req, res) => {
-  const archetypes = await archetypeService.queryArchetypes();
+const query = catchAsync(async (req, res) => {
+  const { name, page, limit, sort } = req.query;
+  const filters = {
+    name,
+  };
+
+  const options = {
+    page: Number(page) || 1,
+    limit: Number(limit) || 10,
+    sort,
+  };
+  options.skip = (options.page - 1) * options.limit;
+
+  const results = await archetypeService.query(filters, options);
 
   res.status(httpStatus.OK).json({
     status: httpStatus.OK,
     message: 'Get All Archetypes Success',
-    data: archetypes,
+    data: results.archetypes,
+    meta: results.meta,
   });
 });
 
 module.exports = {
   create,
-  queryArchetypes,
+  query,
 };

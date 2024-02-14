@@ -9,6 +9,6 @@ const router = express.Router();
 router
   .route('/')
   .post(auth(), validate(archetypeValidation.create), archetypeController.create)
-  .get(auth(), archetypeController.queryArchetypes);
+  .get(auth(), archetypeController.query);
 
 module.exports = router;
