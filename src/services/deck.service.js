@@ -12,7 +12,7 @@ const isDeckExist = async (deckId, user) => {
   return;
 };
 
-const checkExist = async (userId, archetypeId) => {
+const checkExist = async ({ userId, archetypeId }) => {
   if (userId) {
     const isUserExist = await knex('users').where({ id: userId }).first();
     if (!isUserExist) {
@@ -70,10 +70,10 @@ const getById = async (id) => {
 const update = async (user, deckId, updateBody) => {
   await isDeckExist(deckId, user);
 
-  const { userId, archetypeId } = updateBody;
+  const { archetypeId } = updateBody;
 
-  if (userId || archetypeId) {
-    await checkExist(userId, archetypeId);
+  if (archetypeId) {
+    await checkExist({ archetypeId });
   }
 
   const updatedDeck = await knex('decks').update(updateBody).where({ id: deckId }).returning('*');
