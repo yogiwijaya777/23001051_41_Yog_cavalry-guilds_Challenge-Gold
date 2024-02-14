@@ -33,6 +33,15 @@ const update = catchAsync(async (req, res) => {
   });
 });
 
+const del = catchAsync(async (req, res) => {
+  await deckService.del(req.user, req.params.deckId);
+
+  res.status(httpStatus.OK).json({
+    status: httpStatus.OK,
+    message: 'Delete Deck Success',
+  });
+});
+
 const query = catchAsync(async (req, res) => {
   const { name, page, limit, sort } = req.query;
   console.log(req.user);
@@ -61,5 +70,6 @@ module.exports = {
   create,
   getById,
   update,
+  del,
   query,
 };

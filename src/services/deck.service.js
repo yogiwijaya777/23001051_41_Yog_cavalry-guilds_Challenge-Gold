@@ -92,7 +92,15 @@ const update = async (user, deckId, updateBody) => {
   return updatedDeck;
 };
 
-const del = async (user, deckId) => {};
+const del = async (user, deckId) => {
+  if (user.role !== 'admin') {
+    await isDeckExist({ deckId, user });
+  } else {
+    await isDeckExist({ deckId });
+  }
+
+  await knex('decks').delete().where({ id: deckId });
+};
 
 const query = async (filters, options) => {
   const query = knex('decks');
@@ -140,5 +148,6 @@ module.exports = {
   create,
   getById,
   update,
+  del,
   query,
 };
