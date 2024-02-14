@@ -72,7 +72,9 @@ const update = async (id, body) => {
 
   const { userId, archetypeId } = body;
 
-  await checkExist(userId, archetypeId);
+  if (userId || archetypeId) {
+    await checkExist(userId, archetypeId);
+  }
 
   const updatedDeck = await knex('decks').update(body).where({ id }).returning('*');
 
