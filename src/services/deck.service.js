@@ -3,10 +3,19 @@ const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
 const knex = require('../db/knex');
 
-const isDeckExist = async (deckId, user) => {
-  const isDeckExist = await knex('decks').where({ id: deckId, userId: user.id }).first();
-  if (!isDeckExist) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Deck is not exist');
+const isDeckExist = async ({ deckId, user }) => {
+  if (deckId && user) {
+    const isDeckExist = await knex('decks').where({ id: deckId, userId: user.id }).first();
+
+    if (!isDeckExist) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Deck is not exist');
+    }
+  } else if (deckId) {
+    const isDeckExist = await knex('decks').where({ id: deckId }).first();
+
+    if (!isDeckExist) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Deck is not exist');
+    }
   }
 
   return;
@@ -15,6 +24,7 @@ const isDeckExist = async (deckId, user) => {
 const checkExist = async ({ userId, archetypeId }) => {
   if (userId) {
     const isUserExist = await knex('users').where({ id: userId }).first();
+
     if (!isUserExist) {
       throw new ApiError(httpStatus.NOT_FOUND, 'User is not exist');
     }
@@ -22,6 +32,7 @@ const checkExist = async ({ userId, archetypeId }) => {
 
   if (archetypeId) {
     const isArchetypeExist = await knex('archetypes').where({ id: archetypeId }).first();
+
     if (!isArchetypeExist) {
       throw new ApiError(httpStatus.NOT_FOUND, 'Archetype are not exist');
     }
@@ -68,7 +79,7 @@ const getById = async (id) => {
 };
 
 const update = async (user, deckId, updateBody) => {
-  await isDeckExist(deckId, user);
+  await isDeckExist({ deckId, user });
 
   const { archetypeId } = updateBody;
 
@@ -80,6 +91,8 @@ const update = async (user, deckId, updateBody) => {
 
   return updatedDeck;
 };
+
+const del = async (user, deckId) => {};
 
 const query = async (filters, options) => {
   const query = knex('decks');
