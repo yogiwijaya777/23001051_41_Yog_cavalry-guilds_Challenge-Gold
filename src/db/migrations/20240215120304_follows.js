@@ -3,10 +3,10 @@
  * @returns { Promise<void> }
  */
 exports.up = function (knex) {
-  return knex.schema.createTable('followers', function (table) {
+  return knex.schema.createTable('follows', function (table) {
     table.uuid('id').defaultTo(knex.fn.uuid()).primary();
-    table.uuid('userId').references('id').inTable('users').onDelete('CASCADE');
     table.uuid('followerId').references('id').inTable('users').onDelete('CASCADE');
+    table.uuid('followingId').references('id').inTable('users').onDelete('CASCADE');
     table.timestamp('createdAt').defaultTo(knex.raw('CURRENT_TIMESTAMP'));
   });
 };
@@ -16,5 +16,5 @@ exports.up = function (knex) {
  * @returns { Promise<void> }
  */
 exports.down = function (knex) {
-  return knex.schema.dropTable('followers');
+  return knex.schema.dropTable('follows');
 };
