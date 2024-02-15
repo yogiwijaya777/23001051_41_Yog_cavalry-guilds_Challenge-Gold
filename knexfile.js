@@ -16,7 +16,7 @@ module.exports = {
       directory: './src/db/migrations',
     },
     seeds: {
-      directory: __dirname + '/knex/seeds',
+      directory: './src/db/seeds',
     },
   },
   production: {

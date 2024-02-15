@@ -34,19 +34,15 @@ API Specification for Cavalry Guilds
    - Update Archetype: `PUT /v1/archetypes/{archetypeId}`
    - Delete Archetype: `DELETE /v1/archetypes/{archetypeId}`
 
-5. **Follower API:**
+5. **Follow API:**
 
-   - Create Follower: `POST /v1/followers`
-   - Delete Follower: `DELETE /v1/followers/{followerId}`
+   - Create Follow: `POST /v1/follows`
+   - Delete Follow: `DELETE /v1/follows/{followId}`
    - Get Followers by User: `GET /v1/users/{userId}/followers`
-
-6. **Following API:**
-
-   - Create Following: `POST /v1/followings`
-   - Delete Following: `DELETE /v1/followings/{followingId}`
    - Get Followings by User: `GET /v1/users/{userId}/followings`
 
-7. **Favorite Deck API:**
+6. **Favorite Deck API:**
+
    - Create Favorite Deck: `POST /v1/favorite-decks`
    - Delete Favorite Deck: `DELETE /v1/favorite-decks/{favoriteDecksId}`
    - Get Favorite Decks by User: `GET /v1/users/{userId}/favorite-decks`
