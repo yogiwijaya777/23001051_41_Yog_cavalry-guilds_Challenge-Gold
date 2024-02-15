@@ -3,6 +3,7 @@ const authRoute = require('./auth.route');
 const userRoute = require('./user.route');
 const archetypeRoute = require('./archetype.route');
 const deckRoute = require('./deck.route');
+const followRoute = require('./follow.route');
 // const docsRoute = require('./docs.route');
 const config = require('../../configs/config');
 
@@ -24,6 +25,10 @@ const defaultRoutes = [
   {
     path: '/decks',
     route: deckRoute,
+  },
+  {
+    path: '/follows',
+    route: followRoute,
   },
 ];
 
