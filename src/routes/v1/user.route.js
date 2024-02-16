@@ -6,6 +6,7 @@ const favoriteDeckController = require('../../controllers/favoriteDeck.controlle
 const auth = require('../../middlewares/auth');
 const validate = require('../../middlewares/validate');
 const { userValidation, deckValidation, followValidation, favoriteDeckValidation } = require('../../validations');
+
 const router = express.Router();
 
 router.route('/').post(validate(userValidation.create), userController.create).get(auth('getUsers'), userController.search);

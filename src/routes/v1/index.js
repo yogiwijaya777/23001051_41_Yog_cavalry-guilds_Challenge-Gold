@@ -7,7 +7,7 @@ const followRoute = require('./follow.route');
 const favoriteDeckRoute = require('./favoriteDeck.route');
 
 // const docsRoute = require('./docs.route');
-const config = require('../../configs/config');
+// const config = require('../../configs/config');
 
 const router = express.Router();
 

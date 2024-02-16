@@ -1,10 +1,9 @@
+const httpStatus = require('http-status');
 const knex = require('../db/knex');
 const ApiError = require('../utils/ApiError');
-const httpStatus = require('http-status');
 
-const checkExist = async ({ doubleCheck, followerId, followingId }) => {
+const checkExist = async ({ doubleCheck, followingId }) => {
   if (doubleCheck) {
-    console.log(doubleCheck);
     const isFollowExist = await knex('follows')
       .where({ ...doubleCheck })
       .first();
@@ -21,8 +20,6 @@ const checkExist = async ({ doubleCheck, followerId, followingId }) => {
       throw new ApiError(httpStatus.NOT_FOUND, 'Follow is not exist');
     }
   }
-
-  return;
 };
 
 const create = async (user, body) => {
@@ -46,7 +43,7 @@ const create = async (user, body) => {
 };
 
 const del = async (user, id) => {
-  await checkExist({ doubleCheck: { id: id, followerId: user.id } });
+  await checkExist({ doubleCheck: { id, followerId: user.id } });
 
   await knex('follows').delete().where({ id });
 };

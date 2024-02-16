@@ -7,8 +7,6 @@ const checkExist = async ({ archetypeId }) => {
   if (!archetype) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Archetype not found');
   }
-
-  return;
 };
 
 const create = async (archetype) => {

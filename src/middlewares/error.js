@@ -2,7 +2,23 @@ const httpStatus = require('http-status');
 const config = require('../configs/config');
 const logger = require('../configs/logger');
 const ApiError = require('../utils/ApiError');
-const knex = require('../db/knex');
+
+const handleDatabaseError = (err) => {
+  switch (err.code) {
+    case 'P2002':
+      // handling duplicate key errors
+      return new ApiError(400, `Duplicate field value: ${err.meta.target}`, false, err.stack);
+    case 'P2014':
+      // handling invalid id errors
+      return new ApiError(400, `Invalid ID: ${err.meta.target}`, false, err.stack);
+    case 'P2003':
+      // handling invalid data errors
+      return new ApiError(400, `Invalid input data: ${err.meta.target}`, false, err.stack);
+    default:
+      // handling all other errors
+      return new ApiError(500, `Something went wrong: ${err.message}`, false, err.stack);
+  }
+};
 
 const errorConverter = (err, req, res, next) => {
   let error = err;
@@ -27,23 +43,6 @@ const errorConverter = (err, req, res, next) => {
     }
   }
   next(error);
-};
-
-const handleDatabaseError = (err) => {
-  switch (err.code) {
-    case 'P2002':
-      // handling duplicate key errors
-      return new ApiError(400, `Duplicate field value: ${err.meta.target}`, false, err.stack);
-    case 'P2014':
-      // handling invalid id errors
-      return new ApiError(400, `Invalid ID: ${err.meta.target}`, false, err.stack);
-    case 'P2003':
-      // handling invalid data errors
-      return new ApiError(400, `Invalid input data: ${err.meta.target}`, false, err.stack);
-    default:
-      // handling all other errors
-      return new ApiError(500, `Something went wrong: ${err.message}`, false, err.stack);
-  }
 };
 
 // eslint-disable-next-line no-unused-vars

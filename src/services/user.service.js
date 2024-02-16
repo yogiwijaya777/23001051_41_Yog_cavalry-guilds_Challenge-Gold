@@ -1,7 +1,7 @@
-const knex = require('../db/knex');
 const httpStatus = require('http-status');
-const ApiError = require('../utils/ApiError');
 const bcrypt = require('bcryptjs');
+const knex = require('../db/knex');
+const ApiError = require('../utils/ApiError');
 
 const create = async (body) => {
   body.password = bcrypt.hashSync(body.password, 8);

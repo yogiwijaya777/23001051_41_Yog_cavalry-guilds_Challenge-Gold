@@ -1,8 +1,8 @@
 const httpStatus = require('http-status');
-const { userService, tokenService } = require('../services');
+const bcrypt = require('bcryptjs');
+const { userService, tokenService } = require('.');
 const knex = require('../db/knex');
 const ApiError = require('../utils/ApiError');
-const bcrypt = require('bcryptjs');
 const tokenTypes = require('../configs/tokens');
 
 /**
@@ -42,7 +42,6 @@ const refreshAuth = async (refreshToken) => {
     await knex('tokens').delete().where('id', refreshTokenDoc.userId);
     return tokenService.generateAuthTokens(user);
   } catch (error) {
-    console.log(error);
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Please authenticate');
   }
 };

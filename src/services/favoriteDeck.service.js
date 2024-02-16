@@ -1,10 +1,9 @@
+const httpStatus = require('http-status');
 const knex = require('../db/knex');
 const ApiError = require('../utils/ApiError');
-const httpStatus = require('http-status');
 
-const checkExist = async ({ doubleCheck, followerId, followingId }) => {
+const checkExist = async ({ doubleCheck }) => {
   if (doubleCheck) {
-    console.log(doubleCheck);
     const isFavoriteDeckExist = await knex('favoriteDecks')
       .where({ ...doubleCheck })
       .first();
@@ -13,8 +12,6 @@ const checkExist = async ({ doubleCheck, followerId, followingId }) => {
       throw new ApiError(httpStatus.NOT_FOUND, 'Favorite Deck is not exist');
     }
   }
-
-  return;
 };
 
 const create = async (user, body) => {
@@ -38,7 +35,7 @@ const create = async (user, body) => {
 };
 
 const del = async (user, id) => {
-  await checkExist({ doubleCheck: { id: id, userId: user.id } });
+  await checkExist({ doubleCheck: { id, userId: user.id } });
 
   await knex('favoriteDecks').delete().where({ id, userId: user.id });
 };

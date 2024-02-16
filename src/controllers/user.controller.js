@@ -1,5 +1,5 @@
-const { userService, tokenService } = require('../services');
 const httpStatus = require('http-status');
+const { userService, tokenService } = require('../services');
 const catchAsync = require('../utils/catchAsync');
 const ApiError = require('../utils/ApiError');
 
@@ -29,7 +29,6 @@ const search = catchAsync(async (req, res) => {
     role,
   };
 
-  console.log(sort);
   const options = {
     page: Number(page) || 1,
     limit: Number(limit) || 10,
