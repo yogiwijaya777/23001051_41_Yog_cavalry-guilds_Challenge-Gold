@@ -4,6 +4,8 @@ const xss = require('xss-clean');
 const compression = require('compression');
 const cors = require('cors');
 const passport = require('passport');
+const swaggerUi = require('swagger-ui-express');
+const YAML = require('yamljs');
 const httpStatus = require('http-status');
 const config = require('./configs/config');
 const morgan = require('./configs/morgan');
@@ -52,6 +54,11 @@ app.get('/', (req, res) => {
 
 // v1 api routes
 app.use('/v1', routes);
+
+if (config.env === 'development') {
+  const swaggerDocument = YAML.load('./cavalry-guilds-docs.yaml');
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+}
 
 // send back a 404 error for any unknown api request
 app.use((req, res, next) => {

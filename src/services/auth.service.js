@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const { userService, tokenService } = require('.');
 const knex = require('../db/knex');
 const ApiError = require('../utils/ApiError');
-const tokenTypes = require('../configs/tokens');
+const { tokenTypes } = require('../configs/tokens');
 
 /**
  * Login with username and password
@@ -39,7 +39,7 @@ const refreshAuth = async (refreshToken) => {
     if (!user) {
       throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
     }
-    await knex('tokens').delete().where('id', refreshTokenDoc.userId);
+    await knex('tokens').delete().where('userId', refreshTokenDoc.userId);
     return tokenService.generateAuthTokens(user);
   } catch (error) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Please authenticate');
