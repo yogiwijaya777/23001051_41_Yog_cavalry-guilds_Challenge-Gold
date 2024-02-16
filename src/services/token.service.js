@@ -2,7 +2,6 @@ const jwt = require('jsonwebtoken');
 const moment = require('moment');
 const httpStatus = require('http-status');
 const config = require('../configs/config');
-const userService = require('./user.service');
 const ApiError = require('../utils/ApiError');
 const { tokenTypes } = require('../configs/tokens');
 const knex = require('../db/knex');

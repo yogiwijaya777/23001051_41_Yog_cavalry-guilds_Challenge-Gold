@@ -1,5 +1,5 @@
-const { userService, tokenService } = require('../services');
 const httpStatus = require('http-status');
+const { userService, tokenService } = require('../services');
 const catchAsync = require('../utils/catchAsync');
 const ApiError = require('../utils/ApiError');
 
@@ -21,7 +21,7 @@ const create = catchAsync(async (req, res) => {
   });
 });
 
-const queryUsers = catchAsync(async (req, res) => {
+const search = catchAsync(async (req, res) => {
   const { name, role, page, limit, sort } = req.query;
 
   const filters = {
@@ -29,7 +29,6 @@ const queryUsers = catchAsync(async (req, res) => {
     role,
   };
 
-  console.log(sort);
   const options = {
     page: Number(page) || 1,
     limit: Number(limit) || 10,
@@ -37,7 +36,7 @@ const queryUsers = catchAsync(async (req, res) => {
   };
   options.skip = (options.page - 1) * options.limit;
 
-  const result = await userService.queryUsers(filters, options);
+  const result = await userService.search(filters, options);
 
   res.status(httpStatus.OK).json({
     status: httpStatus.OK,
@@ -78,7 +77,7 @@ const del = catchAsync(async (req, res) => {
 
 module.exports = {
   create,
-  queryUsers,
+  search,
   getById,
   update,
   del,

@@ -1,7 +1,6 @@
-const { deckService } = require('../services');
 const httpStatus = require('http-status');
+const { deckService } = require('../services');
 const catchAsync = require('../utils/catchAsync');
-const ApiError = require('../utils/ApiError');
 
 const create = catchAsync(async (req, res) => {
   const deckCreated = await deckService.create(req.user, req.body);
@@ -88,7 +87,7 @@ const getDecksByArchetype = catchAsync(async (req, res) => {
   });
 });
 
-const query = catchAsync(async (req, res) => {
+const search = catchAsync(async (req, res) => {
   const { name, page, limit, sort } = req.query;
   const filters = {
     name,
@@ -101,7 +100,7 @@ const query = catchAsync(async (req, res) => {
   };
   options.skip = (options.page - 1) * options.limit;
 
-  const results = await deckService.query(filters, options);
+  const results = await deckService.search(filters, options);
 
   res.status(httpStatus.OK).json({
     status: httpStatus.OK,
@@ -118,5 +117,5 @@ module.exports = {
   del,
   getByUser,
   getDecksByArchetype,
-  query,
+  search,
 };

@@ -1,7 +1,6 @@
-const { archetypeService } = require('../services');
 const httpStatus = require('http-status');
+const { archetypeService } = require('../services');
 const catchAsync = require('../utils/catchAsync');
-const ApiError = require('../utils/ApiError');
 
 const create = catchAsync(async (req, res) => {
   const archetypeCreated = await archetypeService.create(req.body);
@@ -42,7 +41,7 @@ const del = catchAsync(async (req, res) => {
   });
 });
 
-const query = catchAsync(async (req, res) => {
+const search = catchAsync(async (req, res) => {
   const { name, page, limit, sort } = req.query;
   const filters = {
     name,
@@ -55,7 +54,7 @@ const query = catchAsync(async (req, res) => {
   };
   options.skip = (options.page - 1) * options.limit;
 
-  const results = await archetypeService.query(filters, options);
+  const results = await archetypeService.search(filters, options);
 
   res.status(httpStatus.OK).json({
     status: httpStatus.OK,
@@ -70,5 +69,5 @@ module.exports = {
   getById,
   update,
   del,
-  query,
+  search,
 };

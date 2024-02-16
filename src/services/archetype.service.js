@@ -7,8 +7,6 @@ const checkExist = async ({ archetypeId }) => {
   if (!archetype) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Archetype not found');
   }
-
-  return;
 };
 
 const create = async (archetype) => {
@@ -59,7 +57,7 @@ const del = async (archetypeId) => {
   await knex('archetypes').delete().where({ id: archetypeId });
 };
 
-const query = async (filters, options) => {
+const search = async (filters, options) => {
   const query = knex('archetypes')
     .select('archetypes.*')
     .leftJoin('decks', 'decks.archetypeId', '=', 'archetypes.id')
@@ -110,5 +108,5 @@ module.exports = {
   getById,
   update,
   del,
-  query,
+  search,
 };

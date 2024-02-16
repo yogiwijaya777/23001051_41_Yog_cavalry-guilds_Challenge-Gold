@@ -1,24 +1,21 @@
-const { userService, archetypeService } = require('../services');
 const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
 const knex = require('../db/knex');
 
 const isDeckExist = async ({ deckId, user }) => {
+  const query = knex('decks');
+
   if (deckId && user) {
-    const isDeckExist = await knex('decks').where({ id: deckId, userId: user.id }).first();
-
-    if (!isDeckExist) {
-      throw new ApiError(httpStatus.NOT_FOUND, 'Deck is not exist');
-    }
+    query.where({ id: deckId, userId: user.id }).first();
   } else if (deckId) {
-    const isDeckExist = await knex('decks').where({ id: deckId }).first();
-
-    if (!isDeckExist) {
-      throw new ApiError(httpStatus.NOT_FOUND, 'Deck is not exist');
-    }
+    query.where({ id: deckId }).first();
   }
 
-  return;
+  const result = await query;
+
+  if (!result) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Deck is not exist');
+  }
 };
 
 const checkExist = async ({ userId, archetypeId }) => {
@@ -37,8 +34,6 @@ const checkExist = async ({ userId, archetypeId }) => {
       throw new ApiError(httpStatus.NOT_FOUND, 'Archetype are not exist');
     }
   }
-
-  return;
 };
 
 const create = async (user, deck) => {
@@ -137,7 +132,7 @@ const getByUser = async (userId, filters, options) => {
   return {
     decks,
     meta: {
-      currentPage: 1,
+      currentPage: page,
       totalPage: Math.ceil(count / limit),
       totalDecks: +count,
     },
@@ -190,7 +185,7 @@ const getDecksByArchetype = async (archetypeId, filters, options) => {
   };
 };
 
-const query = async (filters, options) => {
+const search = async (filters, options) => {
   const query = knex('decks')
     .join('users', 'decks.userId', '=', 'users.id')
     .join('archetypes', 'decks.archetypeId', '=', 'archetypes.id')
@@ -228,7 +223,7 @@ const query = async (filters, options) => {
   return {
     decks,
     meta: {
-      currentPage: 1,
+      currentPage: page,
       totalPage: Math.ceil(count / limit),
       totalDecks: +count,
     },
@@ -242,5 +237,5 @@ module.exports = {
   del,
   getByUser,
   getDecksByArchetype,
-  query,
+  search,
 };

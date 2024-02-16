@@ -4,8 +4,10 @@ const userRoute = require('./user.route');
 const archetypeRoute = require('./archetype.route');
 const deckRoute = require('./deck.route');
 const followRoute = require('./follow.route');
+const favoriteDeckRoute = require('./favoriteDeck.route');
+
 // const docsRoute = require('./docs.route');
-const config = require('../../configs/config');
+// const config = require('../../configs/config');
 
 const router = express.Router();
 
@@ -29,6 +31,10 @@ const defaultRoutes = [
   {
     path: '/follows',
     route: followRoute,
+  },
+  {
+    path: '/favorite-decks',
+    route: favoriteDeckRoute,
   },
 ];
 
