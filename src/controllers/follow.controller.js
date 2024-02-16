@@ -30,7 +30,19 @@ const del = catchAsync(async (req, res) => {
   });
 });
 
+const getFollowers = catchAsync(async (req, res) => {
+  const results = await followService.getFollowers(req.params.userId);
+
+  res.status(httpStatus.OK).json({
+    status: httpStatus.OK,
+    message: 'Get Followers Success',
+    data: results.followers,
+    meta: results.meta,
+  });
+});
+
 module.exports = {
   create,
   del,
+  getFollowers,
 };

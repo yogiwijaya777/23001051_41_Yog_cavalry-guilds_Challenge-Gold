@@ -10,11 +10,18 @@ const create = {
 
 const del = {
   params: Joi.object().keys({
-    followId: Joi.required().custom(objectId),
+    followId: Joi.required().custom(objectId).required(),
+  }),
+};
+
+const getFollowers = {
+  params: Joi.object().keys({
+    userId: Joi.string().custom(objectId).required(),
   }),
 };
 
 module.exports = {
   create,
   del,
+  getFollowers,
 };
