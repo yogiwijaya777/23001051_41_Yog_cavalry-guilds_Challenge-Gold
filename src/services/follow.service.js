@@ -25,15 +25,20 @@ const checkExist = async ({ doubleCheck, followerId, followingId }) => {
   return;
 };
 
-const create = async (body) => {
+const create = async (user, body) => {
+  const data = {
+    followerId: user.id,
+    followingId: body.followingId,
+  };
+
   // Check exist follow
-  const isFollowExist = await knex('follows').where(body).first();
+  const isFollowExist = await knex('follows').where(data).first();
 
   if (isFollowExist) {
     throw new ApiError(httpStatus.CONFLICT, 'Follow already exist');
   }
 
-  const createdFollow = await knex('follows').insert(body, '*');
+  const createdFollow = await knex('follows').insert(data, '*');
 
   const [resultObj] = createdFollow;
 
