@@ -42,7 +42,7 @@ const del = catchAsync(async (req, res) => {
   });
 });
 
-const query = catchAsync(async (req, res) => {
+const search = catchAsync(async (req, res) => {
   const { name, page, limit, sort } = req.query;
   const filters = {
     name,
@@ -55,7 +55,7 @@ const query = catchAsync(async (req, res) => {
   };
   options.skip = (options.page - 1) * options.limit;
 
-  const results = await archetypeService.query(filters, options);
+  const results = await archetypeService.search(filters, options);
 
   res.status(httpStatus.OK).json({
     status: httpStatus.OK,
@@ -70,5 +70,5 @@ module.exports = {
   getById,
   update,
   del,
-  query,
+  search,
 };

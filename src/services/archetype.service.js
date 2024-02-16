@@ -59,7 +59,7 @@ const del = async (archetypeId) => {
   await knex('archetypes').delete().where({ id: archetypeId });
 };
 
-const query = async (filters, options) => {
+const search = async (filters, options) => {
   const query = knex('archetypes')
     .select('archetypes.*')
     .leftJoin('decks', 'decks.archetypeId', '=', 'archetypes.id')
@@ -110,5 +110,5 @@ module.exports = {
   getById,
   update,
   del,
-  query,
+  search,
 };

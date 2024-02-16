@@ -42,7 +42,7 @@ const del = async (id) => {
   await knex('users').delete().where({ id });
 };
 
-const queryUsers = async (filters, options) => {
+const search = async (filters, options) => {
   const query = knex('users').select(['id', 'name', 'email', 'createdAt']);
 
   const { name, role } = filters;
@@ -88,7 +88,7 @@ const queryUsers = async (filters, options) => {
 
 module.exports = {
   create,
-  queryUsers,
+  search,
   getByEmail,
   getById,
   update,

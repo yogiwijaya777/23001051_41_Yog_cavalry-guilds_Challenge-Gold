@@ -7,7 +7,7 @@ const favoriteDeckController = require('../../controllers/favoriteDeck.controlle
 
 const router = express.Router();
 
-router.route('/').post(auth(), validate(deckValidation.create), deckController.create).get(auth(), deckController.query);
+router.route('/').post(auth(), validate(deckValidation.create), deckController.create).get(auth(), deckController.search);
 
 router
   .route('/:deckId')

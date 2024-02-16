@@ -21,7 +21,7 @@ const create = catchAsync(async (req, res) => {
   });
 });
 
-const queryUsers = catchAsync(async (req, res) => {
+const search = catchAsync(async (req, res) => {
   const { name, role, page, limit, sort } = req.query;
 
   const filters = {
@@ -37,7 +37,7 @@ const queryUsers = catchAsync(async (req, res) => {
   };
   options.skip = (options.page - 1) * options.limit;
 
-  const result = await userService.queryUsers(filters, options);
+  const result = await userService.search(filters, options);
 
   res.status(httpStatus.OK).json({
     status: httpStatus.OK,
@@ -78,7 +78,7 @@ const del = catchAsync(async (req, res) => {
 
 module.exports = {
   create,
-  queryUsers,
+  search,
   getById,
   update,
   del,

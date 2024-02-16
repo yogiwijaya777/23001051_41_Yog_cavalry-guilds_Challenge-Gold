@@ -190,7 +190,7 @@ const getDecksByArchetype = async (archetypeId, filters, options) => {
   };
 };
 
-const query = async (filters, options) => {
+const search = async (filters, options) => {
   const query = knex('decks')
     .join('users', 'decks.userId', '=', 'users.id')
     .join('archetypes', 'decks.archetypeId', '=', 'archetypes.id')
@@ -242,5 +242,5 @@ module.exports = {
   del,
   getByUser,
   getDecksByArchetype,
-  query,
+  search,
 };

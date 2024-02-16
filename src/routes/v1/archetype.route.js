@@ -10,7 +10,7 @@ const router = express.Router();
 router
   .route('/')
   .post(auth('manageArchetypes'), validate(archetypeValidation.create), archetypeController.create)
-  .get(auth(), archetypeController.query);
+  .get(auth(), archetypeController.search);
 
 router
   .route('/:archetypeId')
