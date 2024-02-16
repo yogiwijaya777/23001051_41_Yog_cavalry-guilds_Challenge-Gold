@@ -21,5 +21,6 @@ router
 router.route('/:userId/decks').get(auth(), validate(deckValidation.getByUser), deckController.getByUser);
 
 router.route('/:userId/followers').get(auth(), validate(followValidation.getFollowers), followController.getFollowers);
+router.route('/:userId/followings').get(auth(), validate(followValidation.getFollowings), followController.getFollowings);
 
 module.exports = router;

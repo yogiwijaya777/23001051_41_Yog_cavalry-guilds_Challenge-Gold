@@ -19,9 +19,15 @@ const getFollowers = {
     userId: Joi.string().custom(objectId).required(),
   }),
 };
+const getFollowings = {
+  params: Joi.object().keys({
+    userId: Joi.string().custom(objectId).required(),
+  }),
+};
 
 module.exports = {
   create,
   del,
   getFollowers,
+  getFollowings,
 };

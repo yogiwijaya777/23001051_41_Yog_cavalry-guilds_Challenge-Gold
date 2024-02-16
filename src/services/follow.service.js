@@ -61,9 +61,25 @@ const getFollowers = async (userId) => {
     },
   };
 };
+const getFollowings = async (userId) => {
+  const followings = await knex('follows').where({ followerId: userId });
+
+  const { totalFollowings } = await knex('follows')
+    .count('id', { as: 'totalFollowings' })
+    .where({ followerId: userId })
+    .first();
+
+  return {
+    followings,
+    meta: {
+      totalFollowings,
+    },
+  };
+};
 
 module.exports = {
   create,
   del,
   getFollowers,
+  getFollowings,
 };

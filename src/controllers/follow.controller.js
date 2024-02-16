@@ -40,9 +40,20 @@ const getFollowers = catchAsync(async (req, res) => {
     meta: results.meta,
   });
 });
+const getFollowings = catchAsync(async (req, res) => {
+  const results = await followService.getFollowings(req.params.userId);
+
+  res.status(httpStatus.OK).json({
+    status: httpStatus.OK,
+    message: 'Get Followings Success',
+    data: results.followings,
+    meta: results.meta,
+  });
+});
 
 module.exports = {
   create,
   del,
   getFollowers,
+  getFollowings,
 };
