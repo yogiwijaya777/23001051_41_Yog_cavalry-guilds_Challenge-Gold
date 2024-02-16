@@ -43,7 +43,7 @@ const del = async (user, id) => {
   await knex('favoriteDecks').delete().where({ id, userId: user.id });
 };
 
-const getFavoriteDecksByUser = async (userId) => {
+const getFavoritedDecksByUser = async (userId) => {
   // Show Deck Name, Archetype Name
   const favoriteDecks = await knex('favoriteDecks')
     .join('decks', 'favoriteDecks.deckId', '=', 'decks.id')
@@ -60,8 +60,24 @@ const getFavoriteDecksByUser = async (userId) => {
   return { favoriteDecks, meta: { totalFavoritedDecks } };
 };
 
+const getFollowersDeckByDeck = async (deckId) => {
+  const followerDecks = await knex('favoriteDecks')
+    .join('decks', 'favoriteDecks.deckId', '=', 'decks.id')
+    .join('users', 'favoriteDecks.userId', '=', 'users.id')
+    .select('users.name as user', 'users.id as userId')
+    .where('favoriteDecks.deckId', deckId);
+
+  const { totalFollowersDeck } = await knex('favoriteDecks')
+    .count('id', { as: 'totalFollowersDeck' })
+    .where({ deckId })
+    .first();
+
+  return { followerDecks, meta: { totalFollowersDeck } };
+};
+
 module.exports = {
   create,
   del,
-  getFavoriteDecksByUser,
+  getFavoritedDecksByUser,
+  getFollowersDeckByDeck,
 };

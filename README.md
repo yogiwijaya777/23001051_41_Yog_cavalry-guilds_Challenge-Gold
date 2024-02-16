@@ -46,4 +46,4 @@ API Specification for Cavalry Guilds
    - Create Favorite Deck: `POST /v1/favorite-decks`
    - Delete Favorite Deck: `DELETE /v1/favorite-decks/{favoriteDecksId}`
    - Get Favorite Decks by User: `GET /v1/users/{userId}/favorite-decks`
-   - Get Favorited Deck by Deck `GET v1/decks/{deckId}/favorite-decks`
+   - Get Followers Deck by Deck `GET v1/decks/{deckId}/followers`

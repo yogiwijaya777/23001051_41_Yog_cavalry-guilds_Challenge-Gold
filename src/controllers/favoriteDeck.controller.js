@@ -21,13 +21,24 @@ const del = catchAsync(async (req, res) => {
   });
 });
 
-const getFavoriteDecksByUser = catchAsync(async (req, res) => {
-  const results = await favoriteDeckService.getFavoriteDecksByUser(req.params.userId);
+const getFavoritedDecksByUser = catchAsync(async (req, res) => {
+  const results = await favoriteDeckService.getFavoritedDecksByUser(req.params.userId);
 
   res.status(httpStatus.OK).json({
     status: httpStatus.OK,
-    message: 'Get Favorite Decks By User Success',
+    message: 'Get Favorited Decks By User Success',
     data: results.favoriteDecks,
+    meta: results.meta,
+  });
+});
+
+const getFollowersDeckByDeck = catchAsync(async (req, res) => {
+  const results = await favoriteDeckService.getFollowersDeckByDeck(req.params.deckId);
+
+  res.status(httpStatus.OK).json({
+    status: httpStatus.OK,
+    message: 'Get Followers Deck By Deck Success',
+    data: results.followerDecks,
     meta: results.meta,
   });
 });
@@ -35,5 +46,6 @@ const getFavoriteDecksByUser = catchAsync(async (req, res) => {
 module.exports = {
   create,
   del,
-  getFavoriteDecksByUser,
+  getFavoritedDecksByUser,
+  getFollowersDeckByDeck,
 };

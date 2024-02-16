@@ -13,14 +13,20 @@ const del = {
   }),
 };
 
-const getFavoriteDecksByUser = {
+const getFavoritedDecksByUser = {
   params: Joi.object().keys({
     userId: Joi.string().custom(objectId).required(),
+  }),
+};
+const getFollowersDeckByDeck = {
+  params: Joi.object().keys({
+    deckId: Joi.string().custom(objectId).required(),
   }),
 };
 
 module.exports = {
   create,
   del,
-  getFavoriteDecksByUser,
+  getFavoritedDecksByUser,
+  getFollowersDeckByDeck,
 };

@@ -25,6 +25,6 @@ router.route('/:userId/followers').get(auth(), validate(followValidation.getFoll
 router.route('/:userId/followings').get(auth(), validate(followValidation.getFollowings), followController.getFollowings);
 router
   .route('/:userId/favorite-decks')
-  .get(auth(), validate(favoriteDeckValidation.getFavoriteDecksByUser), favoriteDeckController.getFavoriteDecksByUser);
+  .get(auth(), validate(favoriteDeckValidation.getFavoritedDecksByUser), favoriteDeckController.getFavoritedDecksByUser);
 
 module.exports = router;
