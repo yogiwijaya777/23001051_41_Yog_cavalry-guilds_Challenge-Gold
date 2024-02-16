@@ -59,7 +59,6 @@ const saveToken = async (token, userId, expires, type, blacklisted = false) => {
 const verifyToken = async (token, type) => {
   const payload = jwt.verify(token, config.jwt.secret);
   const tokenDoc = await knex('tokens').where({ token, type, userId: payload.sub, blacklisted: false }).first();
-
   if (!tokenDoc) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Token not found');
   }
