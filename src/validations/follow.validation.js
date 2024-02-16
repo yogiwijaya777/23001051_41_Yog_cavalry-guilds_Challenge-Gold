@@ -8,6 +8,13 @@ const create = {
   }),
 };
 
+const del = {
+  params: Joi.object().keys({
+    followId: Joi.required().custom(objectId),
+  }),
+};
+
 module.exports = {
   create,
+  del,
 };

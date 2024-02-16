@@ -21,6 +21,16 @@ const create = catchAsync(async (req, res) => {
   });
 });
 
+const del = catchAsync(async (req, res) => {
+  await followService.del(req.user, req.params.followId);
+
+  res.status(httpStatus.OK).json({
+    status: httpStatus.OK,
+    message: 'Delete Follow Success',
+  });
+});
+
 module.exports = {
   create,
+  del,
 };
