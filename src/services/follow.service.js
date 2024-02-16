@@ -52,7 +52,10 @@ const del = async (user, id) => {
 };
 
 const getFollowers = async (userId) => {
-  const followers = await knex('follows').where({ followingId: userId });
+  const followers = await knex('follows')
+    .join('users', 'follows.followerId', '=', 'users.id')
+    .select('users.id', 'users.name')
+    .where({ followingId: userId });
 
   const { totalFollowers } = await knex('follows')
     .count('id', { as: 'totalFollowers' })
@@ -67,7 +70,10 @@ const getFollowers = async (userId) => {
   };
 };
 const getFollowings = async (userId) => {
-  const followings = await knex('follows').where({ followerId: userId });
+  const followings = await knex('follows')
+    .join('users', 'follows.followingId', '=', 'users.id')
+    .select('users.id', 'users.name')
+    .where({ followerId: userId });
 
   const { totalFollowings } = await knex('follows')
     .count('id', { as: 'totalFollowings' })

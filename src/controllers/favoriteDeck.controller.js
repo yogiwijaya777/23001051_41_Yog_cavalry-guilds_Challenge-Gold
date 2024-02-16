@@ -12,6 +12,27 @@ const create = catchAsync(async (req, res) => {
   });
 });
 
+const del = catchAsync(async (req, res) => {
+  await favoriteDeckService.del(req.user, req.params.favoriteDeckId);
+
+  res.status(httpStatus.OK).json({
+    status: httpStatus.OK,
+    message: 'Delete Favorite Decks Success',
+  });
+});
+
+const getFavoriteDecksByUser = catchAsync(async (req, res) => {
+  const favoriteDecks = await favoriteDeckService.getFavoriteDecksByUser(req.params.userId);
+
+  res.status(httpStatus.OK).json({
+    status: httpStatus.OK,
+    message: 'Get Favorite Decks By User Success',
+    data: favoriteDecks,
+  });
+});
+
 module.exports = {
   create,
+  del,
+  getFavoriteDecksByUser,
 };
