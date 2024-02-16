@@ -49,10 +49,6 @@ const del = async (user, id) => {
 const getFollowers = async (userId) => {
   const followers = await knex('follows').where({ followingId: userId });
 
-  if (!followers) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Followers not found');
-  }
-
   const { totalFollowers } = await knex('follows')
     .count('id', { as: 'totalFollowers' })
     .where({ followingId: userId })
