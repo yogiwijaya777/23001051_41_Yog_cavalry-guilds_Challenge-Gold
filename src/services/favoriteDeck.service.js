@@ -45,7 +45,12 @@ const del = async (user, id) => {
 
 const getFavoriteDecksByUser = async (userId) => {
   // Show Deck Name, Archetype Name
-  const favoriteDecks = await knex('favoriteDecks').where({ userId });
+  const favoriteDecks = await knex('favoriteDecks')
+    .join('decks', 'favoriteDecks.deckId', '=', 'decks.id')
+    .join('archetypes', 'decks.archetypeId', '=', 'archetypes.id')
+    .join('users', 'decks.userId', '=', 'users.id')
+    .select('decks.id as deckId', 'decks.name as deck', 'archetypes.name as archetype', 'users.name as user')
+    .where('favoriteDecks.userId', userId);
 
   const { totalFavoritedDecks } = await knex('favoriteDecks')
     .count('id', { as: 'totalFavoritedDecks' })

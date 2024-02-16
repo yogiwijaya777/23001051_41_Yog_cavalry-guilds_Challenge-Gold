@@ -22,12 +22,13 @@ const del = catchAsync(async (req, res) => {
 });
 
 const getFavoriteDecksByUser = catchAsync(async (req, res) => {
-  const favoriteDecks = await favoriteDeckService.getFavoriteDecksByUser(req.params.userId);
+  const results = await favoriteDeckService.getFavoriteDecksByUser(req.params.userId);
 
   res.status(httpStatus.OK).json({
     status: httpStatus.OK,
     message: 'Get Favorite Decks By User Success',
-    data: favoriteDecks,
+    data: results.favoriteDecks,
+    meta: results.meta,
   });
 });
 
