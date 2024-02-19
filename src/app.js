@@ -1,6 +1,7 @@
 const express = require('express');
 const helmet = require('helmet');
 const xss = require('xss-clean');
+const path = require('path');
 const compression = require('compression');
 const cors = require('cors');
 const passport = require('passport');
@@ -21,6 +22,9 @@ if (config.env !== 'test') {
   app.use(morgan.successHandler);
   app.use(morgan.errorHandler);
 }
+
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, '..', 'views'));
 
 // set security HTTP headers
 app.use(helmet());
@@ -49,7 +53,7 @@ if (config.env === 'production') {
 }
 
 app.get('/', (req, res) => {
-  res.send('Hello World');
+  res.render('index', { foo: 'Homepage' });
 });
 
 // v1 api routes
