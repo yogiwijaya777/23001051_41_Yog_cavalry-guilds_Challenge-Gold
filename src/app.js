@@ -53,7 +53,7 @@ if (config.env === 'production') {
 }
 
 app.get('/', (req, res) => {
-  res.render('index', { foo: 'Homepage' });
+  res.render('index', { name: 'cavalry-guilds' });
 });
 
 // v1 api routes
