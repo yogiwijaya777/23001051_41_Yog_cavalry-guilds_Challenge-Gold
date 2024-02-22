@@ -21,6 +21,8 @@ const create = catchAsync(async (req, res) => {
   });
 });
 
+// localhost:3000/register {without /api/auth}
+
 const search = catchAsync(async (req, res) => {
   const { name, role, page, limit, sort } = req.query;
 
