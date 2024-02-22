@@ -12,7 +12,7 @@ const config = require('./configs/config');
 const morgan = require('./configs/morgan');
 const { jwtStrategy } = require('./configs/passport');
 const { authLimiter } = require('./middlewares/rateLimiter');
-const routes = require('./routes/v1');
+const apiRoutes = require('./routes/api-v1');
 const { errorConverter, errorHandler } = require('./middlewares/error');
 const ApiError = require('./utils/ApiError');
 
@@ -57,7 +57,7 @@ app.get('/', (req, res) => {
 });
 
 // v1 api routes
-app.use('/v1', routes);
+app.use('/v1', apiRoutes);
 
 if (config.env === 'development') {
   const swaggerDocument = YAML.load('./cavalry-guilds-docs.yaml');
