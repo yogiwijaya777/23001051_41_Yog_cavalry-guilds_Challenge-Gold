@@ -12,7 +12,8 @@ const config = require('./configs/config');
 const morgan = require('./configs/morgan');
 const { jwtStrategy } = require('./configs/passport');
 const { authLimiter } = require('./middlewares/rateLimiter');
-const apiRoutes = require('./routes/api-v1');
+const apiRoutes = require('./routes/api-v1/index');
+const routes = require('./routes/production/index');
 const { errorConverter, errorHandler } = require('./middlewares/error');
 const ApiError = require('./utils/ApiError');
 
@@ -23,7 +24,7 @@ if (config.env !== 'test') {
   app.use(morgan.errorHandler);
 }
 
-app.set('view engine', 'ejs');
+app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, '..', 'views'));
 
 // set security HTTP headers
@@ -58,6 +59,7 @@ app.get('/', (req, res) => {
 
 // v1 api routes
 app.use('/v1', apiRoutes);
+app.use('/', routes);
 
 if (config.env === 'development') {
   const swaggerDocument = YAML.load('./cavalry-guilds-docs.yaml');
