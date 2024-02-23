@@ -24,8 +24,10 @@ if (config.env !== 'test') {
   app.use(morgan.errorHandler);
 }
 
-app.set('view engine', 'hbs');
+// set views
+app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, '..', 'views'));
+app.use(express.static(path.join(__dirname, '..', 'public')));
 
 // set security HTTP headers
 app.use(helmet());
@@ -54,11 +56,13 @@ if (config.env === 'production') {
 }
 
 app.get('/', (req, res) => {
-  res.render('index', { name: 'cavalry-guilds' });
+  res.send('<h1>Cavalry Guilds</h1>');
 });
 
 // v1 api routes
 app.use('/v1', apiRoutes);
+
+// production routes
 app.use('/', routes);
 
 if (config.env === 'development') {
