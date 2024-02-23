@@ -1,7 +1,7 @@
 const httpStatus = require('http-status');
-const { followService } = require('../services');
-const catchAsync = require('../utils/catchAsync');
-const ApiError = require('../utils/ApiError');
+const { followService } = require('../../services');
+const catchAsync = require('../../utils/catchAsync');
+const ApiError = require('../../utils/ApiError');
 
 const create = catchAsync(async (req, res) => {
   if (req.user.id === req.body.followingId) {

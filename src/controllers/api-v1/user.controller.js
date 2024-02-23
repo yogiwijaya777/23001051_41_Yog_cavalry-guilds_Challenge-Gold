@@ -1,7 +1,7 @@
 const httpStatus = require('http-status');
-const { userService, tokenService } = require('../services');
-const catchAsync = require('../utils/catchAsync');
-const ApiError = require('../utils/ApiError');
+const { userService, tokenService } = require('../../services');
+const catchAsync = require('../../utils/catchAsync');
+const ApiError = require('../../utils/ApiError');
 
 const create = catchAsync(async (req, res) => {
   const existingEmail = await userService.getByEmail(req.body.email);

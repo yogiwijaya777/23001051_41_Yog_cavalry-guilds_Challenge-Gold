@@ -2,8 +2,8 @@ const express = require('express');
 const auth = require('../../middlewares/auth');
 const validate = require('../../middlewares/validate');
 const { deckValidation, favoriteDeckValidation } = require('../../validations');
-const deckController = require('../../controllers/deck.controller');
-const favoriteDeckController = require('../../controllers/favoriteDeck.controller');
+const deckController = require('../../controllers/api-v1/deck.controller');
+const favoriteDeckController = require('../../controllers/api-v1/favoriteDeck.controller');
 
 const router = express.Router();
 
