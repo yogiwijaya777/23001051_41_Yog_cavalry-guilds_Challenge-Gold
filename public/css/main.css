@@ -1,0 +1,32 @@
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav--cavalry {
+  display: flex;
+  align-items: center;
+}
+
+.nav--user {
+  display: flex;
+  align-items: center;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+img {
+  max-width: 100px;
+  max-height: 100px;
+}

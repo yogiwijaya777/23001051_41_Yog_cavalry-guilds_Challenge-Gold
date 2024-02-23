@@ -56,7 +56,7 @@ if (config.env === 'production') {
 }
 
 app.get('/', (req, res) => {
-  res.send('<h1>Cavalry Guilds</h1>');
+  res.render('base', { slogan: 'The Greate One' });
 });
 
 // v1 api routes
