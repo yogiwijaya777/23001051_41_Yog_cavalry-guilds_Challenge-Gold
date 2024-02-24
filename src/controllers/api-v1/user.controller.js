@@ -14,6 +14,8 @@ const create = catchAsync(async (req, res) => {
 
   const tokens = await tokenService.generateAuthTokens(userCreated);
 
+  userCreated.password = undefined;
+
   res.status(httpStatus.CREATED).json({
     status: httpStatus.CREATED,
     message: 'Register Success',

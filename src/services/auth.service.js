@@ -19,6 +19,8 @@ const loginUserWithEmailAndPassword = async (email, password) => {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect email or password');
   }
 
+  delete user.password;
+
   return user;
 };
 
