@@ -1,5 +1,6 @@
 const httpStatus = require('http-status');
 const { userService, tokenService, authService } = require('../../services');
+const config = require('../../configs/config');
 const catchAsync = require('../../utils/catchAsync');
 const ApiError = require('../../utils/ApiError');
 
@@ -13,6 +14,14 @@ const register = catchAsync(async (req, res) => {
   const userCreated = await userService.create(req.body);
 
   const tokens = await tokenService.generateAuthTokens(userCreated);
+
+  const cookieOptions = {
+    expires: new Date(Date.now() + config.jwt.accessExpirationMinutes * 60 * 1000),
+    httpOnly: true,
+  };
+  if (config.env === 'production') cookieOptions.secure = true;
+
+  res.cookie('jwt', tokens.access.token, cookieOptions);
 
   res.status(httpStatus.CREATED).json({
     status: httpStatus.CREATED,

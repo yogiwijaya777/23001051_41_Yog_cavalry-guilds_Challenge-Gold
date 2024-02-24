@@ -1,4 +1,4 @@
-const register = async (name, email, password) => {
+export const register = async (name, email, password) => {
   const res = await fetch('/v1/auth/register', {
     method: 'POST',
     headers: {
@@ -18,13 +18,3 @@ const register = async (name, email, password) => {
     alert(data.message);
   }
 };
-
-document.querySelector('.form--register').addEventListener('submit', (e) => {
-  e.preventDefault();
-
-  const name = document.getElementById('name').value;
-  const email = document.getElementById('email').value;
-  const password = document.getElementById('password').value;
-
-  register(name, email, password);
-});
