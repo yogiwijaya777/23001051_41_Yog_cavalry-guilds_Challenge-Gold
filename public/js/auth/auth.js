@@ -7,8 +7,6 @@ const register = async (name, email, password) => {
     body: JSON.stringify({ name, email, password }),
   });
 
-  console.log(res);
-
   const data = await res.json();
 
   if (data.message === 'Register Success') {
@@ -21,7 +19,7 @@ const register = async (name, email, password) => {
   }
 };
 
-document.querySelector('.form').addEventListener('submit', (e) => {
+document.querySelector('.form--register').addEventListener('submit', (e) => {
   e.preventDefault();
 
   const name = document.getElementById('name').value;
