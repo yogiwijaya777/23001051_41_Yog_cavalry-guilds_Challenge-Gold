@@ -9,6 +9,7 @@ export const register = async (name, email, password) => {
 
   const data = await res.json();
 
+  console.log(data);
   if (data.message === 'Register Success') {
     alert('Registered ');
     window.setTimeout(() => {
