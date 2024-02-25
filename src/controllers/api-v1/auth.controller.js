@@ -51,15 +51,16 @@ const login = catchAsync(async (req, res) => {
 });
 
 const logout = catchAsync(async (req, res) => {
-  await authService.logout(req.body.refreshToken);
+  await authService.logout(req.cookies.tokens.refresh.token);
 
   res.clearCookie('tokens');
+  req.user = null;
 
-  res.status(httpStatus.NO_CONTENT).json();
+  res.status(httpStatus.OK).send();
 });
 
 const refreshTokens = catchAsync(async (req, res) => {
-  const tokens = await authService.refreshAuth(req.body.refreshToken);
+  const tokens = await authService.refreshAuth(req.cookies.tokens.refresh.token);
   res.send({ ...tokens });
 });
 

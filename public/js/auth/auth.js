@@ -39,3 +39,14 @@ export const login = async (email, password) => {
     location.assign('/');
   }, 1500);
 };
+
+export const logout = async () => {
+  const res = await fetch('/v1/auth/logout');
+
+  if (!res.ok) {
+    return showAlert('error', 'Please try again');
+  }
+
+  showAlert('success', 'Logout Success');
+  location.reload(true);
+};

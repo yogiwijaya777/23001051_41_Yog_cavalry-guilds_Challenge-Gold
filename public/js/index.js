@@ -1,7 +1,8 @@
-import { register, login } from './auth/auth.js';
+import { register, login, logout } from './auth/auth.js';
 
 const registerForm = document.querySelector('.form--register');
 const loginForm = document.querySelector('.form--login');
+const logoutButton = document.querySelector('.nav__el--logout');
 
 if (registerForm) {
   registerForm.addEventListener('submit', (e) => {
@@ -25,3 +26,5 @@ if (loginForm) {
     login(email, password);
   });
 }
+
+if (logoutButton) logoutButton.addEventListener('click', logout);
