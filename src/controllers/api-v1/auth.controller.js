@@ -42,6 +42,7 @@ const login = catchAsync(async (req, res) => {
   if (config.env === 'production') cookieOptions.secure = true;
 
   res.cookie('tokens', tokens, cookieOptions);
+
   res.status(httpStatus.OK).json({
     status: httpStatus.OK,
     message: 'Login Success',
