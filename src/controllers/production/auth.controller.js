@@ -4,4 +4,8 @@ const register = catchAsync(async (req, res) => {
   res.render('auth/register.pug');
 });
 
-module.exports = { register };
+const login = catchAsync(async (req, res) => {
+  res.render('auth/login.pug');
+});
+
+module.exports = { register, login };
