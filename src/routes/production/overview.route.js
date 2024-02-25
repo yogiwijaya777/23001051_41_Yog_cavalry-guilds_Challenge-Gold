@@ -1,9 +1,9 @@
 const express = require('express');
-const auth = require('../../middlewares/auth');
+const isUserLoggedIn = require('../../middlewares/isUserLoggedIn');
 
 const router = express.Router();
 
-router.get('/', auth(), (req, res) => {
+router.get('/', isUserLoggedIn(), (req, res) => {
   res.render('base', { title: 'The Greate One' });
 });
 

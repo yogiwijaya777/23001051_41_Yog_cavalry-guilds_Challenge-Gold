@@ -8,7 +8,7 @@ export const register = async (name, email, password) => {
   });
   const data = await res.json();
 
-  if (data.code !== '201') {
+  if (data.message !== 'Register Success') {
     return alert(data.message);
   }
 
@@ -28,7 +28,7 @@ export const login = async (email, password) => {
   });
   const data = await res.json();
 
-  if (data.code !== '200') {
+  if (data.message !== 'Login Success') {
     return alert(data.message);
   }
 
