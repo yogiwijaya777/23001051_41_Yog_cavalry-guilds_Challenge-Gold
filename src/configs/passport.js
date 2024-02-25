@@ -7,8 +7,8 @@ const ApiError = require('../utils/ApiError');
 
 const cookieExtractor = (req) => {
   let token = null;
-  if (req && req.cookies) {
-    token = req.cookies.jwt;
+  if (req && req.cookies && req.cookies.tokens) {
+    token = req.cookies.tokens.access.token;
   }
   return token;
 };

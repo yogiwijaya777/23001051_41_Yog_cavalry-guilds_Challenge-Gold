@@ -21,7 +21,7 @@ const register = catchAsync(async (req, res) => {
   };
   if (config.env === 'production') cookieOptions.secure = true;
 
-  res.cookie('jwt', tokens.access.token, cookieOptions);
+  res.cookie('tokens', tokens, cookieOptions);
 
   res.status(httpStatus.CREATED).json({
     status: httpStatus.CREATED,
@@ -35,6 +35,13 @@ const login = catchAsync(async (req, res) => {
   const user = await authService.loginUserWithEmailAndPassword(email, password);
   const tokens = await tokenService.generateAuthTokens(user);
 
+  const cookieOptions = {
+    expires: new Date(Date.now() + config.jwt.accessExpirationMinutes * 60 * 1000),
+    httpOnly: true,
+  };
+  if (config.env === 'production') cookieOptions.secure = true;
+
+  res.cookie('tokens', tokens, cookieOptions);
   res.status(httpStatus.OK).json({
     status: httpStatus.OK,
     message: 'Login Success',
