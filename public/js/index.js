@@ -1,3 +1,4 @@
+import '@babel/polyfill';
 import { register, login } from './auth/auth.js';
 
 const registerForm = document.querySelector('.form--register');
