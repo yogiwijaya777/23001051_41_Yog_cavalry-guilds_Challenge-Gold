@@ -6,17 +6,16 @@ export const register = async (name, email, password) => {
     },
     body: JSON.stringify({ name, email, password }),
   });
-
   const data = await res.json();
 
-  if (data.message === 'Register Success') {
-    alert('Registered ');
-    window.setTimeout(() => {
-      location.assign('/');
-    }, 1500);
-  } else {
-    alert(data.message);
+  if (data.code !== '201') {
+    return alert(data.message);
   }
+
+  alert('Register Success');
+  window.setTimeout(() => {
+    location.assign('/');
+  }, 1500);
 };
 
 export const login = async (email, password) => {
@@ -27,15 +26,14 @@ export const login = async (email, password) => {
     },
     body: JSON.stringify({ email, password }),
   });
-
   const data = await res.json();
 
-  if (data.message === 'Login Success') {
-    alert('Login Success');
-    window.setTimeout(() => {
-      location.assign('/');
-    }, 1500);
-  } else {
-    alert(data.message);
+  if (data.code !== '200') {
+    return alert(data.message);
   }
+
+  alert('Login Success');
+  window.setTimeout(() => {
+    location.assign('/');
+  }, 1500);
 };
