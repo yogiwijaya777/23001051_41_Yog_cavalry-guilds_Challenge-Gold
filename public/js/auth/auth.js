@@ -1,3 +1,5 @@
+import { showAlert } from '../alert';
+
 export const register = async (name, email, password) => {
   const res = await fetch('/v1/auth/register', {
     method: 'POST',
@@ -9,10 +11,10 @@ export const register = async (name, email, password) => {
   const data = await res.json();
 
   if (data.message !== 'Register Success') {
-    return alert(data.message);
+    return showAlert('error', data.message);
   }
 
-  alert('Register Success');
+  showAlert('success', 'Register Success');
   window.setTimeout(() => {
     location.assign('/');
   }, 1500);
@@ -29,10 +31,10 @@ export const login = async (email, password) => {
   const data = await res.json();
 
   if (data.message !== 'Login Success') {
-    return alert(data.message);
+    return showAlert('error', data.message);
   }
 
-  alert('Login Success');
+  showAlert('success', 'Login Success');
   window.setTimeout(() => {
     location.assign('/');
   }, 1500);
