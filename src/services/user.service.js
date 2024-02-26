@@ -6,7 +6,7 @@ const ApiError = require('../utils/ApiError');
 const create = async (body) => {
   body.password = bcrypt.hashSync(body.password, 8);
 
-  const user = await knex('users').insert(body, '*');
+  const user = await knex('users').insert(body, ['id', 'name', 'email', 'createdAt']);
 
   const [userObj] = user;
 

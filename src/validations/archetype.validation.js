@@ -29,9 +29,19 @@ const del = {
   }),
 };
 
+const search = {
+  query: Joi.object().keys({
+    name: Joi.string(),
+    sort: Joi.string(),
+    limit: Joi.number().integer(),
+    page: Joi.number().integer(),
+  }),
+};
+
 module.exports = {
   create,
   getById,
   update,
   del,
+  search,
 };

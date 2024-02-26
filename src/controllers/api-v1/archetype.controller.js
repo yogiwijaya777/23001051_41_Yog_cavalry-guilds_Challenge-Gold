@@ -1,6 +1,6 @@
 const httpStatus = require('http-status');
-const { archetypeService } = require('../services');
-const catchAsync = require('../utils/catchAsync');
+const { archetypeService } = require('../../services');
+const catchAsync = require('../../utils/catchAsync');
 
 const create = catchAsync(async (req, res) => {
   const archetypeCreated = await archetypeService.create(req.body);

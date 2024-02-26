@@ -28,8 +28,7 @@ const logout = async (refreshToken) => {
   if (!refreshTokenDoc) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Not found');
   }
-
-  await knex('tokens').delete().where({ id: refreshTokenDoc.id });
+  return knex('tokens').delete().where({ id: refreshTokenDoc.id });
 };
 
 const refreshAuth = async (refreshToken) => {

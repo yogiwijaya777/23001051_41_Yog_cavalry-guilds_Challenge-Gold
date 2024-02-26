@@ -8,11 +8,13 @@ const passport = require('passport');
 const swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
 const httpStatus = require('http-status');
+const cookieParser = require('cookie-parser');
 const config = require('./configs/config');
 const morgan = require('./configs/morgan');
 const { jwtStrategy } = require('./configs/passport');
 const { authLimiter } = require('./middlewares/rateLimiter');
-const routes = require('./routes/v1');
+const apiRoutes = require('./routes/api-v1/index');
+const routes = require('./routes/production/index');
 const { errorConverter, errorHandler } = require('./middlewares/error');
 const ApiError = require('./utils/ApiError');
 
@@ -23,8 +25,10 @@ if (config.env !== 'test') {
   app.use(morgan.errorHandler);
 }
 
-app.set('view engine', 'ejs');
+// set views
+app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, '..', 'views'));
+app.use(express.static(path.join(__dirname, '..', 'public')));
 
 // set security HTTP headers
 app.use(helmet());
@@ -43,6 +47,9 @@ app.use(compression());
 app.use(cors());
 app.options('*', cors());
 
+// parse cookies
+app.use(cookieParser());
+
 // jwt authentication
 app.use(passport.initialize());
 passport.use('jwt', jwtStrategy);
@@ -52,12 +59,11 @@ if (config.env === 'production') {
   app.use('/v1/auth', authLimiter);
 }
 
-app.get('/', (req, res) => {
-  res.render('index', { foo: 'Homepage' });
-});
-
 // v1 api routes
-app.use('/v1', routes);
+app.use('/v1', apiRoutes);
+
+// production routes
+app.use('/', routes);
 
 if (config.env === 'development') {
   const swaggerDocument = YAML.load('./cavalry-guilds-docs.yaml');

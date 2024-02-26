@@ -1,7 +1,7 @@
 const httpStatus = require('http-status');
-const { userService, tokenService } = require('../services');
-const catchAsync = require('../utils/catchAsync');
-const ApiError = require('../utils/ApiError');
+const { userService, tokenService } = require('../../services');
+const catchAsync = require('../../utils/catchAsync');
+const ApiError = require('../../utils/ApiError');
 
 const create = catchAsync(async (req, res) => {
   const existingEmail = await userService.getByEmail(req.body.email);
@@ -14,12 +14,16 @@ const create = catchAsync(async (req, res) => {
 
   const tokens = await tokenService.generateAuthTokens(userCreated);
 
+  userCreated.password = undefined;
+
   res.status(httpStatus.CREATED).json({
     status: httpStatus.CREATED,
     message: 'Register Success',
     data: { userCreated, tokens },
   });
 });
+
+// localhost:3000/register {without /api/auth}
 
 const search = catchAsync(async (req, res) => {
   const { name, role, page, limit, sort } = req.query;
