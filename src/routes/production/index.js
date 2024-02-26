@@ -4,6 +4,7 @@ const router = express.Router();
 
 const overviewRoute = require('./overview.route');
 const authRoute = require('./auth.route');
+const archetypeRoute = require('./archetype.route');
 
 const defaultRoutes = [
   {
@@ -13,6 +14,10 @@ const defaultRoutes = [
   {
     path: '/auth',
     route: authRoute,
+  },
+  {
+    path: '/archetypes',
+    route: archetypeRoute,
   },
 ];
 

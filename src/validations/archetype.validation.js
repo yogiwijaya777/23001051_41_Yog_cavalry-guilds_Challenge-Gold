@@ -29,9 +29,16 @@ const del = {
   }),
 };
 
+const search = {
+  query: Joi.object().keys({
+    name: Joi.string(),
+  }),
+};
+
 module.exports = {
   create,
   getById,
   update,
   del,
+  search,
 };

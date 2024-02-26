@@ -3,8 +3,10 @@ const isUserLoggedIn = require('../../middlewares/isUserLoggedIn');
 
 const router = express.Router();
 
-router.route('/').get(isUserLoggedIn(), (req, res) => {
-  res.render('base', { title: 'The Greate One' });
+router.use(isUserLoggedIn());
+
+router.route('/').get((req, res) => {
+  res.render('archetypes/archetype', { title: 'Archetypes' });
 });
 
 module.exports = router;

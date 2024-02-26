@@ -580,9 +580,11 @@ function hmrAccept(bundle /*: ParcelRequire */ , id /*: string */ ) {
 
 },{}],"f2QDv":[function(require,module,exports) {
 var _authJs = require("./auth/auth.js");
+var _getArchetypesJs = require("./archetypes/get.archetypes.js");
 const registerForm = document.querySelector(".form--register");
 const loginForm = document.querySelector(".form--login");
 const logoutButton = document.querySelector(".nav__el--logout");
+const archetypesRoute = location.pathname === "/archetypes";
 if (registerForm) registerForm.addEventListener("submit", (e)=>{
     e.preventDefault();
     const name = document.getElementById("name").value;
@@ -597,8 +599,10 @@ if (loginForm) loginForm.addEventListener("submit", (e)=>{
     (0, _authJs.login)(email, password);
 });
 if (logoutButton) logoutButton.addEventListener("click", (0, _authJs.logout));
+console.log(archetypesRoute);
+if (archetypesRoute) document.addEventListener("load", (0, _getArchetypesJs.renderArchetypes)());
 
-},{"./auth/auth.js":"fkh3q"}],"fkh3q":[function(require,module,exports) {
+},{"./auth/auth.js":"fkh3q","./archetypes/get.archetypes.js":"7RmHQ"}],"fkh3q":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "register", ()=>register);
@@ -695,6 +699,75 @@ exports.export = function(dest, destName, get) {
     });
 };
 
-},{}]},["14ixo","f2QDv"], "f2QDv", "parcelRequiref988")
+},{}],"7RmHQ":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "renderArchetypes", ()=>renderArchetypes);
+var _alertJs = require("../alert.js");
+const getArchetypes = async (queries)=>{
+    let res;
+    let data;
+    if (queries) {
+        res = await fetch(`/v1/archetypes/?${queries}`, {
+            credentials: "include"
+        });
+        data = await res.json();
+    } else {
+        res = await fetch("/v1/archetypes/", {
+            credentials: "include"
+        });
+        data = await res.json();
+    }
+    if (!res.ok) {
+        (0, _alertJs.showAlert)("error", data.message);
+        if (data.message === "Please authenticate") setTimeout(()=>{
+            location.assign("/auth/login");
+        }, 1500);
+        return;
+    }
+    return data.data;
+};
+const renderArchetypes = async (queries)=>{
+    let archetypes;
+    if (queries) {
+        archetypes = await getArchetypes(queries);
+        if (archetypes.length === 0) {
+            const card = document.createElement("div");
+            card.classList.add("not-found");
+            const notFound = document.createElement("p");
+            notFound.textContent = "No Archetypes Found";
+            card.appendChild(notFound);
+            return;
+        }
+    } else {
+        archetypes = await getArchetypes();
+        console.log(archetypes);
+    }
+    console.log(archetypes);
+    const cardContainer = document.querySelector(".card-container");
+    archetypes.forEach((archetype)=>{
+        const card = document.createElement("div");
+        card.classList.add("card");
+        const cardCover = document.createElement("div");
+        cardCover.classList.add("card-cover");
+        const coverImg = document.createElement("img");
+        coverImg.classList.add("card__cover-img");
+        coverImg.src = `/img/archetypes/${archetype.name}`;
+        coverImg.alt = `${archetype.name} cover`;
+        const nameHeader = document.createElement("h3");
+        nameHeader.classList.add("archetype-name");
+        nameHeader.textContent = archetype.name;
+        const totalDecks = document.createElement("p");
+        totalDecks.classList.add("total-decks");
+        totalDecks.textContent = archetype.totalDecks;
+        cardCover.appendChild(coverImg);
+        card.appendChild(cardCover);
+        card.appendChild(nameHeader);
+        card.appendChild(totalDecks);
+        cardContainer.appendChild(card);
+    });
+};
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","../alert.js":"kxdiQ"}]},["14ixo","f2QDv"], "f2QDv", "parcelRequiref988")
 
 //# sourceMappingURL=index.js.map
