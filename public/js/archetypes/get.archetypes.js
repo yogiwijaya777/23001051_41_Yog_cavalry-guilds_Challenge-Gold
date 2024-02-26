@@ -60,7 +60,11 @@ export const renderArchetypes = async (queries) => {
 
     const coverImg = document.createElement('img');
     coverImg.classList.add('card__cover-img');
-    coverImg.src = `/img/archetypes/${archetype.name}`;
+
+    if (archetype.name.includes(' ')) {
+      archetype.name = archetype.name.split(' ').join('');
+    }
+    coverImg.src = `/img/archetypes/${archetype.name.toLowerCase()}.jpg`;
     coverImg.alt = `${archetype.name} cover`;
 
     const nameHeader = document.createElement('h3');
