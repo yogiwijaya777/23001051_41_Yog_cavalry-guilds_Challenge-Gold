@@ -745,11 +745,7 @@ const renderArchetypes = async (queries)=>{
             card.appendChild(notFound);
             return;
         }
-    } else {
-        archetypes = await getArchetypes();
-        console.log(archetypes);
-    }
-    console.log(archetypes);
+    } else archetypes = await getArchetypes();
     const cardContainer = document.querySelector(".card-container");
     archetypes.forEach((archetype)=>{
         const card = document.createElement("div");

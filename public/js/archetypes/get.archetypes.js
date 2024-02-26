@@ -45,10 +45,8 @@ export const renderArchetypes = async (queries) => {
     }
   } else {
     archetypes = await getArchetypes();
-    console.log(archetypes);
   }
 
-  console.log(archetypes);
   const cardContainer = document.querySelector('.card-container');
 
   archetypes.forEach((archetype) => {
