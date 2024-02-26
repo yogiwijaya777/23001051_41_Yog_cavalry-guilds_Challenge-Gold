@@ -599,8 +599,14 @@ if (loginForm) loginForm.addEventListener("submit", (e)=>{
     (0, _authJs.login)(email, password);
 });
 if (logoutButton) logoutButton.addEventListener("click", (0, _authJs.logout));
-console.log(archetypesRoute);
-if (archetypesRoute) document.addEventListener("load", (0, _getArchetypesJs.renderArchetypes)());
+if (archetypesRoute) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const queries = urlParams.toString();
+    let archetypes;
+    if (queries) archetypes = (0, _getArchetypesJs.renderArchetypes)(queries);
+    else archetypes = (0, _getArchetypesJs.renderArchetypes)();
+    document.addEventListener("load", archetypes);
+}
 
 },{"./auth/auth.js":"fkh3q","./archetypes/get.archetypes.js":"7RmHQ"}],"fkh3q":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");

@@ -31,7 +31,16 @@ if (loginForm) {
 
 if (logoutButton) logoutButton.addEventListener('click', logout);
 
-console.log(archetypesRoute);
 if (archetypesRoute) {
-  document.addEventListener('load', renderArchetypes());
+  const urlParams = new URLSearchParams(window.location.search);
+  const queries = urlParams.toString();
+
+  let archetypes;
+  if (queries) {
+    archetypes = renderArchetypes(queries);
+  } else {
+    archetypes = renderArchetypes();
+  }
+
+  document.addEventListener('load', archetypes);
 }
