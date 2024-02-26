@@ -581,10 +581,18 @@ function hmrAccept(bundle /*: ParcelRequire */ , id /*: string */ ) {
 },{}],"f2QDv":[function(require,module,exports) {
 var _authJs = require("./auth/auth.js");
 var _getArchetypesJs = require("./archetypes/get.archetypes.js");
+// Utils
+function createUuidRegex(keyword) {
+    const regexString = `\\/${keyword}\\/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})`;
+    return new RegExp(regexString);
+}
+// DOM TRIGGER
 const registerForm = document.querySelector(".form--register");
 const loginForm = document.querySelector(".form--login");
 const logoutButton = document.querySelector(".nav__el--logout");
-const archetypesRoute = location.pathname === "/archetypes";
+const archetypesRoute = location.pathname.startsWith("/archetypes");
+const isArchetypeByIdRoute = location.pathname.match(createUuidRegex("archetypes"));
+console.log(archetypesRoute);
 if (registerForm) registerForm.addEventListener("submit", (e)=>{
     e.preventDefault();
     const name = document.getElementById("name").value;
@@ -602,10 +610,15 @@ if (logoutButton) logoutButton.addEventListener("click", (0, _authJs.logout));
 if (archetypesRoute) {
     const urlParams = new URLSearchParams(window.location.search);
     const queries = urlParams.toString();
+    console.log(archetypesRoute);
     let archetypes;
     if (queries) archetypes = (0, _getArchetypesJs.renderArchetypes)(queries);
     else archetypes = (0, _getArchetypesJs.renderArchetypes)();
     document.addEventListener("load", archetypes);
+}
+if (isArchetypeByIdRoute) {
+    const archetypeId = isArchetypeByIdRoute[1];
+    document.addEventListener("load", (0, _getArchetypesJs.renderArchetype)(archetypeId));
 }
 
 },{"./auth/auth.js":"fkh3q","./archetypes/get.archetypes.js":"7RmHQ"}],"fkh3q":[function(require,module,exports) {
@@ -709,7 +722,21 @@ exports.export = function(dest, destName, get) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "renderArchetypes", ()=>renderArchetypes);
+parcelHelpers.export(exports, "renderArchetype", ()=>renderArchetype);
 var _alertJs = require("../alert.js");
+const getArchetype = async (id)=>{
+    const res = await fetch(`/v1/archetypes/${id}`, {
+        credentials: "include"
+    });
+    const data = await res.json();
+    if (!res.ok) {
+        (0, _alertJs.showAlert)("error", data.message);
+        if (data.message === "Please authenticate") setTimeout(()=>{
+            location.assign("/auth/login");
+        }, 1500);
+    }
+    return data.data;
+};
 const getArchetypes = async (queries)=>{
     let res;
     let data;
@@ -734,19 +761,20 @@ const getArchetypes = async (queries)=>{
     return data.data;
 };
 const renderArchetypes = async (queries)=>{
+    const cardContainer = document.querySelector(".archetypes-container");
     let archetypes;
     if (queries) {
         archetypes = await getArchetypes(queries);
-        if (archetypes.length === 0) {
+        if (archetypes.length < 1) {
             const card = document.createElement("div");
             card.classList.add("not-found");
-            const notFound = document.createElement("p");
+            const notFound = document.createElement("h1");
             notFound.textContent = "No Archetypes Found";
             card.appendChild(notFound);
+            cardContainer.appendChild(card);
             return;
         }
     } else archetypes = await getArchetypes();
-    const cardContainer = document.querySelector(".card-container");
     archetypes.forEach((archetype)=>{
         const card = document.createElement("div");
         card.classList.add("card");
@@ -762,12 +790,66 @@ const renderArchetypes = async (queries)=>{
         nameHeader.textContent = archetype.name;
         const totalDecks = document.createElement("p");
         totalDecks.classList.add("total-decks");
-        totalDecks.textContent = archetype.totalDecks;
+        totalDecks.textContent = "Total Decks: " + archetype.totalDecks;
         cardCover.appendChild(coverImg);
         card.appendChild(cardCover);
         card.appendChild(nameHeader);
         card.appendChild(totalDecks);
         cardContainer.appendChild(card);
+        card.addEventListener("click", (e)=>{
+            location.assign(`/archetypes/${archetype.id}`);
+        });
+    });
+};
+const renderArchetype = async (id)=>{
+    const archetype = await getArchetype(id);
+    const archetypeCardContainer = document.querySelector(".archetype-container");
+    const card = document.createElement("div");
+    card.classList.add("card");
+    const cardCover = document.createElement("div");
+    cardCover.classList.add("card-cover");
+    const coverImg = document.createElement("img");
+    coverImg.classList.add("card__cover-img");
+    if (archetype.name.includes(" ")) archetype.name = archetype.name.split(" ").join("");
+    coverImg.src = `/img/archetypes/${archetype.name.toLowerCase()}.jpg`;
+    coverImg.alt = `${archetype.name} cover`;
+    const nameHeader = document.createElement("h1");
+    nameHeader.classList.add("archetype-name");
+    nameHeader.textContent = archetype.name;
+    const totalDecks = document.createElement("p");
+    totalDecks.classList.add("total-decks");
+    totalDecks.textContent = "Total Decks: " + archetype.totalDecks;
+    cardCover.appendChild(coverImg);
+    card.appendChild(cardCover);
+    card.appendChild(nameHeader);
+    card.appendChild(totalDecks);
+    archetypeCardContainer.appendChild(card);
+    const decksCardContainer = document.querySelector(".decks-container");
+    archetype.decks.forEach((deck)=>{
+        const deckCard = document.createElement("div");
+        deckCard.classList.add("card");
+        deckCard.classList.add("decks-card");
+        const deckCover = document.createElement("div");
+        deckCover.classList.add("card-cover");
+        const nameHeader = document.createElement("h3");
+        nameHeader.classList.add("deck-name");
+        nameHeader.textContent = deck.name;
+        const userInfo = document.createElement("p");
+        userInfo.classList.add("user-info");
+        const username = document.createElement("span");
+        username.classList.add("username");
+        username.textContent = deck.username;
+        deckCard.appendChild(deckCover);
+        deckCard.appendChild(nameHeader);
+        userInfo.appendChild(username);
+        deckCard.appendChild(userInfo);
+        decksCardContainer.appendChild(deckCard);
+        nameHeader.addEventListener("click", ()=>{
+            location.assign(`/decks/${deck.id}`);
+        });
+        username.addEventListener("click", ()=>{
+            location.assign(`/users/${deck.userId}`);
+        });
     });
 };
 

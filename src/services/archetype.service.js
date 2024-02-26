@@ -31,13 +31,21 @@ const getById = async (archetypeId) => {
   const archetype = await knex('archetypes')
     .select('archetypes.*')
     .leftJoin('decks', 'decks.archetypeId', '=', 'archetypes.id')
-    .where({ archetypeId })
+    .where({ 'archetypes.id': archetypeId })
     .count('decks.id', { as: 'totalDecks' })
     .groupBy('archetypes.id')
     .first();
 
   if (!archetype) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Archetype not found');
+  }
+
+  if (archetype.totalDecks > 0) {
+    const decks = await knex('decks')
+      .leftJoin('users', 'decks.userId', '=', 'users.id')
+      .where({ archetypeId })
+      .select('decks.*', 'users.name as username', 'users.id as userId');
+    archetype.decks = decks;
   }
 
   return archetype;
