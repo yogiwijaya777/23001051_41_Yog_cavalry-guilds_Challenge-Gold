@@ -43,7 +43,7 @@ const del = async (id) => {
 };
 
 const search = async (filters, options) => {
-  const query = knex('users').select(['id', 'name', 'email', 'createdAt']);
+  const query = knex('users').select(['id', 'name', 'email', 'role', 'createdAt']);
 
   const { name, role } = filters;
   const { page, limit, sort, skip } = options;

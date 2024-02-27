@@ -582,6 +582,7 @@ function hmrAccept(bundle /*: ParcelRequire */ , id /*: string */ ) {
 var _authJs = require("./auth.js");
 var _archetypesJs = require("./archetypes.js");
 var _decksJs = require("./decks.js");
+var _usersJs = require("./users.js");
 // Utils
 function createUuidRegex(keyword) {
     const regexString = `\\/${keyword}\\/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})`;
@@ -598,6 +599,9 @@ const isArchetypeByIdRoute = location.pathname.match(createUuidRegex("archetypes
 // Decks
 const decksRoute = location.pathname === "/decks" || location.pathname === "/decks/";
 const isDeckByIdRoute = location.pathname.match(createUuidRegex("decks"));
+// Users
+const usersRoute = location.pathname === "/users" || location.pathname === "/users/";
+const isUserByIdRoute = location.pathname.match(createUuidRegex("users"));
 if (registerForm) registerForm.addEventListener("submit", (e)=>{
     e.preventDefault();
     const name = document.getElementById("name").value;
@@ -612,8 +616,6 @@ if (loginForm) loginForm.addEventListener("submit", (e)=>{
     (0, _authJs.login)(email, password);
 });
 if (logoutButton) logoutButton.addEventListener("click", (0, _authJs.logout));
-console.log(archetypesRoute);
-console.log(location.pathname);
 if (archetypesRoute) {
     const urlParams = new URLSearchParams(window.location.search);
     const queries = urlParams.toString();
@@ -638,8 +640,16 @@ if (isDeckByIdRoute) {
     const deckId = isDeckByIdRoute[1];
     document.addEventListener("load", (0, _decksJs.renderDeck)(deckId));
 }
+if (usersRoute) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const queries = urlParams.toString();
+    let users;
+    if (queries) users = (0, _usersJs.renderUsers)(queries);
+    else users = (0, _usersJs.renderUsers)();
+    document.addEventListener("load", users);
+}
 
-},{"./auth.js":"fov0Z","./archetypes.js":"jiVwJ","./decks.js":"7dKr1"}],"fov0Z":[function(require,module,exports) {
+},{"./auth.js":"fov0Z","./archetypes.js":"jiVwJ","./decks.js":"7dKr1","./users.js":"9h3E9"}],"fov0Z":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "register", ()=>register);
@@ -1005,6 +1015,78 @@ const renderDeck = async (id)=>{
     });
     username.addEventListener("click", ()=>{
         location.assign(`/users/${deck.userId}`);
+    });
+};
+
+},{"./alert":"kxdiQ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"9h3E9":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "renderUsers", ()=>renderUsers);
+var _alert = require("./alert");
+const getUsers = async (queries)=>{
+    let res;
+    if (queries) res = await fetch(`/v1/users/?${queries}`, {
+        credentials: "include"
+    });
+    else res = await fetch("/v1/users/", {
+        credentials: "include"
+    });
+    const data = await res.json();
+    if (!res.ok) {
+        (0, _alert.showAlert)("error", "Please try again");
+        if (data.message === "Please authenticate") setTimeout(()=>{
+            location.assign("/auth/login");
+        }, 1500);
+    }
+    return data.data;
+};
+const renderUsers = async (queries)=>{
+    const cardContainer = document.querySelector(".users-container");
+    let users;
+    if (queries) {
+        users = await getUsers(queries);
+        if (users.length < 1) {
+            const card = document.createElement("div");
+            card.classList.add("not-found");
+            const notFound = document.createElement("h1");
+            notFound.textContent = "No Users Found";
+            card.appendChild(notFound);
+            cardContainer.appendChild(card);
+            return;
+        }
+    } else users = await getUsers();
+    users.forEach((user)=>{
+        const card = document.createElement("div");
+        card.classList.add("card");
+        const cardCover = document.createElement("div");
+        cardCover.classList.add("card-cover");
+        const coverImg = document.createElement("img");
+        coverImg.classList.add("card__cover-img");
+        const nameHeader = document.createElement("h1");
+        nameHeader.classList.add("user-name");
+        nameHeader.textContent = user.name;
+        if (user.name.includes(" ")) user.name = user.name.split(" ").join("");
+        coverImg.src = `/img/users/${user.name.toLowerCase()}.jpg`;
+        coverImg.alt = `${user.name} cover`;
+        const userEmail = document.createElement("p");
+        userEmail.classList.add("user-email");
+        userEmail.textContent = `Email : ${user.email}`;
+        const userRole = document.createElement("p");
+        userRole.classList.add("user-role");
+        userRole.textContent = `Role : ${user.role}`;
+        const userCreated = document.createElement("p");
+        userCreated.classList.add("user-created");
+        userCreated.textContent = `Created At : ${new Date(user.createdAt).toString()}`;
+        card.appendChild(nameHeader);
+        card.appendChild(userEmail);
+        card.appendChild(userRole);
+        card.appendChild(userCreated);
+        cardCover.appendChild(coverImg);
+        card.appendChild(cardCover);
+        cardContainer.appendChild(card);
+        nameHeader.addEventListener("click", ()=>{
+            location.assign(`/users/${user.id}`);
+        });
     });
 };
 
