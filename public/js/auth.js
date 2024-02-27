@@ -1,4 +1,4 @@
-import { showAlert } from '../alert';
+import { showAlert } from './alert';
 
 export const register = async (name, email, password) => {
   const res = await fetch('/v1/auth/register', {

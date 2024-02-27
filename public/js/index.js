@@ -1,5 +1,5 @@
-import { register, login, logout } from './auth/auth.js';
-import { renderArchetype, renderArchetypes } from './archetypes/get.archetypes.js';
+import { register, login, logout } from './auth.js';
+import { renderArchetype, renderArchetypes } from './archetypes.js';
 
 // Utils
 function createUuidRegex(keyword) {
@@ -12,7 +12,7 @@ const loginForm = document.querySelector('.form--login');
 const logoutButton = document.querySelector('.nav__el--logout');
 const archetypesRoute = location.pathname.startsWith('/archetypes');
 const isArchetypeByIdRoute = location.pathname.match(createUuidRegex('archetypes'));
-console.log(archetypesRoute);
+
 if (registerForm) {
   registerForm.addEventListener('submit', (e) => {
     e.preventDefault();

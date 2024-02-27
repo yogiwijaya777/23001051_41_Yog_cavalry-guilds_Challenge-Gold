@@ -579,8 +579,8 @@ function hmrAccept(bundle /*: ParcelRequire */ , id /*: string */ ) {
 }
 
 },{}],"f2QDv":[function(require,module,exports) {
-var _authJs = require("./auth/auth.js");
-var _getArchetypesJs = require("./archetypes/get.archetypes.js");
+var _authJs = require("./auth.js");
+var _archetypesJs = require("./archetypes.js");
 // Utils
 function createUuidRegex(keyword) {
     const regexString = `\\/${keyword}\\/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})`;
@@ -592,7 +592,6 @@ const loginForm = document.querySelector(".form--login");
 const logoutButton = document.querySelector(".nav__el--logout");
 const archetypesRoute = location.pathname.startsWith("/archetypes");
 const isArchetypeByIdRoute = location.pathname.match(createUuidRegex("archetypes"));
-console.log(archetypesRoute);
 if (registerForm) registerForm.addEventListener("submit", (e)=>{
     e.preventDefault();
     const name = document.getElementById("name").value;
@@ -612,22 +611,22 @@ if (archetypesRoute) {
     const queries = urlParams.toString();
     console.log(archetypesRoute);
     let archetypes;
-    if (queries) archetypes = (0, _getArchetypesJs.renderArchetypes)(queries);
-    else archetypes = (0, _getArchetypesJs.renderArchetypes)();
+    if (queries) archetypes = (0, _archetypesJs.renderArchetypes)(queries);
+    else archetypes = (0, _archetypesJs.renderArchetypes)();
     document.addEventListener("load", archetypes);
 }
 if (isArchetypeByIdRoute) {
     const archetypeId = isArchetypeByIdRoute[1];
-    document.addEventListener("load", (0, _getArchetypesJs.renderArchetype)(archetypeId));
+    document.addEventListener("load", (0, _archetypesJs.renderArchetype)(archetypeId));
 }
 
-},{"./auth/auth.js":"fkh3q","./archetypes/get.archetypes.js":"7RmHQ"}],"fkh3q":[function(require,module,exports) {
+},{"./auth.js":"fov0Z","./archetypes.js":"jiVwJ"}],"fov0Z":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "register", ()=>register);
 parcelHelpers.export(exports, "login", ()=>login);
 parcelHelpers.export(exports, "logout", ()=>logout);
-var _alert = require("../alert");
+var _alert = require("./alert");
 const register = async (name, email, password)=>{
     const res = await fetch("/v1/auth/register", {
         method: "POST",
@@ -672,7 +671,7 @@ const logout = async ()=>{
     location.reload(true);
 };
 
-},{"../alert":"kxdiQ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"kxdiQ":[function(require,module,exports) {
+},{"./alert":"kxdiQ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"kxdiQ":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "hideAlert", ()=>hideAlert);
@@ -718,12 +717,12 @@ exports.export = function(dest, destName, get) {
     });
 };
 
-},{}],"7RmHQ":[function(require,module,exports) {
+},{}],"jiVwJ":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "renderArchetypes", ()=>renderArchetypes);
 parcelHelpers.export(exports, "renderArchetype", ()=>renderArchetype);
-var _alertJs = require("../alert.js");
+var _alertJs = require("./alert.js");
 const getArchetype = async (id)=>{
     const res = await fetch(`/v1/archetypes/${id}`, {
         credentials: "include"
@@ -853,6 +852,6 @@ const renderArchetype = async (id)=>{
     });
 };
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","../alert.js":"kxdiQ"}]},["14ixo","f2QDv"], "f2QDv", "parcelRequiref988")
+},{"./alert.js":"kxdiQ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["14ixo","f2QDv"], "f2QDv", "parcelRequiref988")
 
 //# sourceMappingURL=index.js.map

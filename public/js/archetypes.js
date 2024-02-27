@@ -1,4 +1,4 @@
-import { showAlert } from '../alert.js';
+import { showAlert } from './alert.js';
 
 const getArchetype = async (id) => {
   const res = await fetch(`/v1/archetypes/${id}`, {

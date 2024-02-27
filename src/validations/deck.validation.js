@@ -45,6 +45,15 @@ const getDecksByArchetype = {
     archetypeId: Joi.string().required(),
   }),
 };
+
+const search = {
+  query: Joi.object().keys({
+    name: Joi.string(),
+    sort: Joi.string(),
+    limit: Joi.number(),
+    page: Joi.number(),
+  }),
+};
 module.exports = {
   create,
   getById,
@@ -52,4 +61,5 @@ module.exports = {
   del,
   getByUser,
   getDecksByArchetype,
+  search,
 };
