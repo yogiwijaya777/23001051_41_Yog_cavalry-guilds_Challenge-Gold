@@ -6,6 +6,7 @@ const overviewRoute = require('./overview.route');
 const authRoute = require('./auth.route');
 const archetypeRoute = require('./archetype.route');
 const deckRoute = require('./deck.route');
+const userRoute = require('./user.route');
 
 const defaultRoutes = [
   {
@@ -23,6 +24,10 @@ const defaultRoutes = [
   {
     path: '/decks',
     route: deckRoute,
+  },
+  {
+    path: '/users',
+    route: userRoute,
   },
 ];
 

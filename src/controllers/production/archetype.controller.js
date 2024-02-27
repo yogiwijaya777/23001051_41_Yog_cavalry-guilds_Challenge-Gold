@@ -5,7 +5,7 @@ const getById = catchAsync(async (req, res) => {
 });
 
 const gets = catchAsync(async (req, res) => {
-  res.render('archetypes/archetype', { title: 'Archetypes' });
+  res.render('archetypes/archetype', { title: 'Archetype' });
 });
 
 module.exports = {

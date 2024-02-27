@@ -15,11 +15,11 @@ const loginForm = document.querySelector('.form--login');
 const logoutButton = document.querySelector('.nav__el--logout');
 
 // Archetypes
-const archetypesRoute = location.pathname.name === '/archetypes' || location.pathname.name === '/archetypes/';
+const archetypesRoute = location.pathname === '/archetypes' || location.pathname === '/archetypes/';
 const isArchetypeByIdRoute = location.pathname.match(createUuidRegex('archetypes'));
 
 // Decks
-const decksRoute = location.pathname.name === '/decks' || location.pathname.name === '/decks/';
+const decksRoute = location.pathname === '/decks' || location.pathname === '/decks/';
 const isDeckByIdRoute = location.pathname.match(createUuidRegex('decks'));
 
 if (registerForm) {
@@ -47,6 +47,8 @@ if (loginForm) {
 
 if (logoutButton) logoutButton.addEventListener('click', logout);
 
+console.log(archetypesRoute);
+console.log(location.pathname);
 if (archetypesRoute) {
   const urlParams = new URLSearchParams(window.location.search);
   const queries = urlParams.toString();
