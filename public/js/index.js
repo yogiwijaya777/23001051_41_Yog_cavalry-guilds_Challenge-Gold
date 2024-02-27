@@ -1,5 +1,6 @@
 import { register, login, logout } from './auth.js';
 import { renderArchetype, renderArchetypes } from './archetypes.js';
+import { renderDeck, renderDecks } from './decks.js';
 
 // Utils
 function createUuidRegex(keyword) {
@@ -7,11 +8,19 @@ function createUuidRegex(keyword) {
   return new RegExp(regexString);
 }
 // DOM TRIGGER
+
+// Auth
 const registerForm = document.querySelector('.form--register');
 const loginForm = document.querySelector('.form--login');
 const logoutButton = document.querySelector('.nav__el--logout');
-const archetypesRoute = location.pathname.startsWith('/archetypes');
+
+// Archetypes
+const archetypesRoute = location.pathname.name === '/archetypes' || location.pathname.name === '/archetypes/';
 const isArchetypeByIdRoute = location.pathname.match(createUuidRegex('archetypes'));
+
+// Decks
+const decksRoute = location.pathname.name === '/decks' || location.pathname.name === '/decks/';
+const isDeckByIdRoute = location.pathname.match(createUuidRegex('decks'));
 
 if (registerForm) {
   registerForm.addEventListener('submit', (e) => {
@@ -42,8 +51,6 @@ if (archetypesRoute) {
   const urlParams = new URLSearchParams(window.location.search);
   const queries = urlParams.toString();
 
-  console.log(archetypesRoute);
-
   let archetypes;
   if (queries) {
     archetypes = renderArchetypes(queries);
@@ -58,4 +65,24 @@ if (isArchetypeByIdRoute) {
   const archetypeId = isArchetypeByIdRoute[1];
 
   document.addEventListener('load', renderArchetype(archetypeId));
+}
+
+if (decksRoute) {
+  const urlParams = new URLSearchParams(window.location.search);
+  const queries = urlParams.toString();
+
+  let decks;
+  if (queries) {
+    decks = renderDecks(queries);
+  } else {
+    decks = renderDecks();
+  }
+
+  document.addEventListener('load', decks);
+}
+
+if (isDeckByIdRoute) {
+  const deckId = isDeckByIdRoute[1];
+
+  document.addEventListener('load', renderDeck(deckId));
 }

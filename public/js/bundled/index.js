@@ -581,17 +581,23 @@ function hmrAccept(bundle /*: ParcelRequire */ , id /*: string */ ) {
 },{}],"f2QDv":[function(require,module,exports) {
 var _authJs = require("./auth.js");
 var _archetypesJs = require("./archetypes.js");
+var _decksJs = require("./decks.js");
 // Utils
 function createUuidRegex(keyword) {
     const regexString = `\\/${keyword}\\/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})`;
     return new RegExp(regexString);
 }
 // DOM TRIGGER
+// Auth
 const registerForm = document.querySelector(".form--register");
 const loginForm = document.querySelector(".form--login");
 const logoutButton = document.querySelector(".nav__el--logout");
-const archetypesRoute = location.pathname.startsWith("/archetypes");
+// Archetypes
+const archetypesRoute = location.pathname.name === "/archetypes" || location.pathname.name === "/archetypes/";
 const isArchetypeByIdRoute = location.pathname.match(createUuidRegex("archetypes"));
+// Decks
+const decksRoute = location.pathname.name === "/decks" || location.pathname.name === "/decks/";
+const isDeckByIdRoute = location.pathname.match(createUuidRegex("decks"));
 if (registerForm) registerForm.addEventListener("submit", (e)=>{
     e.preventDefault();
     const name = document.getElementById("name").value;
@@ -609,7 +615,6 @@ if (logoutButton) logoutButton.addEventListener("click", (0, _authJs.logout));
 if (archetypesRoute) {
     const urlParams = new URLSearchParams(window.location.search);
     const queries = urlParams.toString();
-    console.log(archetypesRoute);
     let archetypes;
     if (queries) archetypes = (0, _archetypesJs.renderArchetypes)(queries);
     else archetypes = (0, _archetypesJs.renderArchetypes)();
@@ -619,8 +624,20 @@ if (isArchetypeByIdRoute) {
     const archetypeId = isArchetypeByIdRoute[1];
     document.addEventListener("load", (0, _archetypesJs.renderArchetype)(archetypeId));
 }
+if (decksRoute) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const queries = urlParams.toString();
+    let decks;
+    if (queries) decks = (0, _decksJs.renderDecks)(queries);
+    else decks = (0, _decksJs.renderDecks)();
+    document.addEventListener("load", decks);
+}
+if (isDeckByIdRoute) {
+    const deckId = isDeckByIdRoute[1];
+    document.addEventListener("load", (0, _decksJs.renderDeck)(deckId));
+}
 
-},{"./auth.js":"fov0Z","./archetypes.js":"jiVwJ"}],"fov0Z":[function(require,module,exports) {
+},{"./auth.js":"fov0Z","./archetypes.js":"jiVwJ","./decks.js":"7dKr1"}],"fov0Z":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "register", ()=>register);
@@ -852,6 +869,143 @@ const renderArchetype = async (id)=>{
     });
 };
 
-},{"./alert.js":"kxdiQ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["14ixo","f2QDv"], "f2QDv", "parcelRequiref988")
+},{"./alert.js":"kxdiQ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"7dKr1":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "renderDecks", ()=>renderDecks);
+parcelHelpers.export(exports, "renderDeck", ()=>renderDeck);
+var _alert = require("./alert");
+const getDecks = async (queries)=>{
+    let res;
+    let data;
+    if (queries) {
+        res = await fetch(`/v1/decks/?${queries}`, {
+            credentials: "include"
+        });
+        data = await res.json();
+    } else {
+        res = await fetch("/v1/decks/", {
+            credentials: "include"
+        });
+        data = await res.json();
+    }
+    if (!res.ok) {
+        (0, _alert.showAlert)("error", data.message);
+        if (data.message === "Please authenticate") setTimeout(()=>{
+            location.assign("/auth/login");
+        }, 1500);
+        return;
+    }
+    return data.data;
+};
+const getDeck = async (id)=>{
+    const res = await fetch(`/v1/decks/${id}`, {
+        credentials: "include"
+    });
+    const data = await res.json();
+    if (!res.ok) {
+        (0, _alert.showAlert)("error", data.message);
+        if (data.message === "Please authenticate") setTimeout(()=>{
+            location.assign("/auth/login");
+        }, 1500);
+    }
+    return data.data;
+};
+const renderDecks = async (queries)=>{
+    const decksCardContainer = document.querySelector(".decks-container");
+    let decks;
+    if (queries) {
+        decks = await getDecks(queries);
+        if (decks.length < 1) {
+            const card = document.createElement("div");
+            card.classList.add("not-found");
+            const notFound = document.createElement("h1");
+            notFound.textContent = "No Decks Found";
+            card.appendChild(notFound);
+            decksCardContainer.appendChild(card);
+            return;
+        }
+    } else decks = await getDecks();
+    decks.forEach((deck)=>{
+        const card = document.createElement("div");
+        card.classList.add("card");
+        const cardCover = document.createElement("div");
+        cardCover.classList.add("card-cover");
+        const coverImg = document.createElement("img");
+        coverImg.classList.add("card__cover-img");
+        const nameHeader = document.createElement("h1");
+        nameHeader.classList.add("deck-name");
+        nameHeader.textContent = deck.name;
+        const archetype = document.createElement("h2");
+        archetype.classList.add("archetype");
+        archetype.textContent = `Archetype : ${deck.archetypeName}`;
+        const userInfo = document.createElement("p");
+        userInfo.classList.add("user-info");
+        const username = document.createElement("span");
+        username.classList.add("username");
+        username.textContent = `User : ${deck.userName}, Created at ${new Date(deck.createdAt).toString()}`;
+        if (deck.archetypeName.includes(" ")) deck.archetypeName = deck.archetypeName.split(" ").join("");
+        coverImg.src = `/img/archetypes/${deck.archetypeName.toLowerCase()}.jpg`;
+        coverImg.alt = `${deck.name} cover`;
+        userInfo.appendChild(username);
+        cardCover.appendChild(coverImg);
+        card.appendChild(cardCover);
+        card.appendChild(nameHeader);
+        card.appendChild(archetype);
+        card.appendChild(userInfo);
+        decksCardContainer.appendChild(card);
+        nameHeader.addEventListener("click", ()=>{
+            location.assign(`/decks/${deck.id}`);
+        });
+        coverImg.addEventListener("click", ()=>{
+            location.assign(`/decks/${deck.id}`);
+        });
+        archetype.addEventListener("clicl", ()=>{
+            location.assign(`/archetypes/${deck.archetypeId}`);
+        });
+        username.addEventListener("click", ()=>{
+            location.assign(`/users/${deck.userId}`);
+        });
+    });
+};
+const renderDeck = async (id)=>{
+    const deck = await getDeck(id);
+    const deckCardContainer = document.querySelector(".deck-container");
+    const card = document.createElement("div");
+    card.classList.add("card");
+    const cardCover = document.createElement("div");
+    cardCover.classList.add("card-cover");
+    const coverImg = document.createElement("img");
+    coverImg.classList.add("card__cover-img");
+    if (deck.archetypeName.includes(" ")) deck.archetypeName = deck.archetypeName.split(" ").join("");
+    coverImg.src = `/img/archetypes/${deck.archetypeName.toLowerCase()}.jpg`;
+    coverImg.alt = `${deck.name} cover`;
+    const nameHeader = document.createElement("h1");
+    nameHeader.classList.add("deck-name");
+    nameHeader.textContent = deck.name;
+    const archetype = document.createElement("h2");
+    archetype.classList.add("archetype");
+    archetype.textContent = `Archetype : ${deck.archetypeName}`;
+    const userInfo = document.createElement("p");
+    userInfo.classList.add("user-info");
+    const username = document.createElement("span");
+    username.classList.add("username");
+    username.textContent = `User : ${deck.userName}, Created at ${new Date(deck.createdAt).toString()}`;
+    userInfo.appendChild(username);
+    cardCover.appendChild(coverImg);
+    card.appendChild(cardCover);
+    card.appendChild(nameHeader);
+    card.appendChild(archetype);
+    card.appendChild(userInfo);
+    deckCardContainer.appendChild(card);
+    archetype.addEventListener("click", ()=>{
+        location.assign(`/archetypes/${deck.archetypeId}`);
+    });
+    username.addEventListener("click", ()=>{
+        location.assign(`/users/${deck.userId}`);
+    });
+};
+
+},{"./alert":"kxdiQ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["14ixo","f2QDv"], "f2QDv", "parcelRequiref988")
 
 //# sourceMappingURL=index.js.map
