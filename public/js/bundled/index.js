@@ -1067,7 +1067,7 @@ const renderUsers = async (queries)=>{
         nameHeader.textContent = user.name;
         if (user.name.includes(" ")) user.name = user.name.split(" ").join("");
         coverImg.src = `/img/users/${user.name.toLowerCase()}.jpg`;
-        coverImg.alt = `${user.name} cover`;
+        coverImg.alt = `${user.name} Photo`;
         const userEmail = document.createElement("p");
         userEmail.classList.add("user-email");
         userEmail.textContent = `Email : ${user.email}`;
@@ -1077,12 +1077,17 @@ const renderUsers = async (queries)=>{
         const userCreated = document.createElement("p");
         userCreated.classList.add("user-created");
         userCreated.textContent = `Created At : ${new Date(user.createdAt).toString()}`;
+        const userFollows = document.createElement("div");
+        userFollows.classList.add("user-follows");
+        userFollows.textContent = `Followers : ${user.followers}
+    Following : ${user.following}`;
+        card.appendChild(cardCover);
         card.appendChild(nameHeader);
         card.appendChild(userEmail);
         card.appendChild(userRole);
         card.appendChild(userCreated);
+        card.appendChild(userFollows);
         cardCover.appendChild(coverImg);
-        card.appendChild(cardCover);
         cardContainer.appendChild(card);
         nameHeader.addEventListener("click", ()=>{
             location.assign(`/users/${user.id}`);
