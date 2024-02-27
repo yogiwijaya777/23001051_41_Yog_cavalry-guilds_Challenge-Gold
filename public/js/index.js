@@ -1,7 +1,7 @@
 import { register, login, logout } from './auth.js';
 import { renderArchetype, renderArchetypes } from './archetypes.js';
 import { renderDeck, renderDecks } from './decks.js';
-import { renderUsers } from './users.js';
+import { renderUser, renderUsers } from './users.js';
 
 // Utils
 function createUuidRegex(keyword) {
@@ -104,4 +104,10 @@ if (usersRoute) {
   }
 
   document.addEventListener('load', users);
+}
+
+if (isUserByIdRoute) {
+  const userId = isUserByIdRoute[1];
+
+  document.addEventListener('load', renderUser(userId));
 }

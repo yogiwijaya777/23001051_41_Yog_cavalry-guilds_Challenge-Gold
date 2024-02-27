@@ -25,6 +25,12 @@ const getById = async (id) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
 
+  const { totalFollowers } = await knex('follows').count('id', { as: 'totalFollowers' }).where({ followingId: id }).first();
+  const { totalFollowing } = await knex('follows').count('id', { as: 'totalFollowing' }).where({ followerId: id }).first();
+
+  user.followers = totalFollowers;
+  user.following = totalFollowing;
+
   return user;
 };
 
