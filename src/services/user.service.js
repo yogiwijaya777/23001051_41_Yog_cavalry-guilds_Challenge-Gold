@@ -70,6 +70,25 @@ const search = async (filters, options) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Users not found');
   }
 
+  await Promise.all(
+    users.map(async (user) => {
+      const totalFollowersPromise = knex('follows')
+        .count('id', { as: 'totalFollowers' })
+        .where({ followingId: user.id })
+        .first();
+
+      const totalFollowingPromise = knex('follows')
+        .count('id', { as: 'totalFollowing' })
+        .where({ followerId: user.id })
+        .first();
+
+      const [{ totalFollowers }, { totalFollowing }] = await Promise.all([totalFollowersPromise, totalFollowingPromise]);
+
+      user.followers = totalFollowers;
+      user.following = totalFollowing;
+    })
+  );
+
   const countQuery = knex('users').count('id as count').first();
   if (name) countQuery.where('name', 'ilike', `%${name}%`);
   if (role) countQuery.where('role', 'ilike', `%${role}%`);
