@@ -6,16 +6,19 @@ html
     title Cavalry | #{title}
     link(rel='stylesheet' href='/css/main.css')
     link(rel='shortcut icon' type='image/png' href='/img/cavalry-icon.png')
+    link(rel='stylesheet' href='/bootstrap5/css/bootstrap.css')
     script(type='module' src='/js/bundled/index.js')
 
   body
-    // HEADER
-    include _header
+    script( src='/bootstrap5/js/bootstrap.js')
+    script( src='/bootstrap5/js/popper.min.js')
+  // HEADER
+  include _header
 
-    // CONTENT
-    block content
+  // CONTENT
+  block content
 
-    // FOOTER
-    include _footer
+  // FOOTER
+  include _footer
 
 
