@@ -47,3 +47,67 @@ export const showModal = (modalTitle, modalBody) => {
     });
   });
 };
+
+export const showUpdateDeckModal = () => {
+  return new Promise((resolve, reject) => {
+    hideModal();
+    const markup = `
+      <div class="modal" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Update Deck</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form id="updateDeckForm">
+                <div class="mb-3">
+                  <label for="name" class="form-label">Name</label>
+                  <input type="text" class="form-control" id="name" required>
+                </div>
+                <div class="mb-3">
+                  <label for="description" class="form-label">Description</label>
+                  <textarea class="form-control" id="description" required></textarea>
+                </div>
+                <div class="mb-3">
+                  <label for="archetypeId" class="form-label">Archetype ID</label>
+                  <input type="text" class="form-control" id="archetypeId" required>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-result="false">
+                Close
+              </button>
+              <button type="button" class="btn btn-primary" id="confirmUpdateDeckBtn">
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+    document.querySelector('body').insertAdjacentHTML('afterbegin', markup);
+
+    const modal = new bootstrap.Modal(document.querySelector('.modal'));
+    modal.show();
+
+    const confirmUpdateDeckBtn = document.getElementById('confirmUpdateDeckBtn');
+    confirmUpdateDeckBtn.addEventListener('click', () => {
+      const name = document.getElementById('name').value;
+      const description = document.getElementById('description').value;
+      const archetypeId = document.getElementById('archetypeId').value;
+      if (name !== '' || description !== '' || archetypeId !== '') {
+        resolve({ name, description, archetypeId });
+        modal.hide();
+      } else {
+        alert('At least one of the fields (name, description, archetypeId) must be filled out.');
+      }
+    });
+
+    const modalElement = document.querySelector('.modal');
+    modalElement.addEventListener('hidden.bs.modal', () => {
+      modalElement.remove();
+    });
+  });
+};
