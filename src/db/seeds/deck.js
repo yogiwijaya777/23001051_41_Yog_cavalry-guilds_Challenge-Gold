@@ -12,7 +12,7 @@ exports.seed = async function (knex) {
       description:
         'Deck "Exosister Regen" adalah deck berbasis Spellcaster yang menekankan pemanggilan kembali monster dari graveyard dan pengendalian permainan melalui kartu sihir dan jebakan. Strateginya adalah memanfaatkan efek pemanggilan kembali dan pengendalian lapangan untuk mengatur tempo permainan dan mendapatkan keunggulan dalam pertarungan.',
       archetypeId: '6e35aa3d-1573-4b56-99c0-3f2dd4d64475',
-      userId: '',
+      userId: 'beb60df8-f3ef-453c-9064-8ae8b459f1a6',
     },
     {
       id: 'cbfe4713-c553-4d17-b63e-00629e69e5fa',
@@ -54,7 +54,7 @@ exports.seed = async function (knex) {
     },
     {
       id: '3248b507-88e0-4a8c-afbb-669960031cc6',
-      name: '',
+      name: 'Ipsumto',
       description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius lectus sed justo consequat.',
       archetypeId: '3b8c3177-e4bb-471a-ac40-18d5f5b97a2c',
       userId: 'fc27a26d-ddfe-4b40-9246-e1e495b71dda',
