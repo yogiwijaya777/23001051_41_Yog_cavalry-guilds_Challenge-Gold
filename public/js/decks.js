@@ -223,14 +223,12 @@ export const renderDeck = async (id) => {
   card.appendChild(userInfo);
 
   const curUser = JSON.parse(localStorage.getItem('user'));
-  console.log(curUser);
   if (curUser.id === deck.userId) {
     const deleteBtn = document.createElement('button');
     deleteBtn.classList.add('delete-btn', 'btn', 'btn-danger', 'btn-sm', 'float-end', 'modal-btn');
     deleteBtn.textContent = 'Delete';
 
     deleteBtn.addEventListener('click', async () => {
-      console.log(localStorage.getItem('user'));
       const confirmation = await showModal('Are you sure you want to delete this deck?', 'This action cannot be undone.');
       if (confirmation) {
         showAlert('success', 'Deck deleted successfully');
@@ -238,7 +236,6 @@ export const renderDeck = async (id) => {
         location.assign('/decks');
       } else {
         showAlert('info', 'Deletion canceled');
-        console.log('Deletion canceled');
       }
     });
 
@@ -264,7 +261,6 @@ export const renderDeck = async (id) => {
         }, 2000);
       } else {
         showAlert('info', 'Update canceled');
-        console.log('Update canceled');
       }
     });
 
