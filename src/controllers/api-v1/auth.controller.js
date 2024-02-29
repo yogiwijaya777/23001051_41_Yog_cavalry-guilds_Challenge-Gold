@@ -13,8 +13,6 @@ const register = catchAsync(async (req, res) => {
 
   const userCreated = await userService.create(req.body);
 
-  delete userCreated.password;
-
   const tokens = await tokenService.generateAuthTokens(userCreated);
 
   const cookieOptions = {

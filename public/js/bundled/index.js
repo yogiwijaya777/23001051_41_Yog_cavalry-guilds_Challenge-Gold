@@ -1029,28 +1029,32 @@ const renderDeck = async (id)=>{
     const username = document.createElement("span");
     username.classList.add("username");
     username.textContent = `User : ${deck.userName}, Created at ${new Date(deck.createdAt).toString()}`;
-    const deleteBtn = document.createElement("button");
-    deleteBtn.classList.add("delete-btn", "btn", "btn-danger", "btn-sm", "float-end", "modal-btn");
-    deleteBtn.textContent = "Delete";
-    deleteBtn.addEventListener("click", async ()=>{
-        console.log(localStorage.getItem("user"));
-        const confirmation = await (0, _modals.showModal)("Are you sure you want to delete this deck?", "This action cannot be undone.");
-        if (confirmation) {
-            (0, _alert.showAlert)("success", "Deck deleted successfully");
-            await deleteDeck(id);
-            location.assign("/decks");
-        } else {
-            (0, _alert.showAlert)("info", "Deletion canceled");
-            console.log("Deletion canceled");
-        }
-    });
     userInfo.appendChild(username);
     cardCover.appendChild(coverImg);
     card.appendChild(cardCover);
     card.appendChild(nameHeader);
     card.appendChild(archetype);
     card.appendChild(userInfo);
-    card.appendChild(deleteBtn);
+    const curUser = JSON.parse(localStorage.getItem("user"));
+    console.log(curUser);
+    if (curUser.id === deck.userId) {
+        const deleteBtn = document.createElement("button");
+        deleteBtn.classList.add("delete-btn", "btn", "btn-danger", "btn-sm", "float-end", "modal-btn");
+        deleteBtn.textContent = "Delete";
+        deleteBtn.addEventListener("click", async ()=>{
+            console.log(localStorage.getItem("user"));
+            const confirmation = await (0, _modals.showModal)("Are you sure you want to delete this deck?", "This action cannot be undone.");
+            if (confirmation) {
+                (0, _alert.showAlert)("success", "Deck deleted successfully");
+                await deleteDeck(id);
+                location.assign("/decks");
+            } else {
+                (0, _alert.showAlert)("info", "Deletion canceled");
+                console.log("Deletion canceled");
+            }
+        });
+        card.appendChild(deleteBtn);
+    }
     deckCardContainer.appendChild(card);
     archetype.addEventListener("click", ()=>{
         location.assign(`/archetypes/${deck.archetypeId}`);
