@@ -1,5 +1,7 @@
-import { register, login, logout } from './auth/auth.js';
-import { renderArchetype, renderArchetypes } from './archetypes/get.archetypes.js';
+import { register, login, logout } from './auth.js';
+import { renderArchetype, renderArchetypes } from './archetypes.js';
+import { renderDeck, renderDecks } from './decks.js';
+import { renderUser, renderUsers } from './users.js';
 
 // Utils
 function createUuidRegex(keyword) {
@@ -7,12 +9,27 @@ function createUuidRegex(keyword) {
   return new RegExp(regexString);
 }
 // DOM TRIGGER
+
+// Overviews
+const overviewRoute = location.pathname === '/';
+
+// Auth
 const registerForm = document.querySelector('.form--register');
 const loginForm = document.querySelector('.form--login');
 const logoutButton = document.querySelector('.nav__el--logout');
-const archetypesRoute = location.pathname.startsWith('/archetypes');
+
+// Archetypes
+const archetypesRoute = location.pathname === '/archetypes' || location.pathname === '/archetypes/';
 const isArchetypeByIdRoute = location.pathname.match(createUuidRegex('archetypes'));
-console.log(archetypesRoute);
+
+// Decks
+const decksRoute = location.pathname === '/decks' || location.pathname === '/decks/';
+const isDeckByIdRoute = location.pathname.match(createUuidRegex('decks'));
+
+// Users
+const usersRoute = location.pathname === '/users' || location.pathname === '/users/';
+const isUserByIdRoute = location.pathname.match(createUuidRegex('users'));
+
 if (registerForm) {
   registerForm.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -38,11 +55,18 @@ if (loginForm) {
 
 if (logoutButton) logoutButton.addEventListener('click', logout);
 
+if (overviewRoute) {
+  console.log('hello');
+  document.addEventListener('DOMContentLoaded', () => {
+    console.log('hello');
+    renderArchetypes();
+    renderDecks();
+  });
+}
+
 if (archetypesRoute) {
   const urlParams = new URLSearchParams(window.location.search);
   const queries = urlParams.toString();
-
-  console.log(archetypesRoute);
 
   let archetypes;
   if (queries) {
@@ -57,5 +81,45 @@ if (archetypesRoute) {
 if (isArchetypeByIdRoute) {
   const archetypeId = isArchetypeByIdRoute[1];
 
-  document.addEventListener('load', renderArchetype(archetypeId));
+  document.addEventListener('DOMContentLoaded', renderArchetype(archetypeId));
+}
+
+if (decksRoute) {
+  const urlParams = new URLSearchParams(window.location.search);
+  const queries = urlParams.toString();
+
+  let decks;
+  if (queries) {
+    decks = renderDecks(queries);
+  } else {
+    decks = renderDecks();
+  }
+
+  document.addEventListener('DOMContentLoaded', decks);
+}
+
+if (isDeckByIdRoute) {
+  const deckId = isDeckByIdRoute[1];
+
+  document.addEventListener('DOMContentLoaded', renderDeck(deckId));
+}
+
+if (usersRoute) {
+  const urlParams = new URLSearchParams(window.location.search);
+  const queries = urlParams.toString();
+
+  let users;
+  if (queries) {
+    users = renderUsers(queries);
+  } else {
+    users = renderUsers();
+  }
+
+  document.addEventListener('DOMContentLoaded', users);
+}
+
+if (isUserByIdRoute) {
+  const userId = isUserByIdRoute[1];
+
+  document.addEventListener('DOMContentLoaded', renderUser(userId));
 }

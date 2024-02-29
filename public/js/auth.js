@@ -1,4 +1,4 @@
-import { showAlert } from '../alert';
+import { showAlert } from './alert';
 
 export const register = async (name, email, password) => {
   const res = await fetch('/v1/auth/register', {
@@ -11,8 +11,10 @@ export const register = async (name, email, password) => {
   const data = await res.json();
 
   if (data.message !== 'Register Success') {
-    return showAlert('error', data.message);
+    return showAlert('danger', data.message);
   }
+
+  localStorage.setItem('user', JSON.stringify(data.data.userCreated));
 
   showAlert('success', 'Register Success');
   window.setTimeout(() => {
@@ -31,8 +33,10 @@ export const login = async (email, password) => {
   const data = await res.json();
 
   if (data.message !== 'Login Success') {
-    return showAlert('error', data.message);
+    return showAlert('dangers', data.message);
   }
+
+  localStorage.setItem('user', JSON.stringify(data.data.user));
 
   showAlert('success', 'Login Success');
   window.setTimeout(() => {
@@ -44,8 +48,10 @@ export const logout = async () => {
   const res = await fetch('/v1/auth/logout');
 
   if (!res.ok) {
-    return showAlert('error', 'Please try again');
+    return showAlert('danger', 'Please try again');
   }
+
+  localStorage.removeItem('user');
 
   showAlert('success', 'Logout Success');
   location.reload(true);

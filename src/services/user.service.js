@@ -25,6 +25,12 @@ const getById = async (id) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
 
+  const { totalFollowers } = await knex('follows').count('id', { as: 'totalFollowers' }).where({ followingId: id }).first();
+  const { totalFollowing } = await knex('follows').count('id', { as: 'totalFollowing' }).where({ followerId: id }).first();
+
+  user.followers = totalFollowers;
+  user.following = totalFollowing;
+
   return user;
 };
 
@@ -43,7 +49,7 @@ const del = async (id) => {
 };
 
 const search = async (filters, options) => {
-  const query = knex('users').select(['id', 'name', 'email', 'createdAt']);
+  const query = knex('users').select(['id', 'name', 'email', 'role', 'createdAt']);
 
   const { name, role } = filters;
   const { page, limit, sort, skip } = options;
@@ -69,6 +75,25 @@ const search = async (filters, options) => {
   if (!users) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Users not found');
   }
+
+  await Promise.all(
+    users.map(async (user) => {
+      const totalFollowersPromise = knex('follows')
+        .count('id', { as: 'totalFollowers' })
+        .where({ followingId: user.id })
+        .first();
+
+      const totalFollowingPromise = knex('follows')
+        .count('id', { as: 'totalFollowing' })
+        .where({ followerId: user.id })
+        .first();
+
+      const [{ totalFollowers }, { totalFollowing }] = await Promise.all([totalFollowersPromise, totalFollowingPromise]);
+
+      user.followers = totalFollowers;
+      user.following = totalFollowing;
+    })
+  );
 
   const countQuery = knex('users').count('id as count').first();
   if (name) countQuery.where('name', 'ilike', `%${name}%`);

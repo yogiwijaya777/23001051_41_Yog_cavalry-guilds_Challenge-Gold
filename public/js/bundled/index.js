@@ -579,20 +579,31 @@ function hmrAccept(bundle /*: ParcelRequire */ , id /*: string */ ) {
 }
 
 },{}],"f2QDv":[function(require,module,exports) {
-var _authJs = require("./auth/auth.js");
-var _getArchetypesJs = require("./archetypes/get.archetypes.js");
+var _authJs = require("./auth.js");
+var _archetypesJs = require("./archetypes.js");
+var _decksJs = require("./decks.js");
+var _usersJs = require("./users.js");
 // Utils
 function createUuidRegex(keyword) {
     const regexString = `\\/${keyword}\\/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})`;
     return new RegExp(regexString);
 }
 // DOM TRIGGER
+// Overviews
+const overviewRoute = location.pathname === "/";
+// Auth
 const registerForm = document.querySelector(".form--register");
 const loginForm = document.querySelector(".form--login");
 const logoutButton = document.querySelector(".nav__el--logout");
-const archetypesRoute = location.pathname.startsWith("/archetypes");
+// Archetypes
+const archetypesRoute = location.pathname === "/archetypes" || location.pathname === "/archetypes/";
 const isArchetypeByIdRoute = location.pathname.match(createUuidRegex("archetypes"));
-console.log(archetypesRoute);
+// Decks
+const decksRoute = location.pathname === "/decks" || location.pathname === "/decks/";
+const isDeckByIdRoute = location.pathname.match(createUuidRegex("decks"));
+// Users
+const usersRoute = location.pathname === "/users" || location.pathname === "/users/";
+const isUserByIdRoute = location.pathname.match(createUuidRegex("users"));
 if (registerForm) registerForm.addEventListener("submit", (e)=>{
     e.preventDefault();
     const name = document.getElementById("name").value;
@@ -607,27 +618,58 @@ if (loginForm) loginForm.addEventListener("submit", (e)=>{
     (0, _authJs.login)(email, password);
 });
 if (logoutButton) logoutButton.addEventListener("click", (0, _authJs.logout));
+if (overviewRoute) {
+    console.log("hello");
+    document.addEventListener("DOMContentLoaded", ()=>{
+        console.log("hello");
+        (0, _archetypesJs.renderArchetypes)();
+        (0, _decksJs.renderDecks)();
+    });
+}
 if (archetypesRoute) {
     const urlParams = new URLSearchParams(window.location.search);
     const queries = urlParams.toString();
-    console.log(archetypesRoute);
     let archetypes;
-    if (queries) archetypes = (0, _getArchetypesJs.renderArchetypes)(queries);
-    else archetypes = (0, _getArchetypesJs.renderArchetypes)();
+    if (queries) archetypes = (0, _archetypesJs.renderArchetypes)(queries);
+    else archetypes = (0, _archetypesJs.renderArchetypes)();
     document.addEventListener("load", archetypes);
 }
 if (isArchetypeByIdRoute) {
     const archetypeId = isArchetypeByIdRoute[1];
-    document.addEventListener("load", (0, _getArchetypesJs.renderArchetype)(archetypeId));
+    document.addEventListener("DOMContentLoaded", (0, _archetypesJs.renderArchetype)(archetypeId));
+}
+if (decksRoute) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const queries = urlParams.toString();
+    let decks;
+    if (queries) decks = (0, _decksJs.renderDecks)(queries);
+    else decks = (0, _decksJs.renderDecks)();
+    document.addEventListener("DOMContentLoaded", decks);
+}
+if (isDeckByIdRoute) {
+    const deckId = isDeckByIdRoute[1];
+    document.addEventListener("DOMContentLoaded", (0, _decksJs.renderDeck)(deckId));
+}
+if (usersRoute) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const queries = urlParams.toString();
+    let users;
+    if (queries) users = (0, _usersJs.renderUsers)(queries);
+    else users = (0, _usersJs.renderUsers)();
+    document.addEventListener("DOMContentLoaded", users);
+}
+if (isUserByIdRoute) {
+    const userId = isUserByIdRoute[1];
+    document.addEventListener("DOMContentLoaded", (0, _usersJs.renderUser)(userId));
 }
 
-},{"./auth/auth.js":"fkh3q","./archetypes/get.archetypes.js":"7RmHQ"}],"fkh3q":[function(require,module,exports) {
+},{"./auth.js":"fov0Z","./archetypes.js":"jiVwJ","./decks.js":"7dKr1","./users.js":"9h3E9"}],"fov0Z":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "register", ()=>register);
 parcelHelpers.export(exports, "login", ()=>login);
 parcelHelpers.export(exports, "logout", ()=>logout);
-var _alert = require("../alert");
+var _alert = require("./alert");
 const register = async (name, email, password)=>{
     const res = await fetch("/v1/auth/register", {
         method: "POST",
@@ -641,7 +683,8 @@ const register = async (name, email, password)=>{
         })
     });
     const data = await res.json();
-    if (data.message !== "Register Success") return (0, _alert.showAlert)("error", data.message);
+    if (data.message !== "Register Success") return (0, _alert.showAlert)("danger", data.message);
+    localStorage.setItem("user", JSON.stringify(data.data.userCreated));
     (0, _alert.showAlert)("success", "Register Success");
     window.setTimeout(()=>{
         location.assign("/");
@@ -659,7 +702,8 @@ const login = async (email, password)=>{
         })
     });
     const data = await res.json();
-    if (data.message !== "Login Success") return (0, _alert.showAlert)("error", data.message);
+    if (data.message !== "Login Success") return (0, _alert.showAlert)("dangers", data.message);
+    localStorage.setItem("user", JSON.stringify(data.data.user));
     (0, _alert.showAlert)("success", "Login Success");
     window.setTimeout(()=>{
         location.assign("/");
@@ -667,12 +711,13 @@ const login = async (email, password)=>{
 };
 const logout = async ()=>{
     const res = await fetch("/v1/auth/logout");
-    if (!res.ok) return (0, _alert.showAlert)("error", "Please try again");
+    if (!res.ok) return (0, _alert.showAlert)("danger", "Please try again");
+    localStorage.removeItem("user");
     (0, _alert.showAlert)("success", "Logout Success");
     location.reload(true);
 };
 
-},{"../alert":"kxdiQ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"kxdiQ":[function(require,module,exports) {
+},{"./alert":"kxdiQ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"kxdiQ":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "hideAlert", ()=>hideAlert);
@@ -683,7 +728,7 @@ const hideAlert = ()=>{
 };
 const showAlert = (type, msg)=>{
     hideAlert();
-    const markup = `<div class="alert alert--${type}">${msg}</div>`;
+    const markup = `<div class="alert alert-${type}">${msg}</div>`;
     document.querySelector("body").insertAdjacentHTML("afterbegin", markup);
     window.setTimeout(hideAlert, 5000);
 };
@@ -718,12 +763,12 @@ exports.export = function(dest, destName, get) {
     });
 };
 
-},{}],"7RmHQ":[function(require,module,exports) {
+},{}],"jiVwJ":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "renderArchetypes", ()=>renderArchetypes);
 parcelHelpers.export(exports, "renderArchetype", ()=>renderArchetype);
-var _alertJs = require("../alert.js");
+var _alertJs = require("./alert.js");
 const getArchetype = async (id)=>{
     const res = await fetch(`/v1/archetypes/${id}`, {
         credentials: "include"
@@ -762,6 +807,7 @@ const getArchetypes = async (queries)=>{
 };
 const renderArchetypes = async (queries)=>{
     const cardContainer = document.querySelector(".archetypes-container");
+    cardContainer.classList.add("row");
     let archetypes;
     if (queries) {
         archetypes = await getArchetypes(queries);
@@ -778,18 +824,19 @@ const renderArchetypes = async (queries)=>{
     archetypes.forEach((archetype)=>{
         const card = document.createElement("div");
         card.classList.add("card");
+        card.classList.add("col-3", "gy-4");
         const cardCover = document.createElement("div");
-        cardCover.classList.add("card-cover");
+        cardCover.classList.add("card-cover", "d-flex", "align-items-center", "justify-content-center", "mt-2");
         const coverImg = document.createElement("img");
-        coverImg.classList.add("card__cover-img");
+        coverImg.classList.add("card__cover-img", "img-fluid", "rounded-circle");
+        const nameHeader = document.createElement("h3");
+        nameHeader.classList.add("archetype-name", "card-title", "text-center");
+        nameHeader.textContent = archetype.name;
         if (archetype.name.includes(" ")) archetype.name = archetype.name.split(" ").join("");
         coverImg.src = `/img/archetypes/${archetype.name.toLowerCase()}.jpg`;
         coverImg.alt = `${archetype.name} cover`;
-        const nameHeader = document.createElement("h3");
-        nameHeader.classList.add("archetype-name");
-        nameHeader.textContent = archetype.name;
         const totalDecks = document.createElement("p");
-        totalDecks.classList.add("total-decks");
+        totalDecks.classList.add("total-decks", "text-center", "mb-0");
         totalDecks.textContent = "Total Decks: " + archetype.totalDecks;
         cardCover.appendChild(coverImg);
         card.appendChild(cardCover);
@@ -810,12 +857,12 @@ const renderArchetype = async (id)=>{
     cardCover.classList.add("card-cover");
     const coverImg = document.createElement("img");
     coverImg.classList.add("card__cover-img");
-    if (archetype.name.includes(" ")) archetype.name = archetype.name.split(" ").join("");
-    coverImg.src = `/img/archetypes/${archetype.name.toLowerCase()}.jpg`;
-    coverImg.alt = `${archetype.name} cover`;
     const nameHeader = document.createElement("h1");
     nameHeader.classList.add("archetype-name");
     nameHeader.textContent = archetype.name;
+    if (archetype.name.includes(" ")) archetype.name = archetype.name.split(" ").join("");
+    coverImg.src = `/img/archetypes/${archetype.name.toLowerCase()}.jpg`;
+    coverImg.alt = `${archetype.name} cover`;
     const totalDecks = document.createElement("p");
     totalDecks.classList.add("total-decks");
     totalDecks.textContent = "Total Decks: " + archetype.totalDecks;
@@ -853,6 +900,448 @@ const renderArchetype = async (id)=>{
     });
 };
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","../alert.js":"kxdiQ"}]},["14ixo","f2QDv"], "f2QDv", "parcelRequiref988")
+},{"./alert.js":"kxdiQ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"7dKr1":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "renderDecks", ()=>renderDecks);
+parcelHelpers.export(exports, "renderDeck", ()=>renderDeck);
+var _alert = require("./alert");
+var _modals = require("./modals");
+const getDecks = async (queries)=>{
+    let res;
+    let data;
+    if (queries) {
+        res = await fetch(`/v1/decks/?${queries}`, {
+            credentials: "include"
+        });
+        data = await res.json();
+    } else {
+        res = await fetch("/v1/decks/", {
+            credentials: "include"
+        });
+        data = await res.json();
+    }
+    if (!res.ok) {
+        (0, _alert.showAlert)("danger", data.message);
+        if (data.message === "Please authenticate") setTimeout(()=>{
+            location.assign("/auth/login");
+        }, 1500);
+        return;
+    }
+    return data.data;
+};
+const getDeck = async (id)=>{
+    const res = await fetch(`/v1/decks/${id}`, {
+        credentials: "include"
+    });
+    const data = await res.json();
+    if (!res.ok) {
+        (0, _alert.showAlert)("danger", data.message);
+        if (data.message === "Please authenticate") setTimeout(()=>{
+            location.assign("/auth/login");
+        }, 1500);
+    }
+    return data.data;
+};
+const deleteDeck = async (id)=>{
+    const res = await fetch(`/v1/decks/${id}`, {
+        method: "DELETE",
+        credentials: "include"
+    });
+    const data = await res.json();
+    if (!res.ok) {
+        (0, _alert.showAlert)("danger", data.message);
+        if (data.message === "Please authenticate") setTimeout(()=>{
+            location.assign("/auth/login");
+        }, 1500);
+    }
+    return;
+};
+const updateDeck = async (id, data)=>{
+    const res = await fetch(`/v1/decks/${id}`, {
+        method: "PATCH",
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    });
+    const dataRes = await res.json();
+    if (!res.ok) {
+        (0, _alert.showAlert)("danger", dataRes.message);
+        if (dataRes.message === "Please authenticate") setTimeout(()=>{
+            location.assign("/auth/login");
+        }, 1500);
+    }
+    return;
+};
+const renderDecks = async (queries)=>{
+    const decksCardContainer = document.querySelector(".decks-container");
+    decksCardContainer.classList.add("row");
+    let decks;
+    if (queries) {
+        decks = await getDecks(queries);
+        if (decks.length < 1) {
+            const card = document.createElement("div");
+            card.classList.add("not-found");
+            const notFound = document.createElement("h1");
+            notFound.textContent = "No Decks Found";
+            card.appendChild(notFound);
+            decksCardContainer.appendChild(card);
+            return;
+        }
+    } else decks = await getDecks();
+    decks.forEach((deck)=>{
+        const card = document.createElement("div");
+        card.classList.add("card", "col-3", "gy-4", "text-center");
+        const cardCover = document.createElement("div");
+        cardCover.classList.add("card-cover");
+        const coverImg = document.createElement("img");
+        coverImg.classList.add("card__cover-img");
+        const nameHeader = document.createElement("h1");
+        nameHeader.classList.add("deck-name");
+        nameHeader.textContent = deck.name;
+        const archetype = document.createElement("h2");
+        archetype.classList.add("archetype");
+        archetype.textContent = `Archetype : ${deck.archetypeName}`;
+        const userInfo = document.createElement("p");
+        userInfo.classList.add("user-info");
+        const username = document.createElement("span");
+        username.classList.add("username");
+        username.textContent = `User : ${deck.userName}, Created at ${new Date(deck.createdAt).toString()}`;
+        if (deck.archetypeName.includes(" ")) deck.archetypeName = deck.archetypeName.split(" ").join("");
+        coverImg.src = `/img/archetypes/${deck.archetypeName.toLowerCase()}.jpg`;
+        coverImg.alt = `${deck.name} cover`;
+        userInfo.appendChild(username);
+        cardCover.appendChild(coverImg);
+        card.appendChild(cardCover);
+        card.appendChild(nameHeader);
+        card.appendChild(archetype);
+        card.appendChild(userInfo);
+        decksCardContainer.appendChild(card);
+        nameHeader.addEventListener("click", ()=>{
+            location.assign(`/decks/${deck.id}`);
+        });
+        coverImg.addEventListener("click", ()=>{
+            location.assign(`/decks/${deck.id}`);
+        });
+        archetype.addEventListener("clicl", ()=>{
+            location.assign(`/archetypes/${deck.archetypeId}`);
+        });
+        username.addEventListener("click", ()=>{
+            location.assign(`/users/${deck.userId}`);
+        });
+    });
+};
+const renderDeck = async (id)=>{
+    const deck = await getDeck(id);
+    const deckCardContainer = document.querySelector(".deck-container");
+    const card = document.createElement("div");
+    card.classList.add("card");
+    const cardCover = document.createElement("div");
+    cardCover.classList.add("card-cover");
+    const coverImg = document.createElement("img");
+    coverImg.classList.add("card__cover-img");
+    if (deck.archetypeName.includes(" ")) deck.archetypeName = deck.archetypeName.split(" ").join("");
+    coverImg.src = `/img/archetypes/${deck.archetypeName.toLowerCase()}.jpg`;
+    coverImg.alt = `${deck.name} cover`;
+    const nameHeader = document.createElement("h1");
+    nameHeader.classList.add("deck-name");
+    nameHeader.textContent = deck.name;
+    const archetype = document.createElement("h2");
+    archetype.classList.add("archetype");
+    archetype.textContent = `Archetype : ${deck.archetypeName}`;
+    const userInfo = document.createElement("p");
+    userInfo.classList.add("user-info");
+    const username = document.createElement("span");
+    username.classList.add("username");
+    username.textContent = `User : ${deck.userName}, Created at ${new Date(deck.createdAt).toString()}`;
+    const deckDescription = document.createElement("p");
+    deckDescription.classList.add("deck-description", "card-text", "d-inline-block", "text-center");
+    deckDescription.textContent = `Description : ${deck.description};`;
+    userInfo.appendChild(username);
+    cardCover.appendChild(coverImg);
+    card.appendChild(deckDescription);
+    card.appendChild(cardCover);
+    card.appendChild(nameHeader);
+    card.appendChild(archetype);
+    card.appendChild(userInfo);
+    const curUser = JSON.parse(localStorage.getItem("user"));
+    if (curUser.id === deck.userId) {
+        const deleteBtn = document.createElement("button");
+        deleteBtn.classList.add("delete-btn", "btn", "btn-danger", "btn-sm", "float-end", "modal-btn");
+        deleteBtn.textContent = "Delete";
+        deleteBtn.addEventListener("click", async ()=>{
+            const confirmation = await (0, _modals.showModal)("Are you sure you want to delete this deck?", "This action cannot be undone.");
+            if (confirmation) {
+                (0, _alert.showAlert)("success", "Deck deleted successfully");
+                await deleteDeck(id);
+                location.assign("/decks");
+            } else (0, _alert.showAlert)("info", "Deletion canceled");
+        });
+        const updateBtn = document.createElement("button");
+        updateBtn.classList.add("update-btn", "btn", "btn-primary", "btn-sm", "float-end", "modal-btn");
+        updateBtn.textContent = "Update";
+        updateBtn.addEventListener("click", async ()=>{
+            const body = await (0, _modals.showUpdateDeckModal)();
+            // Remove empty field
+            for(const key in body)if (body[key] === "") delete body[key];
+            if (body) {
+                (0, _alert.showAlert)("success", "Deck updated successfully");
+                await updateDeck(id, body);
+                setTimeout(()=>{
+                    location.reload(true);
+                }, 2000);
+            } else (0, _alert.showAlert)("info", "Update canceled");
+        });
+        card.appendChild(deleteBtn);
+        card.appendChild(updateBtn);
+    }
+    deckCardContainer.appendChild(card);
+    archetype.addEventListener("click", ()=>{
+        location.assign(`/archetypes/${deck.archetypeId}`);
+    });
+    username.addEventListener("click", ()=>{
+        location.assign(`/users/${deck.userId}`);
+    });
+};
+
+},{"./alert":"kxdiQ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./modals":"aja2f"}],"aja2f":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "hideModal", ()=>hideModal);
+parcelHelpers.export(exports, "showModal", ()=>showModal);
+parcelHelpers.export(exports, "showUpdateDeckModal", ()=>showUpdateDeckModal);
+const hideModal = ()=>{
+    const el = document.querySelector(".modal");
+    if (el) el.parentElement.removeChild(el);
+};
+const showModal = (modalTitle, modalBody)=>{
+    return new Promise((resolve, reject)=>{
+        hideModal();
+        const markup = `
+      <div class="modal" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">${modalTitle}</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p>${modalBody}.</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-result="false">
+                Close
+              </button>
+              <button type="button" class="btn btn-primary" data-result="true">
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+        document.querySelector("body").insertAdjacentHTML("afterbegin", markup);
+        const modal = new bootstrap.Modal(document.querySelector(".modal"));
+        modal.show();
+        const modalElement = document.querySelector(".modal");
+        modalElement.addEventListener("click", (event)=>{
+            const target = event.target;
+            const result = target.getAttribute("data-result");
+            if (result === "true") resolve(true);
+            else resolve(false);
+            modal.hide();
+        });
+    });
+};
+const showUpdateDeckModal = ()=>{
+    return new Promise((resolve, reject)=>{
+        hideModal();
+        const markup = `
+      <div class="modal" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Update Deck</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form id="updateDeckForm">
+                <div class="mb-3">
+                  <label for="name" class="form-label">Name</label>
+                  <input type="text" class="form-control" id="name" required>
+                </div>
+                <div class="mb-3">
+                  <label for="description" class="form-label">Description</label>
+                  <textarea class="form-control" id="description" required></textarea>
+                </div>
+                <div class="mb-3">
+                  <label for="archetypeId" class="form-label">Archetype ID</label>
+                  <input type="text" class="form-control" id="archetypeId" required>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-result="false">
+                Close
+              </button>
+              <button type="button" class="btn btn-primary" id="confirmUpdateDeckBtn">
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+        document.querySelector("body").insertAdjacentHTML("afterbegin", markup);
+        const modal = new bootstrap.Modal(document.querySelector(".modal"));
+        modal.show();
+        const confirmUpdateDeckBtn = document.getElementById("confirmUpdateDeckBtn");
+        confirmUpdateDeckBtn.addEventListener("click", ()=>{
+            const name = document.getElementById("name").value;
+            const description = document.getElementById("description").value;
+            const archetypeId = document.getElementById("archetypeId").value;
+            if (name !== "" || description !== "" || archetypeId !== "") {
+                resolve({
+                    name,
+                    description,
+                    archetypeId
+                });
+                modal.hide();
+            } else alert("At least one of the fields (name, description, archetypeId) must be filled out.");
+        });
+        const modalElement = document.querySelector(".modal");
+        modalElement.addEventListener("hidden.bs.modal", ()=>{
+            modalElement.remove();
+        });
+    });
+};
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"9h3E9":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "renderUsers", ()=>renderUsers);
+parcelHelpers.export(exports, "renderUser", ()=>renderUser);
+var _alert = require("./alert");
+const getUsers = async (queries)=>{
+    let res;
+    if (queries) res = await fetch(`/v1/users/?${queries}`, {
+        credentials: "include"
+    });
+    else res = await fetch("/v1/users/", {
+        credentials: "include"
+    });
+    const data = await res.json();
+    if (!res.ok) {
+        (0, _alert.showAlert)("danger", "Please try again");
+        if (data.message === "Please authenticate") setTimeout(()=>{
+            location.assign("/auth/login");
+        }, 1500);
+    }
+    return data.data;
+};
+const getUserById = async (id)=>{
+    const res = await fetch(`/v1/users/${id}`, {
+        credentials: "include"
+    });
+    const data = await res.json();
+    if (!res.ok) {
+        (0, _alert.showAlert)("danger", "Please try again");
+        if (data.message === "Please authenticate") setTimeout(()=>{
+            location.assign("/auth/login");
+        }, 1500);
+    }
+    return data.data;
+};
+const renderUsers = async (queries)=>{
+    const cardContainer = document.querySelector(".users-container");
+    let users;
+    if (queries) {
+        users = await getUsers(queries);
+        if (users.length < 1) {
+            const card = document.createElement("div");
+            card.classList.add("not-found");
+            const notFound = document.createElement("h1");
+            notFound.textContent = "No Users Found";
+            card.appendChild(notFound);
+            cardContainer.appendChild(card);
+            return;
+        }
+    } else users = await getUsers();
+    users.forEach((user)=>{
+        const card = document.createElement("div");
+        card.classList.add("card");
+        const cardCover = document.createElement("div");
+        cardCover.classList.add("card-cover");
+        const coverImg = document.createElement("img");
+        coverImg.classList.add("card__cover-img");
+        const nameHeader = document.createElement("h1");
+        nameHeader.classList.add("user-name");
+        nameHeader.textContent = user.name;
+        if (user.name.includes(" ")) user.name = user.name.split(" ").join("");
+        coverImg.src = `/img/users/${user.name.toLowerCase()}.jpg`;
+        coverImg.alt = `${user.name} Photo`;
+        const userEmail = document.createElement("p");
+        userEmail.classList.add("user-email");
+        userEmail.textContent = `Email : ${user.email}`;
+        const userRole = document.createElement("p");
+        userRole.classList.add("user-role");
+        userRole.textContent = `Role : ${user.role}`;
+        const userCreated = document.createElement("p");
+        userCreated.classList.add("user-created");
+        userCreated.textContent = `Created At : ${new Date(user.createdAt).toString()}`;
+        const userFollows = document.createElement("div");
+        userFollows.classList.add("user-follows");
+        userFollows.textContent = `Followers : ${user.followers}
+    Following : ${user.following}`;
+        card.appendChild(cardCover);
+        card.appendChild(nameHeader);
+        card.appendChild(userEmail);
+        card.appendChild(userRole);
+        card.appendChild(userCreated);
+        card.appendChild(userFollows);
+        cardCover.appendChild(coverImg);
+        cardContainer.appendChild(card);
+        nameHeader.addEventListener("click", ()=>{
+            location.assign(`/users/${user.id}`);
+        });
+    });
+};
+const renderUser = async (id)=>{
+    const user = await getUserById(id);
+    const cardContainer = document.querySelector(".user-container");
+    const card = document.createElement("div");
+    card.classList.add("card");
+    const cardCover = document.createElement("div");
+    cardCover.classList.add("card-cover");
+    const coverImg = document.createElement("img");
+    coverImg.classList.add("card__cover-img");
+    if (user.name.includes(" ")) user.name = user.name.split(" ").join("");
+    coverImg.src = `/img/users/${user.name.toLowerCase()}.jpg`;
+    coverImg.alt = `${user.name} Photo`;
+    const nameHeader = document.createElement("h1");
+    nameHeader.classList.add("user-name");
+    nameHeader.textContent = user.name;
+    const userEmail = document.createElement("p");
+    userEmail.classList.add("user-email");
+    userEmail.textContent = `Email : ${user.email}`;
+    const userCreated = document.createElement("p");
+    userCreated.classList.add("user-created");
+    userCreated.textContent = `Created At : ${new Date(user.createdAt).toString()}`;
+    const userFollows = document.createElement("div");
+    userFollows.classList.add("user-follows");
+    userFollows.textContent = `Followers : ${user.followers}
+  Following : ${user.following}`;
+    card.appendChild(cardCover);
+    card.appendChild(nameHeader);
+    card.appendChild(userEmail);
+    card.appendChild(userCreated);
+    card.appendChild(userFollows);
+    cardCover.appendChild(coverImg);
+    cardContainer.appendChild(card);
+};
+
+},{"./alert":"kxdiQ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["14ixo","f2QDv"], "f2QDv", "parcelRequiref988")
 
 //# sourceMappingURL=index.js.map

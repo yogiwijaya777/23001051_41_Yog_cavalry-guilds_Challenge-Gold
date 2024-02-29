@@ -33,8 +33,8 @@ const search = {
   query: Joi.object().keys({
     name: Joi.string(),
     sort: Joi.string(),
-    limit: Joi.number().integer(),
-    page: Joi.number().integer(),
+    limit: Joi.number(),
+    page: Joi.number(),
   }),
 };
 

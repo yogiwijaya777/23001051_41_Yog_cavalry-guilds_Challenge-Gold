@@ -1,16 +1,25 @@
-header.header
-  nav.nav.nav--cavalry
-    a.nav__el(href='#') Cavalry
-  .header__logo
-    img(src='/img/cavalry-icon.png' alt='Cavalry logo')
-  nav.nav.nav--user
+header.p-3.text-bg-dark.sticky-top.navbar.py-2
+  .header__logo.d-flex.flex-wrap.align-items-center.justify-content-center.justify-content-lg-start
+    img.img--icon.d-flex.align-items-center.mb-2.mb-lg-0.text-white.text-decoration-none(src='/img/cavalry-icon.png' alt='Cavalry logo')
+  ul.nav.col-12.col-lg-auto.me-lg-auto.mb-2.justify-content-center.mb-md-0
+    li
+      a(href="/" class="nav-link px-2 text-secondary") Home
+    li
+      a(href="/archetypes" class="nav-link px-2 text-white") Archetypes
+    li
+      a(href="/decks" class="nav-link px-2 text-white") Decks
+    li
+      a(href="/faq" class="nav-link px-2 text-white") FAQ
+    li
+    a(href="/about" class="nav-link px-2 text-white") About
+  nav.nav.nav--user.col-2.mb-2.justify-content-end
     if user
-      button.nav__el.nav__el--logout Log out
-      a.nav__el(href='#')
-        if user.name.includes(' ')
-          span= user.name.split(' ')[0]
-        else
-          span= user.name
+      button.nav__el.nav__el--logout.btn.btn-light.mx-2.p-1 Log out
+      nav__el
+       if user.name.includes(' ')
+         a(href=`/users/${user.id}` class="nav-link px-2 text-secondary text-white") #{user.name.split(' ')[0]}
+       else
+         a(href=`/users/${user.id}` class="nav-link px-2 text-secondary text-white") #{user.name}
     else
-      a.nav__el(href='/auth/login') Log in
-      a.nav__el.nav__el--cta(href='/auth/register') Sign up
+      a.btn.btn-light.mx-1(href='/auth/login') Log in
+      a.btn.btn-light.mx-1(href='/auth/register') Register

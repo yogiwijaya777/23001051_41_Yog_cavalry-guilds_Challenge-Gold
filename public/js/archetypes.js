@@ -1,4 +1,4 @@
-import { showAlert } from '../alert.js';
+import { showAlert } from './alert.js';
 
 const getArchetype = async (id) => {
   const res = await fetch(`/v1/archetypes/${id}`, {
@@ -48,6 +48,8 @@ const getArchetypes = async (queries) => {
 
 export const renderArchetypes = async (queries) => {
   const cardContainer = document.querySelector('.archetypes-container');
+  cardContainer.classList.add('row');
+
   let archetypes;
 
   if (queries) {
@@ -71,12 +73,17 @@ export const renderArchetypes = async (queries) => {
   archetypes.forEach((archetype) => {
     const card = document.createElement('div');
     card.classList.add('card');
+    card.classList.add('col-3', 'gy-4');
 
     const cardCover = document.createElement('div');
-    cardCover.classList.add('card-cover');
+    cardCover.classList.add('card-cover', 'd-flex', 'align-items-center', 'justify-content-center', 'mt-2');
 
     const coverImg = document.createElement('img');
-    coverImg.classList.add('card__cover-img');
+    coverImg.classList.add('card__cover-img', 'img-fluid', 'rounded-circle');
+
+    const nameHeader = document.createElement('h3');
+    nameHeader.classList.add('archetype-name', 'card-title', 'text-center');
+    nameHeader.textContent = archetype.name;
 
     if (archetype.name.includes(' ')) {
       archetype.name = archetype.name.split(' ').join('');
@@ -84,12 +91,8 @@ export const renderArchetypes = async (queries) => {
     coverImg.src = `/img/archetypes/${archetype.name.toLowerCase()}.jpg`;
     coverImg.alt = `${archetype.name} cover`;
 
-    const nameHeader = document.createElement('h3');
-    nameHeader.classList.add('archetype-name');
-    nameHeader.textContent = archetype.name;
-
     const totalDecks = document.createElement('p');
-    totalDecks.classList.add('total-decks');
+    totalDecks.classList.add('total-decks', 'text-center', 'mb-0');
     totalDecks.textContent = 'Total Decks: ' + archetype.totalDecks;
 
     cardCover.appendChild(coverImg);
@@ -119,15 +122,15 @@ export const renderArchetype = async (id) => {
   const coverImg = document.createElement('img');
   coverImg.classList.add('card__cover-img');
 
+  const nameHeader = document.createElement('h1');
+  nameHeader.classList.add('archetype-name');
+  nameHeader.textContent = archetype.name;
+
   if (archetype.name.includes(' ')) {
     archetype.name = archetype.name.split(' ').join('');
   }
   coverImg.src = `/img/archetypes/${archetype.name.toLowerCase()}.jpg`;
   coverImg.alt = `${archetype.name} cover`;
-
-  const nameHeader = document.createElement('h1');
-  nameHeader.classList.add('archetype-name');
-  nameHeader.textContent = archetype.name;
 
   const totalDecks = document.createElement('p');
   totalDecks.classList.add('total-decks');
