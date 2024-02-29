@@ -15,7 +15,7 @@ const getUsers = async (queries) => {
   const data = await res.json();
 
   if (!res.ok) {
-    showAlert('error', 'Please try again');
+    showAlert('danger', 'Please try again');
     if (data.message === 'Please authenticate') {
       setTimeout(() => {
         location.assign('/auth/login');
@@ -34,7 +34,7 @@ const getUserById = async (id) => {
   const data = await res.json();
 
   if (!res.ok) {
-    showAlert('error', 'Please try again');
+    showAlert('danger', 'Please try again');
     if (data.message === 'Please authenticate') {
       setTimeout(() => {
         location.assign('/auth/login');

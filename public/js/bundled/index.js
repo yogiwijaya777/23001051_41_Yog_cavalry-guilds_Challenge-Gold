@@ -609,6 +609,7 @@ if (registerForm) registerForm.addEventListener("submit", (e)=>{
     const password = document.getElementById("password").value;
     (0, _authJs.register)(name, email, password);
 });
+console.log(loginForm);
 if (loginForm) loginForm.addEventListener("submit", (e)=>{
     e.preventDefault();
     const email = document.getElementById("email").value;
@@ -673,7 +674,8 @@ const register = async (name, email, password)=>{
         })
     });
     const data = await res.json();
-    if (data.message !== "Register Success") return (0, _alert.showAlert)("error", data.message);
+    if (data.message !== "Register Success") return (0, _alert.showAlert)("danger", data.message);
+    localStorage.setItem("user", JSON.stringify(data.data.userCreated));
     (0, _alert.showAlert)("success", "Register Success");
     window.setTimeout(()=>{
         location.assign("/");
@@ -691,7 +693,8 @@ const login = async (email, password)=>{
         })
     });
     const data = await res.json();
-    if (data.message !== "Login Success") return (0, _alert.showAlert)("error", data.message);
+    if (data.message !== "Login Success") return (0, _alert.showAlert)("dangers", data.message);
+    localStorage.setItem("user", JSON.stringify(data.data.user));
     (0, _alert.showAlert)("success", "Login Success");
     window.setTimeout(()=>{
         location.assign("/");
@@ -699,7 +702,8 @@ const login = async (email, password)=>{
 };
 const logout = async ()=>{
     const res = await fetch("/v1/auth/logout");
-    if (!res.ok) return (0, _alert.showAlert)("error", "Please try again");
+    if (!res.ok) return (0, _alert.showAlert)("danger", "Please try again");
+    localStorage.removeItem("user");
     (0, _alert.showAlert)("success", "Logout Success");
     location.reload(true);
 };
@@ -715,7 +719,7 @@ const hideAlert = ()=>{
 };
 const showAlert = (type, msg)=>{
     hideAlert();
-    const markup = `<div class="alert alert--${type}">${msg}</div>`;
+    const markup = `<div class="alert alert-${type}">${msg}</div>`;
     document.querySelector("body").insertAdjacentHTML("afterbegin", markup);
     window.setTimeout(hideAlert, 5000);
 };
@@ -794,6 +798,7 @@ const getArchetypes = async (queries)=>{
 };
 const renderArchetypes = async (queries)=>{
     const cardContainer = document.querySelector(".archetypes-container");
+    cardContainer.classList.add("row");
     let archetypes;
     if (queries) {
         archetypes = await getArchetypes(queries);
@@ -810,18 +815,19 @@ const renderArchetypes = async (queries)=>{
     archetypes.forEach((archetype)=>{
         const card = document.createElement("div");
         card.classList.add("card");
+        card.classList.add("col-3", "gy-4");
         const cardCover = document.createElement("div");
-        cardCover.classList.add("card-cover");
+        cardCover.classList.add("card-cover", "d-flex", "align-items-center", "justify-content-center", "mt-2");
         const coverImg = document.createElement("img");
-        coverImg.classList.add("card__cover-img");
+        coverImg.classList.add("card__cover-img", "img-fluid", "rounded-circle");
+        const nameHeader = document.createElement("h3");
+        nameHeader.classList.add("archetype-name", "card-title", "text-center");
+        nameHeader.textContent = archetype.name;
         if (archetype.name.includes(" ")) archetype.name = archetype.name.split(" ").join("");
         coverImg.src = `/img/archetypes/${archetype.name.toLowerCase()}.jpg`;
         coverImg.alt = `${archetype.name} cover`;
-        const nameHeader = document.createElement("h3");
-        nameHeader.classList.add("archetype-name");
-        nameHeader.textContent = archetype.name;
         const totalDecks = document.createElement("p");
-        totalDecks.classList.add("total-decks");
+        totalDecks.classList.add("total-decks", "text-center", "mb-0");
         totalDecks.textContent = "Total Decks: " + archetype.totalDecks;
         cardCover.appendChild(coverImg);
         card.appendChild(cardCover);
@@ -842,12 +848,12 @@ const renderArchetype = async (id)=>{
     cardCover.classList.add("card-cover");
     const coverImg = document.createElement("img");
     coverImg.classList.add("card__cover-img");
-    if (archetype.name.includes(" ")) archetype.name = archetype.name.split(" ").join("");
-    coverImg.src = `/img/archetypes/${archetype.name.toLowerCase()}.jpg`;
-    coverImg.alt = `${archetype.name} cover`;
     const nameHeader = document.createElement("h1");
     nameHeader.classList.add("archetype-name");
     nameHeader.textContent = archetype.name;
+    if (archetype.name.includes(" ")) archetype.name = archetype.name.split(" ").join("");
+    coverImg.src = `/img/archetypes/${archetype.name.toLowerCase()}.jpg`;
+    coverImg.alt = `${archetype.name} cover`;
     const totalDecks = document.createElement("p");
     totalDecks.classList.add("total-decks");
     totalDecks.textContent = "Total Decks: " + archetype.totalDecks;
@@ -891,6 +897,7 @@ parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "renderDecks", ()=>renderDecks);
 parcelHelpers.export(exports, "renderDeck", ()=>renderDeck);
 var _alert = require("./alert");
+var _modals = require("./modals");
 const getDecks = async (queries)=>{
     let res;
     let data;
@@ -906,7 +913,7 @@ const getDecks = async (queries)=>{
         data = await res.json();
     }
     if (!res.ok) {
-        (0, _alert.showAlert)("error", data.message);
+        (0, _alert.showAlert)("danger", data.message);
         if (data.message === "Please authenticate") setTimeout(()=>{
             location.assign("/auth/login");
         }, 1500);
@@ -920,15 +927,30 @@ const getDeck = async (id)=>{
     });
     const data = await res.json();
     if (!res.ok) {
-        (0, _alert.showAlert)("error", data.message);
+        (0, _alert.showAlert)("danger", data.message);
         if (data.message === "Please authenticate") setTimeout(()=>{
             location.assign("/auth/login");
         }, 1500);
     }
     return data.data;
 };
+const deleteDeck = async (id)=>{
+    const res = await fetch(`/v1/decks/${id}`, {
+        method: "DELETE",
+        credentials: "include"
+    });
+    const data = await res.json();
+    if (!res.ok) {
+        (0, _alert.showAlert)("danger", data.message);
+        if (data.message === "Please authenticate") setTimeout(()=>{
+            location.assign("/auth/login");
+        }, 1500);
+    }
+    return;
+};
 const renderDecks = async (queries)=>{
     const decksCardContainer = document.querySelector(".decks-container");
+    decksCardContainer.classList.add("row");
     let decks;
     if (queries) {
         decks = await getDecks(queries);
@@ -944,7 +966,7 @@ const renderDecks = async (queries)=>{
     } else decks = await getDecks();
     decks.forEach((deck)=>{
         const card = document.createElement("div");
-        card.classList.add("card");
+        card.classList.add("card", "col-3", "gy-4", "text-center");
         const cardCover = document.createElement("div");
         cardCover.classList.add("card-cover");
         const coverImg = document.createElement("img");
@@ -1007,12 +1029,28 @@ const renderDeck = async (id)=>{
     const username = document.createElement("span");
     username.classList.add("username");
     username.textContent = `User : ${deck.userName}, Created at ${new Date(deck.createdAt).toString()}`;
+    const deleteBtn = document.createElement("button");
+    deleteBtn.classList.add("delete-btn", "btn", "btn-danger", "btn-sm", "float-end", "modal-btn");
+    deleteBtn.textContent = "Delete";
+    deleteBtn.addEventListener("click", async ()=>{
+        console.log(localStorage.getItem("user"));
+        const confirmation = await (0, _modals.showModal)("Are you sure you want to delete this deck?", "This action cannot be undone.");
+        if (confirmation) {
+            (0, _alert.showAlert)("success", "Deck deleted successfully");
+            await deleteDeck(id);
+            location.assign("/decks");
+        } else {
+            (0, _alert.showAlert)("info", "Deletion canceled");
+            console.log("Deletion canceled");
+        }
+    });
     userInfo.appendChild(username);
     cardCover.appendChild(coverImg);
     card.appendChild(cardCover);
     card.appendChild(nameHeader);
     card.appendChild(archetype);
     card.appendChild(userInfo);
+    card.appendChild(deleteBtn);
     deckCardContainer.appendChild(card);
     archetype.addEventListener("click", ()=>{
         location.assign(`/archetypes/${deck.archetypeId}`);
@@ -1022,7 +1060,56 @@ const renderDeck = async (id)=>{
     });
 };
 
-},{"./alert":"kxdiQ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"9h3E9":[function(require,module,exports) {
+},{"./alert":"kxdiQ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./modals":"aja2f"}],"aja2f":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "hideModal", ()=>hideModal);
+parcelHelpers.export(exports, "showModal", ()=>showModal);
+const hideModal = ()=>{
+    const el = document.querySelector(".modal");
+    if (el) el.parentElement.removeChild(el);
+};
+const showModal = (modalTitle, modalBody)=>{
+    return new Promise((resolve, reject)=>{
+        hideModal();
+        const markup = `
+      <div class="modal" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">${modalTitle}</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p>${modalBody}.</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-result="false">
+                Close
+              </button>
+              <button type="button" class="btn btn-primary" data-result="true">
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+        document.querySelector("body").insertAdjacentHTML("afterbegin", markup);
+        const modal = new bootstrap.Modal(document.querySelector(".modal"));
+        modal.show();
+        const modalElement = document.querySelector(".modal");
+        modalElement.addEventListener("click", (event)=>{
+            const target = event.target;
+            const result = target.getAttribute("data-result");
+            if (result === "true") resolve(true);
+            else resolve(false);
+            modal.hide();
+        });
+    });
+};
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"9h3E9":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "renderUsers", ()=>renderUsers);
@@ -1038,7 +1125,7 @@ const getUsers = async (queries)=>{
     });
     const data = await res.json();
     if (!res.ok) {
-        (0, _alert.showAlert)("error", "Please try again");
+        (0, _alert.showAlert)("danger", "Please try again");
         if (data.message === "Please authenticate") setTimeout(()=>{
             location.assign("/auth/login");
         }, 1500);
@@ -1051,7 +1138,7 @@ const getUserById = async (id)=>{
     });
     const data = await res.json();
     if (!res.ok) {
-        (0, _alert.showAlert)("error", "Please try again");
+        (0, _alert.showAlert)("danger", "Please try again");
         if (data.message === "Please authenticate") setTimeout(()=>{
             location.assign("/auth/login");
         }, 1500);

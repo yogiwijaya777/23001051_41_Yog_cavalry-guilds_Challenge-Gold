@@ -1,4 +1,5 @@
 import { showAlert } from './alert';
+import { showModal } from './modals';
 
 const getDecks = async (queries) => {
   let res;
@@ -16,7 +17,7 @@ const getDecks = async (queries) => {
   }
 
   if (!res.ok) {
-    showAlert('error', data.message);
+    showAlert('danger', data.message);
     if (data.message === 'Please authenticate') {
       setTimeout(() => {
         location.assign('/auth/login');
@@ -36,7 +37,7 @@ const getDeck = async (id) => {
   const data = await res.json();
 
   if (!res.ok) {
-    showAlert('error', data.message);
+    showAlert('danger', data.message);
     if (data.message === 'Please authenticate') {
       setTimeout(() => {
         location.assign('/auth/login');
@@ -47,8 +48,29 @@ const getDeck = async (id) => {
   return data.data;
 };
 
+const deleteDeck = async (id) => {
+  const res = await fetch(`/v1/decks/${id}`, {
+    method: 'DELETE',
+    credentials: 'include',
+  });
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    showAlert('danger', data.message);
+    if (data.message === 'Please authenticate') {
+      setTimeout(() => {
+        location.assign('/auth/login');
+      }, 1500);
+    }
+  }
+
+  return;
+};
+
 export const renderDecks = async (queries) => {
   const decksCardContainer = document.querySelector('.decks-container');
+  decksCardContainer.classList.add('row');
 
   let decks;
 
@@ -72,7 +94,7 @@ export const renderDecks = async (queries) => {
 
   decks.forEach((deck) => {
     const card = document.createElement('div');
-    card.classList.add('card');
+    card.classList.add('card', 'col-3', 'gy-4', 'text-center');
 
     const cardCover = document.createElement('div');
     cardCover.classList.add('card-cover');
@@ -164,12 +186,30 @@ export const renderDeck = async (id) => {
   username.classList.add('username');
   username.textContent = `User : ${deck.userName}, Created at ${new Date(deck.createdAt).toString()}`;
 
+  const deleteBtn = document.createElement('button');
+  deleteBtn.classList.add('delete-btn', 'btn', 'btn-danger', 'btn-sm', 'float-end', 'modal-btn');
+  deleteBtn.textContent = 'Delete';
+
+  deleteBtn.addEventListener('click', async () => {
+    console.log(localStorage.getItem('user'));
+    const confirmation = await showModal('Are you sure you want to delete this deck?', 'This action cannot be undone.');
+    if (confirmation) {
+      showAlert('success', 'Deck deleted successfully');
+      await deleteDeck(id);
+      location.assign('/decks');
+    } else {
+      showAlert('info', 'Deletion canceled');
+      console.log('Deletion canceled');
+    }
+  });
+
   userInfo.appendChild(username);
   cardCover.appendChild(coverImg);
   card.appendChild(cardCover);
   card.appendChild(nameHeader);
   card.appendChild(archetype);
   card.appendChild(userInfo);
+  card.appendChild(deleteBtn);
 
   deckCardContainer.appendChild(card);
 

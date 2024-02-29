@@ -13,6 +13,8 @@ const register = catchAsync(async (req, res) => {
 
   const userCreated = await userService.create(req.body);
 
+  delete userCreated.password;
+
   const tokens = await tokenService.generateAuthTokens(userCreated);
 
   const cookieOptions = {
@@ -33,11 +35,14 @@ const register = catchAsync(async (req, res) => {
 const login = catchAsync(async (req, res) => {
   const { email, password } = req.body;
   const user = await authService.loginUserWithEmailAndPassword(email, password);
+
+  delete user.password;
+
   const tokens = await tokenService.generateAuthTokens(user);
 
   const cookieOptions = {
     expires: new Date(Date.now() + config.jwt.accessExpirationMinutes * 60 * 1000),
-    httpOnly: true,
+    httpOnly: false,
   };
   if (config.env === 'production') cookieOptions.secure = true;
 

@@ -39,6 +39,7 @@ if (registerForm) {
   });
 }
 
+console.log(loginForm);
 if (loginForm) {
   loginForm.addEventListener('submit', (e) => {
     e.preventDefault();
