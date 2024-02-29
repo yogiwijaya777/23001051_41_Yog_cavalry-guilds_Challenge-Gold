@@ -10,6 +10,9 @@ function createUuidRegex(keyword) {
 }
 // DOM TRIGGER
 
+// Overviews
+const overviewRoute = location.pathname === '/';
+
 // Auth
 const registerForm = document.querySelector('.form--register');
 const loginForm = document.querySelector('.form--login');
@@ -39,7 +42,6 @@ if (registerForm) {
   });
 }
 
-console.log(loginForm);
 if (loginForm) {
   loginForm.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -52,6 +54,15 @@ if (loginForm) {
 }
 
 if (logoutButton) logoutButton.addEventListener('click', logout);
+
+if (overviewRoute) {
+  console.log('hello');
+  document.addEventListener('DOMContentLoaded', () => {
+    console.log('hello');
+    renderArchetypes();
+    renderDecks();
+  });
+}
 
 if (archetypesRoute) {
   const urlParams = new URLSearchParams(window.location.search);

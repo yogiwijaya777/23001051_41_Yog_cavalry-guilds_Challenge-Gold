@@ -589,6 +589,8 @@ function createUuidRegex(keyword) {
     return new RegExp(regexString);
 }
 // DOM TRIGGER
+// Overviews
+const overviewRoute = location.pathname === "/";
 // Auth
 const registerForm = document.querySelector(".form--register");
 const loginForm = document.querySelector(".form--login");
@@ -609,7 +611,6 @@ if (registerForm) registerForm.addEventListener("submit", (e)=>{
     const password = document.getElementById("password").value;
     (0, _authJs.register)(name, email, password);
 });
-console.log(loginForm);
 if (loginForm) loginForm.addEventListener("submit", (e)=>{
     e.preventDefault();
     const email = document.getElementById("email").value;
@@ -617,6 +618,14 @@ if (loginForm) loginForm.addEventListener("submit", (e)=>{
     (0, _authJs.login)(email, password);
 });
 if (logoutButton) logoutButton.addEventListener("click", (0, _authJs.logout));
+if (overviewRoute) {
+    console.log("hello");
+    document.addEventListener("DOMContentLoaded", ()=>{
+        console.log("hello");
+        (0, _archetypesJs.renderArchetypes)();
+        (0, _decksJs.renderDecks)();
+    });
+}
 if (archetypesRoute) {
     const urlParams = new URLSearchParams(window.location.search);
     const queries = urlParams.toString();
