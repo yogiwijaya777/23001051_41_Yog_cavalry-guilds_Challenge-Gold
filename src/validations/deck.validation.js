@@ -21,8 +21,8 @@ const update = {
   }),
   body: Joi.object()
     .keys({
-      name: Joi.string().required(),
-      description: Joi.string().required(),
+      name: Joi.string(),
+      description: Joi.string(),
       archetypeId: Joi.string().custom(objectId),
     })
     .min(1),

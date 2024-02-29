@@ -948,6 +948,24 @@ const deleteDeck = async (id)=>{
     }
     return;
 };
+const updateDeck = async (id, data)=>{
+    const res = await fetch(`/v1/decks/${id}`, {
+        method: "PATCH",
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    });
+    const dataRes = await res.json();
+    if (!res.ok) {
+        (0, _alert.showAlert)("danger", dataRes.message);
+        if (dataRes.message === "Please authenticate") setTimeout(()=>{
+            location.assign("/auth/login");
+        }, 1500);
+    }
+    return;
+};
 const renderDecks = async (queries)=>{
     const decksCardContainer = document.querySelector(".decks-container");
     decksCardContainer.classList.add("row");
@@ -1057,7 +1075,26 @@ const renderDeck = async (id)=>{
                 console.log("Deletion canceled");
             }
         });
+        const updateBtn = document.createElement("button");
+        updateBtn.classList.add("update-btn", "btn", "btn-primary", "btn-sm", "float-end", "modal-btn");
+        updateBtn.textContent = "Update";
+        updateBtn.addEventListener("click", async ()=>{
+            const body = await (0, _modals.showUpdateDeckModal)();
+            // Remove empty field
+            for(const key in body)if (body[key] === "") delete body[key];
+            if (body) {
+                (0, _alert.showAlert)("success", "Deck updated successfully");
+                await updateDeck(id, body);
+                setTimeout(()=>{
+                    location.reload(true);
+                }, 2000);
+            } else {
+                (0, _alert.showAlert)("info", "Update canceled");
+                console.log("Update canceled");
+            }
+        });
         card.appendChild(deleteBtn);
+        card.appendChild(updateBtn);
     }
     deckCardContainer.appendChild(card);
     archetype.addEventListener("click", ()=>{
@@ -1073,6 +1110,7 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "hideModal", ()=>hideModal);
 parcelHelpers.export(exports, "showModal", ()=>showModal);
+parcelHelpers.export(exports, "showUpdateDeckModal", ()=>showUpdateDeckModal);
 const hideModal = ()=>{
     const el = document.querySelector(".modal");
     if (el) el.parentElement.removeChild(el);
@@ -1113,6 +1151,68 @@ const showModal = (modalTitle, modalBody)=>{
             if (result === "true") resolve(true);
             else resolve(false);
             modal.hide();
+        });
+    });
+};
+const showUpdateDeckModal = ()=>{
+    return new Promise((resolve, reject)=>{
+        hideModal();
+        const markup = `
+      <div class="modal" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Update Deck</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form id="updateDeckForm">
+                <div class="mb-3">
+                  <label for="name" class="form-label">Name</label>
+                  <input type="text" class="form-control" id="name" required>
+                </div>
+                <div class="mb-3">
+                  <label for="description" class="form-label">Description</label>
+                  <textarea class="form-control" id="description" required></textarea>
+                </div>
+                <div class="mb-3">
+                  <label for="archetypeId" class="form-label">Archetype ID</label>
+                  <input type="text" class="form-control" id="archetypeId" required>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-result="false">
+                Close
+              </button>
+              <button type="button" class="btn btn-primary" id="confirmUpdateDeckBtn">
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+        document.querySelector("body").insertAdjacentHTML("afterbegin", markup);
+        const modal = new bootstrap.Modal(document.querySelector(".modal"));
+        modal.show();
+        const confirmUpdateDeckBtn = document.getElementById("confirmUpdateDeckBtn");
+        confirmUpdateDeckBtn.addEventListener("click", ()=>{
+            const name = document.getElementById("name").value;
+            const description = document.getElementById("description").value;
+            const archetypeId = document.getElementById("archetypeId").value;
+            if (name !== "" || description !== "" || archetypeId !== "") {
+                resolve({
+                    name,
+                    description,
+                    archetypeId
+                });
+                modal.hide();
+            } else alert("At least one of the fields (name, description, archetypeId) must be filled out.");
+        });
+        const modalElement = document.querySelector(".modal");
+        modalElement.addEventListener("hidden.bs.modal", ()=>{
+            modalElement.remove();
         });
     });
 };

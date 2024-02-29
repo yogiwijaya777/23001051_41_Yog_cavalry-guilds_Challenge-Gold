@@ -1,5 +1,5 @@
 import { showAlert } from './alert';
-import { showModal } from './modals';
+import { showModal, showUpdateDeckModal } from './modals';
 
 const getDecks = async (queries) => {
   let res;
@@ -59,6 +59,30 @@ const deleteDeck = async (id) => {
   if (!res.ok) {
     showAlert('danger', data.message);
     if (data.message === 'Please authenticate') {
+      setTimeout(() => {
+        location.assign('/auth/login');
+      }, 1500);
+    }
+  }
+
+  return;
+};
+
+const updateDeck = async (id, data) => {
+  const res = await fetch(`/v1/decks/${id}`, {
+    method: 'PATCH',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  });
+
+  const dataRes = await res.json();
+
+  if (!res.ok) {
+    showAlert('danger', dataRes.message);
+    if (dataRes.message === 'Please authenticate') {
       setTimeout(() => {
         location.assign('/auth/login');
       }, 1500);
@@ -218,7 +242,34 @@ export const renderDeck = async (id) => {
       }
     });
 
+    const updateBtn = document.createElement('button');
+    updateBtn.classList.add('update-btn', 'btn', 'btn-primary', 'btn-sm', 'float-end', 'modal-btn');
+    updateBtn.textContent = 'Update';
+
+    updateBtn.addEventListener('click', async () => {
+      const body = await showUpdateDeckModal();
+
+      // Remove empty field
+      for (const key in body) {
+        if (body[key] === '') {
+          delete body[key];
+        }
+      }
+
+      if (body) {
+        showAlert('success', 'Deck updated successfully');
+        await updateDeck(id, body);
+        setTimeout(() => {
+          location.reload(true);
+        }, 2000);
+      } else {
+        showAlert('info', 'Update canceled');
+        console.log('Update canceled');
+      }
+    });
+
     card.appendChild(deleteBtn);
+    card.appendChild(updateBtn);
   }
 
   deckCardContainer.appendChild(card);
