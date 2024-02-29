@@ -636,7 +636,7 @@ if (archetypesRoute) {
 }
 if (isArchetypeByIdRoute) {
     const archetypeId = isArchetypeByIdRoute[1];
-    document.addEventListener("load", (0, _archetypesJs.renderArchetype)(archetypeId));
+    document.addEventListener("DOMContentLoaded", (0, _archetypesJs.renderArchetype)(archetypeId));
 }
 if (decksRoute) {
     const urlParams = new URLSearchParams(window.location.search);
@@ -644,11 +644,11 @@ if (decksRoute) {
     let decks;
     if (queries) decks = (0, _decksJs.renderDecks)(queries);
     else decks = (0, _decksJs.renderDecks)();
-    document.addEventListener("load", decks);
+    document.addEventListener("DOMContentLoaded", decks);
 }
 if (isDeckByIdRoute) {
     const deckId = isDeckByIdRoute[1];
-    document.addEventListener("load", (0, _decksJs.renderDeck)(deckId));
+    document.addEventListener("DOMContentLoaded", (0, _decksJs.renderDeck)(deckId));
 }
 if (usersRoute) {
     const urlParams = new URLSearchParams(window.location.search);
@@ -656,11 +656,11 @@ if (usersRoute) {
     let users;
     if (queries) users = (0, _usersJs.renderUsers)(queries);
     else users = (0, _usersJs.renderUsers)();
-    document.addEventListener("load", users);
+    document.addEventListener("DOMContentLoaded", users);
 }
 if (isUserByIdRoute) {
     const userId = isUserByIdRoute[1];
-    document.addEventListener("load", (0, _usersJs.renderUser)(userId));
+    document.addEventListener("DOMContentLoaded", (0, _usersJs.renderUser)(userId));
 }
 
 },{"./auth.js":"fov0Z","./archetypes.js":"jiVwJ","./decks.js":"7dKr1","./users.js":"9h3E9"}],"fov0Z":[function(require,module,exports) {

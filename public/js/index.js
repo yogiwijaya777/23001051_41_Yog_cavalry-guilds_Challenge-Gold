@@ -81,7 +81,7 @@ if (archetypesRoute) {
 if (isArchetypeByIdRoute) {
   const archetypeId = isArchetypeByIdRoute[1];
 
-  document.addEventListener('load', renderArchetype(archetypeId));
+  document.addEventListener('DOMContentLoaded', renderArchetype(archetypeId));
 }
 
 if (decksRoute) {
@@ -95,13 +95,13 @@ if (decksRoute) {
     decks = renderDecks();
   }
 
-  document.addEventListener('load', decks);
+  document.addEventListener('DOMContentLoaded', decks);
 }
 
 if (isDeckByIdRoute) {
   const deckId = isDeckByIdRoute[1];
 
-  document.addEventListener('load', renderDeck(deckId));
+  document.addEventListener('DOMContentLoaded', renderDeck(deckId));
 }
 
 if (usersRoute) {
@@ -115,11 +115,11 @@ if (usersRoute) {
     users = renderUsers();
   }
 
-  document.addEventListener('load', users);
+  document.addEventListener('DOMContentLoaded', users);
 }
 
 if (isUserByIdRoute) {
   const userId = isUserByIdRoute[1];
 
-  document.addEventListener('load', renderUser(userId));
+  document.addEventListener('DOMContentLoaded', renderUser(userId));
 }
