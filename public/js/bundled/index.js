@@ -1029,8 +1029,12 @@ const renderDeck = async (id)=>{
     const username = document.createElement("span");
     username.classList.add("username");
     username.textContent = `User : ${deck.userName}, Created at ${new Date(deck.createdAt).toString()}`;
+    const deckDescription = document.createElement("p");
+    deckDescription.classList.add("deck-description", "card-text", "d-inline-block", "text-center");
+    deckDescription.textContent = `Description : ${deck.description};`;
     userInfo.appendChild(username);
     cardCover.appendChild(coverImg);
+    card.appendChild(deckDescription);
     card.appendChild(cardCover);
     card.appendChild(nameHeader);
     card.appendChild(archetype);
