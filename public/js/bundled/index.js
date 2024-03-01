@@ -1003,10 +1003,12 @@ const renderDecks = async (queries)=>{
     createBtn.textContent = "Create Deck";
     createBtn.addEventListener("click", async ()=>{
         const archetypes = await (0, _archetypes.getArchetypes)();
-        console.log(archetypes);
         const data = await (0, _modals.showCreateDeckModal)(archetypes);
-        if (data) console.log(data);
-        else console.log("no data");
+        if (data) {
+            (0, _alert.showAlert)("success", "Deck Created");
+            const newDeck = await createDeck(data);
+            location.assign(`/decks/${newDeck.id}`);
+        }
     });
     decksCardContainer.appendChild(createBtn);
     let decks;

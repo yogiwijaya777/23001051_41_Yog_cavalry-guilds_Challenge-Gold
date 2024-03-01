@@ -126,12 +126,11 @@ export const renderDecks = async (queries) => {
   createBtn.textContent = 'Create Deck';
   createBtn.addEventListener('click', async () => {
     const archetypes = await getArchetypes();
-    console.log(archetypes);
     const data = await showCreateDeckModal(archetypes);
     if (data) {
-      console.log(data);
-    } else {
-      console.log('no data');
+      showAlert('success', 'Deck Created');
+      const newDeck = await createDeck(data);
+      location.assign(`/decks/${newDeck.id}`);
     }
   });
   decksCardContainer.appendChild(createBtn);
