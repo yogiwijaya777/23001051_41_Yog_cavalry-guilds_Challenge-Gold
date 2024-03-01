@@ -1,5 +1,6 @@
 import { showAlert } from './alert';
-import { showModal, showUpdateDeckModal } from './modals';
+import { getArchetypes } from './archetypes';
+import { showModal, showUpdateDeckModal, showCreateDeckModal } from './modals';
 
 const getDecks = async (queries) => {
   let res;
@@ -46,6 +47,30 @@ const getDeck = async (id) => {
   }
 
   return data.data;
+};
+
+const createDeck = async (data) => {
+  const res = await fetch('/v1/decks', {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  });
+
+  const dataRes = await res.json();
+
+  if (!res.ok) {
+    showAlert('danger', dataRes.message);
+    if (dataRes.message === 'Please authenticate') {
+      setTimeout(() => {
+        location.assign('/auth/login');
+      }, 1500);
+    }
+  }
+
+  return dataRes.data;
 };
 
 const deleteDeck = async (id) => {
@@ -95,6 +120,21 @@ const updateDeck = async (id, data) => {
 export const renderDecks = async (queries) => {
   const decksCardContainer = document.querySelector('.decks-container');
   decksCardContainer.classList.add('row');
+
+  const createBtn = document.createElement('button');
+  createBtn.classList.add('btn', 'btn-primary', 'btn-create-deck');
+  createBtn.textContent = 'Create Deck';
+  createBtn.addEventListener('click', async () => {
+    const archetypes = await getArchetypes();
+    console.log(archetypes);
+    const data = await showCreateDeckModal(archetypes);
+    if (data) {
+      console.log(data);
+    } else {
+      console.log('no data');
+    }
+  });
+  decksCardContainer.appendChild(createBtn);
 
   let decks;
 

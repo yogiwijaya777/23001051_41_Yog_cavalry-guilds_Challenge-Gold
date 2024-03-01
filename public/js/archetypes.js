@@ -18,7 +18,7 @@ const getArchetype = async (id) => {
 
   return data.data;
 };
-const getArchetypes = async (queries) => {
+export const getArchetypes = async (queries) => {
   let res;
   let data;
   if (queries) {

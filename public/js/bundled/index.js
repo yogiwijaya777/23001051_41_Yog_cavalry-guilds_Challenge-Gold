@@ -766,6 +766,7 @@ exports.export = function(dest, destName, get) {
 },{}],"jiVwJ":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "getArchetypes", ()=>getArchetypes);
 parcelHelpers.export(exports, "renderArchetypes", ()=>renderArchetypes);
 parcelHelpers.export(exports, "renderArchetype", ()=>renderArchetype);
 var _alertJs = require("./alert.js");
@@ -906,6 +907,7 @@ parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "renderDecks", ()=>renderDecks);
 parcelHelpers.export(exports, "renderDeck", ()=>renderDeck);
 var _alert = require("./alert");
+var _archetypes = require("./archetypes");
 var _modals = require("./modals");
 const getDecks = async (queries)=>{
     let res;
@@ -943,6 +945,24 @@ const getDeck = async (id)=>{
     }
     return data.data;
 };
+const createDeck = async (data)=>{
+    const res = await fetch("/v1/decks", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    });
+    const dataRes = await res.json();
+    if (!res.ok) {
+        (0, _alert.showAlert)("danger", dataRes.message);
+        if (dataRes.message === "Please authenticate") setTimeout(()=>{
+            location.assign("/auth/login");
+        }, 1500);
+    }
+    return dataRes.data;
+};
 const deleteDeck = async (id)=>{
     const res = await fetch(`/v1/decks/${id}`, {
         method: "DELETE",
@@ -978,6 +998,17 @@ const updateDeck = async (id, data)=>{
 const renderDecks = async (queries)=>{
     const decksCardContainer = document.querySelector(".decks-container");
     decksCardContainer.classList.add("row");
+    const createBtn = document.createElement("button");
+    createBtn.classList.add("btn", "btn-primary", "btn-create-deck");
+    createBtn.textContent = "Create Deck";
+    createBtn.addEventListener("click", async ()=>{
+        const archetypes = await (0, _archetypes.getArchetypes)();
+        console.log(archetypes);
+        const data = await (0, _modals.showCreateDeckModal)(archetypes);
+        if (data) console.log(data);
+        else console.log("no data");
+    });
+    decksCardContainer.appendChild(createBtn);
     let decks;
     if (queries) {
         decks = await getDecks(queries);
@@ -1106,12 +1137,13 @@ const renderDeck = async (id)=>{
     });
 };
 
-},{"./alert":"kxdiQ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./modals":"aja2f"}],"aja2f":[function(require,module,exports) {
+},{"./alert":"kxdiQ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./modals":"aja2f","./archetypes":"jiVwJ"}],"aja2f":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "hideModal", ()=>hideModal);
 parcelHelpers.export(exports, "showModal", ()=>showModal);
 parcelHelpers.export(exports, "showUpdateDeckModal", ()=>showUpdateDeckModal);
+parcelHelpers.export(exports, "showCreateDeckModal", ()=>showCreateDeckModal);
 const hideModal = ()=>{
     const el = document.querySelector(".modal");
     if (el) el.parentElement.removeChild(el);
@@ -1210,6 +1242,75 @@ const showUpdateDeckModal = ()=>{
                 });
                 modal.hide();
             } else alert("At least one of the fields (name, description, archetypeId) must be filled out.");
+        });
+        const modalElement = document.querySelector(".modal");
+        modalElement.addEventListener("hidden.bs.modal", ()=>{
+            modalElement.remove();
+        });
+    });
+};
+const showCreateDeckModal = (archetypeData)=>{
+    return new Promise((resolve, reject)=>{
+        hideModal();
+        const markup = `
+      <div class="modal" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Create Deck</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form id="createDeckForm">
+                <div class="mb-3">
+                  <label for="name" class="form-label">Name</label>
+                  <input type="text" class="form-control" id="name" required>
+                </div>
+                <div class="mb-3">
+                  <label for="description" class="form-label">Description</label>
+                  <textarea class="form-control" id="description" required></textarea>
+                </div>
+                <div class="mb-3">
+${archetypeData.map((archetype)=>{
+            return `<div class="form-check">
+              <input class="form-check-input" type="radio" name="archetypeId" id="archetypeId-${archetype.id}" value="${archetype.id}">
+              <label class="form-check-label" for="archetypeId-${archetype.id}">
+                ${archetype.name}
+              </label>
+            </div>`;
+        }).join("")}
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-result="false">
+                Close
+              </button>
+              <button type="button" class="btn btn-primary" id="confirmCreateDeckBtn">
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    `;
+        document.querySelector("body").insertAdjacentHTML("afterbegin", markup);
+        const modal = new bootstrap.Modal(document.querySelector(".modal"));
+        modal.show();
+        const confirmCreateDeckBtn = document.getElementById("confirmCreateDeckBtn");
+        confirmCreateDeckBtn.addEventListener("click", ()=>{
+            const name = document.getElementById("name").value;
+            const description = document.getElementById("description").value;
+            const archetypeId = document.querySelector("input[name=archetypeId]:checked").value;
+            if (name !== "" && description !== "" && archetypeId !== "") {
+                resolve({
+                    name,
+                    description,
+                    archetypeId
+                });
+                modal.hide();
+            } else alert("All fields must be filled out.");
         });
         const modalElement = document.querySelector(".modal");
         modalElement.addEventListener("hidden.bs.modal", ()=>{
