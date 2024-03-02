@@ -9,10 +9,7 @@ module.exports = {
   env: process.env.NODE_ENV || 'development',
   port: process.env.PORT || 3000,
   development: {
-    DB_HOST: process.env.DB_HOST,
-    DB_USER: process.env.DB_USER,
-    DB_PASS: process.env.DB_PASS,
-    DB: process.env.DB,
+    CONNECTION_STRING: process.env.DATABASE_URL,
   },
   jwt: {
     secret: process.env.JWT_SECRET,
@@ -20,15 +17,3 @@ module.exports = {
     refreshExpirationDays: process.env.JWT_REFRESH_EXPIRATION_DAYS,
   },
 };
-
-//   email: {
-//     smtp: {
-//       host: envVars.SMTP_HOST,
-//       port: envVars.SMTP_PORT,
-//       auth: {
-//         user: envVars.SMTP_USERNAME,
-//         pass: envVars.SMTP_PASSWORD,
-//       },
-//     },
-//     from: envVars.EMAIL_FROM,
-//   },
