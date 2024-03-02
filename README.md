@@ -259,7 +259,7 @@ const ApiError = require('../utils/ApiError');
 const knex = require('../db/knex');
 
 const getUser = async (userId) => {
-  const user = await knex('users').where({id : userId}).first()
+  const user = await knex('users').where({ id: userId }).first();
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
@@ -272,7 +272,7 @@ Request data is validated using [Joi](https://joi.dev/). Check the [documentatio
 
 The validation schemas are defined in the `src/validations` directory and are used in the routes by providing them as parameters to the `validate` middleware.
 
-````javascript
+```javascript
 const express = require('express');
 const validate = require('../../middlewares/validate');
 const userValidation = require('../../validations/user.validation');
@@ -282,6 +282,7 @@ const router = express.Router();
 
 router.post('/users', validate(userValidation.createUser), userController.createUser);
 ```
+
 ## Authentication
 
 To require authentication for certain routes, you can use the `auth` middleware.
@@ -294,7 +295,7 @@ const userController = require('../../controllers/user.controller');
 const router = express.Router();
 
 router.post('/users', auth(), userController.createUser);
-````
+```
 
 These routes require a valid JWT access token in the Authorization request header using the Bearer schema. If the request does not contain a valid access token, an Unauthorized (401) error is thrown.
 
