@@ -256,10 +256,10 @@ For example, if you are trying to get a user from the DB who is not found, and y
 ```javascript
 const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
-const prisma = require('../prisma/index');
+const knex = require('../db/knex');
 
 const getUser = async (userId) => {
-  const user = await User.findByUnique(userId);
+  const user = await knex('users').where({id : userId}).first()
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
