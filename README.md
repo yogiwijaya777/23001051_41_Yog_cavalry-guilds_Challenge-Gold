@@ -123,7 +123,7 @@ To run this project, you will need to add the following environment variables to
 PORT=3000
 
 # URL of the DB
-DATABASE_URL=postgresql://Example
+DATABASE_URL=postgresql://userName:password@host/databaseName
 
 # JWT
 # JWT secret key

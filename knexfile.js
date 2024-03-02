@@ -6,12 +6,7 @@ const config = require('./src/configs/config');
 module.exports = {
   development: {
     client: 'pg',
-    connection: {
-      host: config.development.DB_HOST,
-      user: config.development.DB_USER,
-      password: config.development.DB_PASS,
-      database: config.development.DB,
-    },
+    connection: config.development.CONNECTION_STRING,
     migrations: {
       directory: './src/db/migrations',
     },
