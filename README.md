@@ -62,14 +62,32 @@ cp .env.example .env
 
 Running locally:
 
+Install the depedencies with npm :
+
 ```bash
-npm run dev
+npm install
+
 ```
 
-Running in production:
+Database Migrations and Seedings :
 
 ```bash
-npm start
+# Migrating Database
+knex migrate:latest
+# OR
+npx knex migrate:latest
+
+# Seeding
+knex seed:run
+# OR
+npx knex seed:run
+
+# OR Instead off 2 of that, you can just run the firstStart.js file on root folder
+node firstStart.js
+```
+
+```bash
+npm run dev
 ```
 
 Parcel bundler:
