@@ -10,23 +10,21 @@ exports.seed = async function (knex) {
       id: 'e98ab0fc-ed0f-47e5-85d0-b667d5907400',
       name: 'Exosister Regen',
       description:
-        'Deck "Exosister Regen" adalah deck berbasis Spellcaster yang menekankan pemanggilan kembali monster dari graveyard dan pengendalian permainan melalui kartu sihir dan jebakan. Strateginya adalah memanfaatkan efek pemanggilan kembali dan pengendalian lapangan untuk mengatur tempo permainan dan mendapatkan keunggulan dalam pertarungan.',
+        'Deck "Exosister Regen" adalah deck berbasis Spellcaster yang menekankan pemanggilan kembali monster dari graveyard dan pengendalian permainan melalui kartu sihir dan jebakan.',
       archetypeId: '6e35aa3d-1573-4b56-99c0-3f2dd4d64475',
       userId: 'beb60df8-f3ef-453c-9064-8ae8b459f1a6',
     },
     {
       id: 'cbfe4713-c553-4d17-b63e-00629e69e5fa',
       name: 'Exo-Handtrap',
-      description:
-        '"Exosister Handtrap" deck focuses on Spellcaster monsters and handtrap effects to control the game. It utilizes monster revival and field control to gain advantage in battles.',
+      description: '"Exosister Handtrap" deck focuses on Spellcaster monsters and handtrap effects to control the game.',
       archetypeId: '6e35aa3d-1573-4b56-99c0-3f2dd4d64475',
       userId: 'f5cc52e7-4bd7-4a50-87f2-da6703ce619c',
     },
     {
       id: '26c50041-6920-4803-9d07-940f0dd927e2',
       name: 'Exosister Tama',
-      description:
-        'Exosister Tama deck focuses on versatile Spellcaster monsters and trap cards to control the game. It excels at disrupting the opponents strategies while maintaining field presence through monster revival and defensive traps.',
+      description: 'Exosister Tama deck focuses on versatile Spellcaster monsters and trap cards to control the game.',
       archetypeId: '6e35aa3d-1573-4b56-99c0-3f2dd4d64475',
       userId: 'beb60df8-f3ef-453c-9064-8ae8b459f1a6',
     },
