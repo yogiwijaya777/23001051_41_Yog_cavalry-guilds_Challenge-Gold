@@ -2,23 +2,8 @@ const httpStatus = require('http-status');
 const config = require('../configs/config');
 const logger = require('../configs/logger');
 const ApiError = require('../utils/ApiError');
+const { DatabaseError } = require('pg');
 
-const handleDatabaseError = (err) => {
-  switch (err.code) {
-    case 'P2002':
-      // handling duplicate key errors
-      return new ApiError(400, `Duplicate field value: ${err.meta.target}`, false, err.stack);
-    case 'P2014':
-      // handling invalid id errors
-      return new ApiError(400, `Invalid ID: ${err.meta.target}`, false, err.stack);
-    case 'P2003':
-      // handling invalid data errors
-      return new ApiError(400, `Invalid input data: ${err.meta.target}`, false, err.stack);
-    default:
-      // handling all other errors
-      return new ApiError(500, `Something went wrong: ${err.message}`, false, err.stack);
-  }
-};
 
 const errorConverter = (err, req, res, next) => {
   let error = err;
@@ -30,18 +15,20 @@ const errorConverter = (err, req, res, next) => {
 
       logger.info('handleAxiosError');
       error = new ApiError(statusCode, message, false, err.stack);
-    } else {
+    } else if (err instanceof DatabaseError){
+
       // Handling Database Error
-      if (err.code) {
-        error = handleDatabaseError(err);
-      } else {
+      logger.info('handleDatabaseError');
+      const statusCode = error.statusCode || 500;
+      const message = error.message || httpStatus[statusCode];
+        error = new ApiError(statusCode, message, false, err.stack);
+    } else {
         // Handling Global Error
         const statusCode = error.statusCode || 500;
         const message = error.message || httpStatus[statusCode];
         error = new ApiError(statusCode, message, false, err.stack);
       }
     }
-  }
   next(error);
 };
 
