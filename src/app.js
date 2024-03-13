@@ -25,6 +25,8 @@ if (config.env !== 'test') {
   app.use(morgan.errorHandler);
 }
 
+app.use(express.static(path.join(__dirname, '..', 'public')));
+
 // set security HTTP headers
 app.use(helmet());
 
