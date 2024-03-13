@@ -6,7 +6,7 @@ const config = require('./src/configs/config');
 module.exports = {
   development: {
     client: 'pg',
-    connection: config.development.CONNECTION_STRING,
+    connection: 'postgres://dfoyfthu:VI7qZHnct7Sa7pr7PVLTW9AtQ1tQIlfC@cornelius.db.elephantsql.com/dfoyfthu',
     migrations: {
       directory: './src/db/migrations',
     },
