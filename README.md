@@ -15,6 +15,12 @@ Install the depedencies with npm :
 
 ```bash
 npm install
+
+# You need to install CRA modules to at client\ folder
+cd client\
+
+npm i 
+
 ```
 
 Set the environment variables :
@@ -65,6 +71,11 @@ Install the depedencies with npm :
 ```bash
 npm install
 
+# You need to install CRA modules to at client\ folder
+cd client\
+
+npm i 
+
 ```
 
 Database Migrations and Seedings :
@@ -85,16 +96,16 @@ node firstStart.js
 ```
 
 ```bash
+# To Run Back-End APP
 npm run dev
+
+# To Run Front-End App
+# You need to at client\ Folder
+cd ~\client\
+npm start
 ```
 
-Parcel bundler:
 
-```bash
-# build
-npm run watch:js
-
-```
 
 Linting:
 
