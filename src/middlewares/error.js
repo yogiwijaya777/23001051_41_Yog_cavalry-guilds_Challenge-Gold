@@ -4,7 +4,6 @@ const logger = require('../configs/logger');
 const ApiError = require('../utils/ApiError');
 const { DatabaseError } = require('pg');
 
-
 const errorConverter = (err, req, res, next) => {
   let error = err;
   if (!(error instanceof ApiError)) {
@@ -15,20 +14,19 @@ const errorConverter = (err, req, res, next) => {
 
       logger.info('handleAxiosError');
       error = new ApiError(statusCode, message, false, err.stack);
-    } else if (err instanceof DatabaseError){
-
+    } else if (err instanceof DatabaseError) {
       // Handling Database Error
       logger.info('handleDatabaseError');
       const statusCode = error.statusCode || 500;
       const message = error.message || httpStatus[statusCode];
-        error = new ApiError(statusCode, message, false, err.stack);
+      error = new ApiError(statusCode, message, false, err.stack);
     } else {
-        // Handling Global Error
-        const statusCode = error.statusCode || 500;
-        const message = error.message || httpStatus[statusCode];
-        error = new ApiError(statusCode, message, false, err.stack);
-      }
+      // Handling Global Error
+      const statusCode = error.statusCode || 500;
+      const message = error.message || httpStatus[statusCode];
+      error = new ApiError(statusCode, message, false, err.stack);
     }
+  }
   next(error);
 };
 
