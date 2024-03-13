@@ -95,6 +95,8 @@ npx knex seed:run
 node firstStart.js
 ```
 
+Running App : 
+
 ```bash
 # To Run Back-End APP
 npm run dev
