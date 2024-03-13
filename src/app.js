@@ -62,10 +62,8 @@ app.use('/v1', apiRoutes);
 // production routes
 app.use('/', routes);
 
-if (config.env === 'development') {
-  const swaggerDocument = YAML.load('./cavalry-guilds-docs.yaml');
-  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-}
+const swaggerDocument = YAML.load('./cavalry-guilds-docs.yaml');
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // send back a 404 error for any unknown api request
 app.use((req, res, next) => {
