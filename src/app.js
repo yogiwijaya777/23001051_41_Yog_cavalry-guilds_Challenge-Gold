@@ -25,11 +25,6 @@ if (config.env !== 'test') {
   app.use(morgan.errorHandler);
 }
 
-// set views
-app.set('view engine', 'pug');
-app.set('views', path.join(__dirname, '..', 'views'));
-app.use(express.static(path.join(__dirname, '..', 'public')));
-
 // set security HTTP headers
 app.use(helmet());
 
