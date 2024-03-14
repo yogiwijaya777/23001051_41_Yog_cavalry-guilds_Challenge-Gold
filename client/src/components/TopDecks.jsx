@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 function fetchArchetypes() {
   const archetypeData = [
@@ -208,7 +208,15 @@ export default function ArchetypeCardList() {
 
   const [archetypes, setArchetypes] = useState(archetypesData);
   const [decks, setDecks] = useState(decksData);
+  const [query, setQuery] = useState('');
   const [isOpen, setIsOpen] = useState(false);
+
+  const filteredArchetypes = useMemo(() => {
+    if (!query) {
+      return archetypes;
+    }
+    return archetypes.filter((archetype) => archetype.name.toLowerCase().includes(query.toLowerCase()));
+  }, [archetypes, query]);
 
   const handlerArchetype = (id) => {
     isOpen ? setArchetypes(archetypesData) : setArchetypes(archetypes.filter((archetype) => archetype.id === id));
@@ -216,14 +224,20 @@ export default function ArchetypeCardList() {
     handlerToggle();
   };
 
+  // useEffect
+
   const handlerToggle = () => {
     setIsOpen(!isOpen);
   };
 
   return (
     <div className="container text-dark">
+      <div className="input-group ">
+        <span className="input-group-text ">Search</span>
+        <input type="text" value={query} className="form-control" onChange={(e) => setQuery(e.target.value)} />
+      </div>
       <div className="row">
-        {archetypes.map((card, index) => (
+        {filteredArchetypes.map((card, index) => (
           <div key={index} className="col-sm-6 col-md-4 col-lg-2 fi" onClick={() => handlerArchetype(card.id)}>
             <div className="card position-relative">
               <div>
