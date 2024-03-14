@@ -1,9 +1,9 @@
 import './App.css';
-
+import ArchetypeCardList from './components/TopDecks';
 function App() {
   return (
     <div className="App">
-      <h1 className="text-center">Hello World</h1>
+      <ArchetypeCardList />
     </div>
   );
 }
