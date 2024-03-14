@@ -129,7 +129,7 @@ const fetchDecks = () => {
     },
     {
       id: '8e435ae3-69bd-4277-b0a1-00b10ed278cd',
-      name: 'adipiscing elit. Suspendisse varius lectus sed justo',
+      name: 'adipiscing elit',
       description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius lectus sed justo consequat.',
       archetypeId: '9dfa578e-e6b3-48ff-99ab-972543f4b6c4',
       userId: 'beb60df8-f3ef-453c-9064-8ae8b459f1a6',
@@ -238,7 +238,7 @@ export default function ArchetypeCardList() {
       </div>
       <div className="row">
         {filteredArchetypes.map((card, index) => (
-          <div key={index} className="col-sm-6 col-md-4 col-lg-2 fi" onClick={() => handlerArchetype(card.id)}>
+          <div key={index} className="col-sm-6 col-md-4 col-lg-2 mt-1" onClick={() => handlerArchetype(card.id)}>
             <div className="card position-relative">
               <div>
                 <span className="ms-2">{card.name}</span>
@@ -248,26 +248,42 @@ export default function ArchetypeCardList() {
           </div>
         ))}
       </div>
-      {isOpen && (
-        <table className="text-light table">
-          <thead>
-            <tr className="table-secondary">
-              <th>Archetype</th>
-              <th>Name</th>
-              <th>Player</th>
-            </tr>
-          </thead>
-          {decks.map((deck) => (
-            <tbody>
-              <tr>
-                <td>{deck.archetypeName}</td>
-                <td>{deck.name}</td>
-                <td>{deck.userName}</td>
-              </tr>
-            </tbody>
-          ))}
-        </table>
-      )}
+      <div className="row">
+        {decks.map((deck) => (
+          <div className="card mb-2 ms-4 mt-3 col-lg-2 col-md-4 col-sm-6" key={deck.id}>
+            <img src={`/img/archetypes/${deck.archetypeName}.jpg`} className="img-fluid w-75 mx-auto" alt="..." />
+            <div className="card-body text-center me-4">
+              <a
+                className="icon-link icon-link-hover"
+                style={{ '--bs-icon-link-transform': 'translate3d(0, -.125rem, 0)' }}
+                href={`/decks/${deck.id}`}
+              >
+                <svg className="bi" aria-hidden="true"></svg>
+                {deck.name}
+              </a>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
+
+// <table className="text-light table">
+//   <thead>
+//     <tr className="table-secondary">
+//       <th>Archetype</th>
+//       <th>Name</th>
+//       <th>Player</th>
+//     </tr>
+//   </thead>
+//   {decks.map((deck) => (
+//     <tbody>
+//       <tr>
+//         <td>{deck.archetypeName}</td>
+//         <td>{deck.name}</td>
+//         <td>{deck.userName}</td>
+//       </tr>
+//     </tbody>
+//   ))}
+// </table>
