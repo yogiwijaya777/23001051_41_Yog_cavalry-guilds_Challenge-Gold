@@ -13,6 +13,10 @@ const { tokenTypes } = require('../configs/tokens');
  */
 const loginUserWithEmailAndPassword = async (email, password) => {
   const user = await userService.getByEmail(email);
+  if (!user) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect email or password');
+  }
+
   const validPassword = await bcrypt.compare(password, user.password);
 
   if (!validPassword) {
