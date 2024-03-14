@@ -112,7 +112,7 @@ export default function ArchetypeCardList() {
 
   const handlerArchetype = (id) => {
     isOpen ? setArchetypes(archetypesData) : setArchetypes(archetypes.filter((archetype) => archetype.id === id));
-    isOpen ? setDecks(decks.filter((deck) => deck.archetypeId === id)) : setDecks(decksData);
+    isOpen ? setDecks(decksData) : setDecks(decks.filter((deck) => deck.archetypeId === id));
     handlerToggle();
   };
 
@@ -143,7 +143,7 @@ export default function ArchetypeCardList() {
               <th>Player</th>
             </tr>
           </thead>
-          {decksData.map((deck) => (
+          {decks.map((deck) => (
             <tbody>
               <tr>
                 <td>{deck.archetypeName}</td>
