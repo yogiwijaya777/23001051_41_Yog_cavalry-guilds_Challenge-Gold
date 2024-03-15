@@ -1,47 +1,56 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import axios from 'axios';
 
-function fetchArchetypes() {
-  const archetypeData = [
-    {
-      id: '109907e7-75e1-4b84-85d6-7e1ff6b1f9a3',
-      name: 'Naturia',
-      createdAt: '2024-03-14T00:18:50.333Z',
-      totalDecks: '0',
-    },
-    {
-      id: '3b8c3177-e4bb-471a-ac40-18d5f5b97a2c',
-      name: 'Rescue Ace',
-      createdAt: '2024-03-14T00:18:50.333Z',
-      totalDecks: '3',
-    },
-    {
-      id: '6e35aa3d-1573-4b56-99c0-3f2dd4d64475',
-      name: 'Exosister',
-      createdAt: '2024-03-14T00:18:50.333Z',
-      totalDecks: '5',
-    },
-    {
-      id: '760efab5-a405-4f96-b31e-98ea6e0b2aa1',
-      name: 'Kashtira 1',
-      createdAt: '2024-03-14T00:18:50.333Z',
-      totalDecks: '2',
-    },
-    {
-      id: '9dfa578e-e6b3-48ff-99ab-972543f4b6c4',
-      name: 'Mannadium',
-      createdAt: '2024-03-14T00:18:50.333Z',
-      totalDecks: '4',
-    },
-    {
-      id: 'ff15bac3-f615-43ac-a9ed-d2a574a2dac2',
-      name: 'Branded',
-      createdAt: '2024-03-14T00:18:50.333Z',
-      totalDecks: '1',
-    },
-  ];
+// function fetchArchetypes() {
+//   const archetypeData = [
+//     {
+//       id: '109907e7-75e1-4b84-85d6-7e1ff6b1f9a3',
+//       name: 'Naturia',
+//       createdAt: '2024-03-14T00:18:50.333Z',
+//       totalDecks: '0',
+//     },
+//     {
+//       id: '3b8c3177-e4bb-471a-ac40-18d5f5b97a2c',
+//       name: 'Rescue Ace',
+//       createdAt: '2024-03-14T00:18:50.333Z',
+//       totalDecks: '3',
+//     },
+//     {
+//       id: '6e35aa3d-1573-4b56-99c0-3f2dd4d64475',
+//       name: 'Exosister',
+//       createdAt: '2024-03-14T00:18:50.333Z',
+//       totalDecks: '5',
+//     },
+//     {
+//       id: '760efab5-a405-4f96-b31e-98ea6e0b2aa1',
+//       name: 'Kashtira 1',
+//       createdAt: '2024-03-14T00:18:50.333Z',
+//       totalDecks: '2',
+//     },
+//     {
+//       id: '9dfa578e-e6b3-48ff-99ab-972543f4b6c4',
+//       name: 'Mannadium',
+//       createdAt: '2024-03-14T00:18:50.333Z',
+//       totalDecks: '4',
+//     },
+//     {
+//       id: 'ff15bac3-f615-43ac-a9ed-d2a574a2dac2',
+//       name: 'Branded',
+//       createdAt: '2024-03-14T00:18:50.333Z',
+//       totalDecks: '1',
+//     },
+//   ];
 
-  return archetypeData;
-}
+//   return archetypeData;
+// }
+
+// const fa = async (queries) => {
+//   if (queries) console.log(queries);
+
+//   const data = response.data.data;
+
+//   return data;
+// };
 
 const fetchDecks = () => {
   const deckList = [
@@ -203,26 +212,48 @@ const fetchDecks = () => {
 };
 
 export default function ArchetypeCardList() {
-  const archetypesData = fetchArchetypes();
+  // const archetypesData = await fetchArchetypes();
   const decksData = fetchDecks();
 
-  const [archetypes, setArchetypes] = useState(archetypesData);
+  const [archetypes, setArchetypes] = useState([]);
   const [decks, setDecks] = useState(decksData);
   const [query, setQuery] = useState('');
   const [isOpen, setIsOpen] = useState(false);
+  const [secondArchetypes, setsecondArchetypes] = useState([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const URL = process.env.REACT_APP_API_URL;
+
+        const response = await axios.get(`${URL}/archetypes`);
+        console.log('running');
+        console.log(response, URL);
+        setArchetypes(response.data.data);
+        setsecondArchetypes(response.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchData();
+  }, []);
+  console.log(process.env.REACT_APP_API_URL);
+  console.log(archetypes);
 
   const filteredArchetypes = useMemo(() => {
     if (!query) {
-      return archetypes;
+      return secondArchetypes;
     }
-    return archetypes.filter((archetype) => archetype.name.toLowerCase().includes(query.toLowerCase()));
-  }, [archetypes, query]);
+    return secondArchetypes.filter((archetype) => archetype.name.toLowerCase().includes(query.toLowerCase()));
+  }, [secondArchetypes, query]);
 
   const handlerArchetype = (id) => {
-    isOpen ? setArchetypes(archetypesData) : setArchetypes(archetypes.filter((archetype) => archetype.id === id));
+    isOpen ? setsecondArchetypes(archetypes) : setsecondArchetypes(archetypes.filter((archetype) => archetype.id === id));
     isOpen ? setDecks(decksData) : setDecks(decks.filter((deck) => deck.archetypeId === id));
     handlerToggle();
   };
+
+  console.log(filteredArchetypes);
 
   // useEffect
 
