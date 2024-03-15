@@ -1,9 +1,10 @@
 import './App.css';
-import ArchetypeCardList from './components/TopDecks';
+import TopDecks from './routes/TopDecks';
+
 function App() {
   return (
     <div className="App">
-      <ArchetypeCardList />
+      <TopDecks />
     </div>
   );
 }
