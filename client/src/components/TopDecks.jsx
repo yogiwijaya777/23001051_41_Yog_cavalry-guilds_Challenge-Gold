@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 
-function fetchArchetypes() {
+async function fetchArchetypes() {
   // if (query) {
   //   console.log(query);
   // }
