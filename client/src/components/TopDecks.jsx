@@ -1,6 +1,9 @@
 import { useMemo, useState } from 'react';
 
 function fetchArchetypes() {
+  // if (query) {
+  //   console.log(query);
+  // }
   const archetypeData = [
     {
       id: '109907e7-75e1-4b84-85d6-7e1ff6b1f9a3',
@@ -231,59 +234,59 @@ export default function ArchetypeCardList() {
   };
 
   return (
-    <div className="container text-dark">
-      <div className="input-group ">
-        <span className="input-group-text ">Search</span>
-        <input type="text" value={query} className="form-control" onChange={(e) => setQuery(e.target.value)} />
+    <>
+      <div class="bg-body-tertiary rounded-3 mx-5 px-5 mt-4 text-center">
+        <div class="container-fluid py-5">
+          <h1 class="display-5 fw-bold mb-4 text-primary">Top Decks</h1>
+          <p class="">
+            Welcome to the world of challenge and strategy, where skill in playing Yu-Gi-Oh! cards reigns supreme. Dive into
+            the thrill and unmatched intelligence with Top Decks Yu-Gi-Oh! Get the latest insights on the meta game, top
+            strategies, and winning card combinations from leading experts. Join a dynamic community and compete for the
+            title of the best. Explore the world of Top Decks Yu-Gi-Oh! with us!
+          </p>
+          <button class="btn btn-primary btn-lg mt-3" type="button">
+            Upload Your Deck
+          </button>
+        </div>
       </div>
-      <div className="row">
-        {filteredArchetypes.map((card, index) => (
-          <div key={index} className="col-sm-6 col-md-4 col-lg-2 mt-1" onClick={() => handlerArchetype(card.id)}>
-            <div className="card position-relative">
-              <div>
-                <span className="ms-2">{card.name}</span>
-                <span className="position-absolute top-0 end-0 me-1">{card.totalDecks}</span>
+      <br />
+      <div className="container">
+        <div className="container text-dark">
+          <div className="input-group ">
+            <span className="input-group-text ">Search</span>
+            <input type="text" value={query} className="form-control" onChange={(e) => setQuery(e.target.value)} />
+          </div>
+          <div className="row">
+            {filteredArchetypes.map((card, index) => (
+              <div key={index} className="col-sm-6 col-md-4 col-lg-2 mt-1" onClick={() => handlerArchetype(card.id)}>
+                <div className="card position-relative">
+                  <div>
+                    <span className="ms-2">{card.name}</span>
+                    <span className="position-absolute top-0 end-0 me-1">{card.totalDecks}</span>
+                  </div>
+                </div>
               </div>
-            </div>
+            ))}
           </div>
-        ))}
-      </div>
-      <div className="row">
-        {decks.map((deck) => (
-          <div className="card mb-2 ms-4 mt-3 col-lg-2 col-md-4 col-sm-6" key={deck.id}>
-            <img src={`/img/archetypes/${deck.archetypeName}.jpg`} className="img-fluid w-75 mx-auto" alt="..." />
-            <div className="card-body text-center me-4">
-              <a
-                className="icon-link icon-link-hover"
-                style={{ '--bs-icon-link-transform': 'translate3d(0, -.125rem, 0)' }}
-                href={`/decks/${deck.id}`}
-              >
-                <svg className="bi" aria-hidden="true"></svg>
-                {deck.name}
-              </a>
-            </div>
+          <div className="row">
+            {decks.map((deck) => (
+              <div className="card mb-2 ms-4 mt-3 col-lg-2 col-md-4 col-sm-6" key={deck.id}>
+                <img src={`/img/archetypes/${deck.archetypeName}.jpg`} className="img-fluid w-75 mx-auto" alt="..." />
+                <div className="card-body text-center me-4">
+                  <a
+                    className="icon-link icon-link-hover"
+                    style={{ '--bs-icon-link-transform': 'translate3d(0, -.125rem, 0)' }}
+                    href={`/decks/${deck.id}`}
+                  >
+                    <svg className="bi" aria-hidden="true"></svg>
+                    {deck.name}
+                  </a>
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
-
-// <table className="text-light table">
-//   <thead>
-//     <tr className="table-secondary">
-//       <th>Archetype</th>
-//       <th>Name</th>
-//       <th>Player</th>
-//     </tr>
-//   </thead>
-//   {decks.map((deck) => (
-//     <tbody>
-//       <tr>
-//         <td>{deck.archetypeName}</td>
-//         <td>{deck.name}</td>
-//         <td>{deck.userName}</td>
-//       </tr>
-//     </tbody>
-//   ))}
-// </table>
