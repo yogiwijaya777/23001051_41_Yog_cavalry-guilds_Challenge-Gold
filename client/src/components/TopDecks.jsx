@@ -213,32 +213,32 @@ const fetchDecks = () => {
 
 export default function ArchetypeCardList() {
   // const archetypesData = await fetchArchetypes();
-  const decksData = fetchDecks();
 
   const [archetypes, setArchetypes] = useState([]);
-  const [decks, setDecks] = useState(decksData);
+  const [decks, setDecks] = useState([]);
   const [query, setQuery] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [secondArchetypes, setsecondArchetypes] = useState([]);
+  const [secondDecks, setsecondDecks] = useState([]);
 
   useEffect(() => {
     async function fetchData() {
       try {
         const URL = process.env.REACT_APP_API_URL;
 
-        const response = await axios.get(`${URL}/archetypes`);
-        console.log('running');
-        console.log(response, URL);
-        setArchetypes(response.data.data);
-        setsecondArchetypes(response.data.data);
+        const archetypesResponse = await axios.get(`${URL}/archetypes`);
+        const decksResponse = await axios.get(`${URL}/decks`);
+
+        setArchetypes(archetypesResponse.data.data);
+        setsecondArchetypes(archetypesResponse.data.data);
+        setDecks(decksResponse.data.data);
+        setsecondDecks(decksResponse.data.data);
       } catch (error) {
         console.log(error);
       }
     }
     fetchData();
   }, []);
-  console.log(process.env.REACT_APP_API_URL);
-  console.log(archetypes);
 
   const filteredArchetypes = useMemo(() => {
     if (!query) {
@@ -249,11 +249,9 @@ export default function ArchetypeCardList() {
 
   const handlerArchetype = (id) => {
     isOpen ? setsecondArchetypes(archetypes) : setsecondArchetypes(archetypes.filter((archetype) => archetype.id === id));
-    isOpen ? setDecks(decksData) : setDecks(decks.filter((deck) => deck.archetypeId === id));
+    isOpen ? setsecondDecks(decks) : setsecondDecks(decks.filter((deck) => deck.archetypeId === id));
     handlerToggle();
   };
-
-  console.log(filteredArchetypes);
 
   // useEffect
 
@@ -296,7 +294,7 @@ export default function ArchetypeCardList() {
           ))}
         </div>
         <div className="row">
-          {decks.map((deck) => (
+          {secondDecks.map((deck) => (
             <div className="card mb-2 ms-4 mt-3 col-lg-2 col-md-4 col-sm-6" key={deck.id}>
               <img src={`/img/archetypes/${deck.archetypeName}.jpg`} className="img-fluid w-75 mx-auto" alt="..." />
               <div className="card-body text-center me-4">
