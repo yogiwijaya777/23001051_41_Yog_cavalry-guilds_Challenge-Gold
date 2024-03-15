@@ -18,8 +18,6 @@ router
   .patch(auth('manageArchetypes'), validate(archetypeValidation.update), archetypeController.update)
   .delete(auth('manageArchetypes'), validate(archetypeValidation.del), archetypeController.del);
 
-router
-  .route('/:archetypeId/decks')
-  .get(auth(), validate(deckValidation.getDecksByArchetype), deckController.getDecksByArchetype);
+router.route('/:archetypeId/decks').get(validate(deckValidation.getDecksByArchetype), deckController.getDecksByArchetype);
 
 module.exports = router;
