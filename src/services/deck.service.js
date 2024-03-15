@@ -206,7 +206,7 @@ const search = async (filters, options) => {
     query.orderBy(sortBy, sortOrder);
   }
 
-  query.limit(limit);
+  if (limit) query.limit(limit);
   query.offset(skip);
 
   const decks = await query;
