@@ -7,6 +7,7 @@ import DeckList from '../components/DeckList';
 import Loading from '../components/Loading';
 import Error from '../components/Error';
 import PaginationBar from '../components/PaginationBar';
+
 // Custom hook for fetching data from API
 const useFetchData = (url) => {
   const [data, setData] = useState([]);
@@ -114,9 +115,11 @@ export default function TopDecks() {
           ) : isError ? (
             <Error code={isError.code} message={isError.message} />
           ) : (
-            filteredArchetypes.map((card, index) => (
-              <ArchetypeList key={index} index={index} isOpen={isOpen} onArchetypeClick={handlerArchetype} card={card} />
-            ))
+            filteredArchetypes.map((card, index) =>
+              card.totalDecks < 1 ? null : (
+                <ArchetypeList key={index} index={index} isOpen={isOpen} onArchetypeClick={handlerArchetype} card={card} />
+              )
+            )
           )}
         </div>
         <div className="row">
