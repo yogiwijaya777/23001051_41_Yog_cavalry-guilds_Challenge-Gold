@@ -1,6 +1,19 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
 
-const PaginationBar = ({ totalPages, currentPage }) => {
+const PaginationBar = ({ totalPages, currentPage, onPageChange }) => {
+  const location = useLocation();
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+
+    const pageFromQuery = searchParams.get('page');
+
+    if (pageFromQuery) {
+      onPageChange(Number(pageFromQuery));
+    }
+  }, [location.search, onPageChange]);
+
   const renderPageLinks = () => {
     const pageLinks = [];
 
@@ -29,8 +42,8 @@ const PaginationBar = ({ totalPages, currentPage }) => {
         {renderPageLinks()}
         <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
           <Link className="page-link" to={`?page=${currentPage + 1}`} aria-label="Next">
-            <span aria-hidden="true">&raquo;</span>
             <span className="sr-only">Next</span>
+            <span aria-hidden="true">&raquo;</span>
           </Link>
         </li>
       </ul>

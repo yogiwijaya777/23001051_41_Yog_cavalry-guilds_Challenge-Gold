@@ -6,6 +6,7 @@ import ArchetypeList from '../components/ArchetypeList';
 import DeckList from '../components/DeckList';
 import Loading from '../components/Loading';
 import Error from '../components/Error';
+import PaginationBar from '../components/PaginationBar';
 // Custom hook for fetching data from API
 const useFetchData = (url) => {
   const [data, setData] = useState([]);
@@ -34,7 +35,7 @@ const useFetchData = (url) => {
     fetchData();
   }, [url]);
 
-  return { data, loading, error };
+  return { data, meta, loading, error };
 };
 
 export default function TopDecks() {
@@ -45,12 +46,13 @@ export default function TopDecks() {
   const [selectedArchetypeId, setSelectedArchetypeId] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setisError] = useState(null);
+  const [page, setPage] = useState(1);
 
   // To avoid throwing an error when page is reloaded
   const { data: archetypeDecks, meta, loading, error } = useFetchData(
     selectedArchetypeId !== null
       ? `${process.env.REACT_APP_API_URL}/archetypes/${selectedArchetypeId}/decks`
-      : `${process.env.REACT_APP_API_URL}/decks`
+      : `${process.env.REACT_APP_API_URL}/decks?page=${page}`
   );
 
   // Only executed one time only when page is reloaded
@@ -85,8 +87,6 @@ export default function TopDecks() {
     isOpen ? setSelectedArchetypeId(null) : setSelectedArchetypeId(id);
     handlerToggle();
   };
-
-  // useEffect
 
   const handlerToggle = () => {
     setIsOpen(!isOpen);
@@ -130,6 +130,7 @@ export default function TopDecks() {
             archetypeDecks.map((deck) => <DeckList key={deck.id} deck={deck} />)
           )}
         </div>
+        <PaginationBar totalPages={meta.totalPage} currentPage={meta.currentPage} onPageChange={setPage} />
       </div>
     </>
   );
