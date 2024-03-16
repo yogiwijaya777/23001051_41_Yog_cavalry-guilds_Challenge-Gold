@@ -14,6 +14,11 @@ const useFetchData = (url) => {
 
   useEffect(() => {
     const fetchData = async () => {
+      if (url === '') {
+        setLoading(false);
+        return;
+      }
+
       try {
         const response = await axios.get(url);
         setData(response.data.data);
@@ -43,12 +48,9 @@ export default function TopDecks() {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setisError] = useState(null);
 
-  // To avoid throwing an error when page is reloaded i passe Null Archetype that does't have data
-  const nullArchetypeId = '9dfa578e-e6b3-48ff-99ab-972543f4b6c4';
+  // To avoid throwing an error when page is reloaded
   const { data: archetypeDecks, loading, error } = useFetchData(
-    selectedArchetypeId !== null
-      ? `${process.env.REACT_APP_API_URL}/archetypes/${selectedArchetypeId}/decks`
-      : `${process.env.REACT_APP_API_URL}/archetypes/${nullArchetypeId}/decks`
+    selectedArchetypeId !== null ? `${process.env.REACT_APP_API_URL}/archetypes/${selectedArchetypeId}/decks` : ``
   );
 
   // Only executed one time only when page is reloaded
