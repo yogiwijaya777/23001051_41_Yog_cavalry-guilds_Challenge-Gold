@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
-
+import Jumbotron from './Jumbotron';
 // Custom hook for fetching data from API
 const useFetchData = (url) => {
   const [data, setData] = useState([]);
@@ -79,20 +79,17 @@ export default function ArchetypeCardList() {
 
   return (
     <>
-      <div className="bg-body-tertiary rounded-3 mx-5 px-5 mt-4 text-center">
-        <div className="container-fluid py-5">
-          <h1 className="display-5 fw-bold mb-4 text-primary">Top Decks</h1>
-          <p className="">
-            Welcome to the world of challenge and strategy, where skill in playing Yu-Gi-Oh! cards reigns supreme. Dive into
-            the thrill and unmatched intelligence with Top Decks Yu-Gi-Oh! Get the latest insights on the meta game, top
-            strategies, and winning card combinations from leading experts. Join a dynamic community and compete for the
-            title of the best. Explore the world of Top Decks Yu-Gi-Oh! with us!
-          </p>
-          <button className="btn btn-primary btn-lg mt-3" type="button">
-            Upload Your Deck
-          </button>
-        </div>
-      </div>
+      <Jumbotron
+        title="Top Decks"
+        text="Welcome to the world of challenge and strategy, where skill in playing Yu-Gi-Oh! cards reigns supreme. Dive into
+          the thrill and unmatched intelligence with Top Decks Yu-Gi-Oh! Get the latest insights on the meta game, top
+          strategies, and winning card combinations from leading experts. Join a dynamic community and compete for the title
+          of the best. Explore the world of Top Decks Yu-Gi-Oh! with us!"
+      >
+        <button className="btn btn-primary btn-lg mt-3" type="button">
+          Upload Your Deck
+        </button>
+      </Jumbotron>
       <br />
       <div className="container text-dark">
         <div className="input-group ">
@@ -148,22 +145,3 @@ export default function ArchetypeCardList() {
     </>
   );
 }
-
-// <table className="text-light table">
-//   <thead>
-//     <tr className="table-secondary">
-//       <th>Archetype</th>
-//       <th>Name</th>
-//       <th>Player</th>
-//     </tr>
-//   </thead>
-//   {decks.map((deck) => (
-//     <tbody>
-//       <tr>
-//         <td>{deck.archetypeName}</td>
-//         <td>{deck.name}</td>
-//         <td>{deck.userName}</td>
-//       </tr>
-//     </tbody>
-//   ))}
-// </table>
