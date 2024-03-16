@@ -7,37 +7,7 @@ import DeckList from '../components/DeckList';
 import Loading from '../components/Loading';
 import Error from '../components/Error';
 import PaginationBar from '../components/PaginationBar';
-
-// Custom hook for fetching data from API
-const useFetchData = (url) => {
-  const [data, setData] = useState([]);
-  const [meta, setMeta] = useState({});
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      if (url === '') {
-        setLoading(false);
-        return;
-      }
-
-      try {
-        const response = await axios.get(url);
-        setData(response.data.data);
-        setMeta(response.data.meta);
-      } catch (err) {
-        setError(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [url]);
-
-  return { data, meta, loading, error };
-};
+import useFetchData from '../utils/useFetchData';
 
 export default function TopDecks() {
   const [archetypes, setArchetypes] = useState([]);
