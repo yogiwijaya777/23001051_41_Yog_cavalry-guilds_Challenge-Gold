@@ -9,6 +9,7 @@ import Error from '../components/Error';
 // Custom hook for fetching data from API
 const useFetchData = (url) => {
   const [data, setData] = useState([]);
+  const [meta, setMeta] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -22,6 +23,7 @@ const useFetchData = (url) => {
       try {
         const response = await axios.get(url);
         setData(response.data.data);
+        setMeta(response.data.meta);
       } catch (err) {
         setError(err);
       } finally {
@@ -39,18 +41,20 @@ export default function TopDecks() {
   // const archetypesData = await fetchArchetypes();
 
   const [archetypes, setArchetypes] = useState([]);
-  const [decks, setDecks] = useState([]);
+  // const [decks, setDecks] = useState([]);
   const [query, setQuery] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [secondArchetypes, setSecondArchetypes] = useState([]);
-  const [secondDecks, setSecondDecks] = useState([]);
+  // const [secondDecks, setSecondDecks] = useState([]);
   const [selectedArchetypeId, setSelectedArchetypeId] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setisError] = useState(null);
 
   // To avoid throwing an error when page is reloaded
-  const { data: archetypeDecks, loading, error } = useFetchData(
-    selectedArchetypeId !== null ? `${process.env.REACT_APP_API_URL}/archetypes/${selectedArchetypeId}/decks` : ``
+  const { data: archetypeDecks, meta, loading, error } = useFetchData(
+    selectedArchetypeId !== null
+      ? `${process.env.REACT_APP_API_URL}/archetypes/${selectedArchetypeId}/decks`
+      : `${process.env.REACT_APP_API_URL}/decks`
   );
 
   // Only executed one time only when page is reloaded
@@ -65,8 +69,8 @@ export default function TopDecks() {
 
         setArchetypes(archetypesResponse.data.data);
         setSecondArchetypes(archetypesResponse.data.data);
-        setDecks(decksResponse.data.data);
-        setSecondDecks(decksResponse.data.data);
+        // setDecks(decksResponse.data.data);
+        // setSecondDecks(decksResponse.data.data);
       } catch (error) {
         setisError(error);
       } finally {
@@ -85,7 +89,7 @@ export default function TopDecks() {
 
   const handlerArchetype = (id) => {
     isOpen ? setSecondArchetypes(archetypes) : setSecondArchetypes(archetypes.filter((archetype) => archetype.id === id));
-    isOpen ? setSecondDecks(decks) : setSelectedArchetypeId(id);
+    isOpen ? setSelectedArchetypeId(null) : setSelectedArchetypeId(id);
     handlerToggle();
   };
 
@@ -130,7 +134,7 @@ export default function TopDecks() {
           ) : isOpen ? (
             archetypeDecks.map((deck) => <DeckList key={deck.id} deck={deck} />)
           ) : (
-            secondDecks.map((deck) => <DeckList key={deck.id} deck={deck} />)
+            archetypeDecks.map((deck) => <DeckList key={deck.id} deck={deck} />)
           )}
         </div>
       </div>
