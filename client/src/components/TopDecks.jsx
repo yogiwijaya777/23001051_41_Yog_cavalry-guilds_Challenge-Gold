@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 import Jumbotron from './Jumbotron';
+import SearchBar from './SearchBar';
 // Custom hook for fetching data from API
 const useFetchData = (url) => {
   const [data, setData] = useState([]);
@@ -92,10 +93,7 @@ export default function ArchetypeCardList() {
       </Jumbotron>
       <br />
       <div className="container text-dark">
-        <div className="input-group ">
-          <span className="input-group-text ">Search</span>
-          <input type="text" value={query} className="form-control" onChange={(e) => setQuery(e.target.value)} />
-        </div>
+        <SearchBar name="Search: " value={query} onQueryChange={setQuery} />
         <div className="row">
           {filteredArchetypes.map((card, index) => (
             <div key={index} className="col-sm-6 col-md-4 col-lg-2 mt-1" onClick={() => handlerArchetype(card.id)}>
