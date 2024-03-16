@@ -43,8 +43,12 @@ export default function TopDecks() {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setisError] = useState(null);
 
+  // To avoid throwing an error when page is reloaded i passe Null Archetype that does't have data
+  const nullArchetypeId = '9dfa578e-e6b3-48ff-99ab-972543f4b6c4';
   const { data: archetypeDecks, loading, error } = useFetchData(
-    `${process.env.REACT_APP_API_URL}/archetypes/${selectedArchetypeId}/decks`
+    selectedArchetypeId !== null
+      ? `${process.env.REACT_APP_API_URL}/archetypes/${selectedArchetypeId}/decks`
+      : `${process.env.REACT_APP_API_URL}/archetypes/${nullArchetypeId}/decks`
   );
 
   // Only executed one time only when page is reloaded
@@ -109,7 +113,7 @@ export default function TopDecks() {
           {isLoading ? (
             <Loading />
           ) : isError ? (
-            <Error message={isError.message} />
+            <Error code={isError.code} message={isError.message} />
           ) : (
             filteredArchetypes.map((card, index) => (
               <ArchetypeList key={index} index={index} isOpen={isOpen} onArchetypeClick={handlerArchetype} card={card} />
@@ -120,7 +124,7 @@ export default function TopDecks() {
           {loading ? (
             <Loading />
           ) : error ? (
-            <Error message={error.message} />
+            <Error code={error.code} message={error.message} />
           ) : isOpen ? (
             archetypeDecks.map((deck) => <DeckList key={deck.id} deck={deck} />)
           ) : (
