@@ -38,14 +38,10 @@ const useFetchData = (url) => {
 };
 
 export default function TopDecks() {
-  // const archetypesData = await fetchArchetypes();
-
   const [archetypes, setArchetypes] = useState([]);
-  // const [decks, setDecks] = useState([]);
   const [query, setQuery] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [secondArchetypes, setSecondArchetypes] = useState([]);
-  // const [secondDecks, setSecondDecks] = useState([]);
   const [selectedArchetypeId, setSelectedArchetypeId] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setisError] = useState(null);
@@ -65,12 +61,9 @@ export default function TopDecks() {
         const URL = process.env.REACT_APP_API_URL;
 
         const archetypesResponse = await axios.get(`${URL}/archetypes`);
-        const decksResponse = await axios.get(`${URL}/decks`);
 
         setArchetypes(archetypesResponse.data.data);
         setSecondArchetypes(archetypesResponse.data.data);
-        // setDecks(decksResponse.data.data);
-        // setSecondDecks(decksResponse.data.data);
       } catch (error) {
         setisError(error);
       } finally {
