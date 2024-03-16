@@ -130,7 +130,9 @@ export default function TopDecks() {
             archetypeDecks.map((deck) => <DeckList key={deck.id} deck={deck} />)
           )}
         </div>
-        <PaginationBar totalPages={meta.totalPage} currentPage={meta.currentPage} onPageChange={setPage} />
+        {meta.totalPage > 1 && (
+          <PaginationBar totalPages={meta.totalPage} currentPage={meta.currentPage} onPageChange={setPage} />
+        )}
       </div>
     </>
   );

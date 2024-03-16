@@ -14,6 +14,9 @@ const PaginationBar = ({ totalPages, currentPage, onPageChange }) => {
     }
   }, [location.search, onPageChange]);
 
+  if (totalPages <= 1) {
+    return null;
+  }
   const renderPageLinks = () => {
     const pageLinks = [];
 
