@@ -1,9 +1,25 @@
-import { useLocation } from 'react-router';
+import { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router';
+import { Alert } from 'react-bootstrap';
 import useFetchData from '../utils/useFetchData';
 import Loading from './Loading';
 import Error from './Error';
+import DeleteModal from './DeleteModal';
 
 function SingleDeck() {
+  const [isUpdate, setIsUpdate] = useState(false);
+  const [isDelete, setIsDelete] = useState(false);
+  const navigate = useNavigate();
+  if (isUpdate) {
+    setIsUpdate(false);
+  }
+
+  if (isDelete) {
+    setTimeout(() => {
+      navigate('/top-decks');
+    }, 2000);
+  }
+
   const { pathname } = useLocation();
   const deckUuid = pathname.split('/')[2];
   const userId = 'beb60df8-f3ef-453c-9064-8ae8b459f1a6';
@@ -23,8 +39,10 @@ function SingleDeck() {
         </p>
         {userId === deck.userId ? (
           <>
-            <button className="btn btn-primary me-3">Update</button>
-            <button className="btn btn-danger me-3">Delete</button>
+            {/* <Modal name="Update Deck" title="Update Deck" color="primary" handler={setIsUpdate}>
+              <p>Are you sure you want to update this deck?</p>
+            </Modal> */}
+            <DeleteModal onDelete={setIsDelete} />
           </>
         ) : (
           <p className="">Fun Fact: This text willd become 2 Buttons if you the Owner of this Deck!</p>
