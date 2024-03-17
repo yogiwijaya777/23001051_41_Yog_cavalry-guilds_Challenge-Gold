@@ -2,6 +2,24 @@ const httpStatus = require('http-status');
 const { deckService } = require('../../services');
 const catchAsync = require('../../utils/catchAsync');
 
+const uploadCloudinary = async (name, image) => {
+  try {
+    const result = await cloudinary.uploader.upload(image.tempFilePath, {
+      use_filename: false,
+      public_id: name,
+      folder: 'cavalry/decks',
+      resource_type: 'image',
+      image_format: 'jpg',
+    });
+
+    fs.unlinkSync(image.tempFilePath);
+
+    return result.secure_url;
+  } catch (err) {
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, err.message);
+  }
+};
+
 const create = catchAsync(async (req, res) => {
   const deckCreated = await deckService.create(req.user, req.body);
 

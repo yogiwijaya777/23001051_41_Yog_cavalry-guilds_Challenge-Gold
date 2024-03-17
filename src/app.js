@@ -38,8 +38,8 @@ app.use(express.static(path.join(__dirname, '..', 'public')));
 app.use(
   fileUpload({
     useTempFiles: true,
-    limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
-    abortOnLimit: true, // Aborts the upload if the limit is exceeded
+    limits: { fileSize: 5 * 1024 * 1024 },
+    abortOnLimit: true,
   })
 );
 
