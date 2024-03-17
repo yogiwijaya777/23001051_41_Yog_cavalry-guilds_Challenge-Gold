@@ -1,17 +1,18 @@
 import { useState } from 'react';
-import axios from 'axios'; // Import Axios
-import { useNavigate } from 'react-router';
+import axios from 'axios';
+import { useLocation, useNavigate } from 'react-router';
 import Loading from './Loading';
 import { Alert, Button, Modal } from 'react-bootstrap';
+import { useAuth } from '../contexts/AuthContext';
 
 function DeleteDeck() {
   const [show, setShow] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isError, setIsError] = useState(false);
-  // const navigate = useNavigate();
-  // const deckId = useLocation().pathname.split('/')[2];
-  const deckId = 'beb60df8-f3ef-453c-9064-8ae8b459f1a6';
+  const { token } = useAuth();
+  const navigate = useNavigate();
+  const deckId = useLocation().pathname.split('/')[2];
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -20,11 +21,19 @@ function DeleteDeck() {
     handleClose();
     try {
       setIsLoading(true);
-      await axios.delete(`${process.env.REACT_APP_API_URL}/decks/${deckId}`);
+      await axios.delete(`${process.env.REACT_APP_API_URL}/deScks/${deckId}`, {
+        headers: {
+          Authorization: `Bearer ${token.access.token}`,
+        },
+      });
 
       setIsSuccess(true);
+
+      setTimeout(() => {
+        navigate('/top-decks');
+      }, 2000);
     } catch (error) {
-      setIsError(true);
+      setIsError(error.response.data.message);
     } finally {
       setIsLoading(false);
     }
@@ -35,7 +44,7 @@ function DeleteDeck() {
   ) : isSuccess ? (
     <Alert variant="success">Deck deleted successfully </Alert>
   ) : isError ? (
-    <Alert variant="danger">Error deleting deck</Alert>
+    <Alert variant="danger">{isError}</Alert>
   ) : (
     <>
       <Button variant="primary" onClick={handleShow}>

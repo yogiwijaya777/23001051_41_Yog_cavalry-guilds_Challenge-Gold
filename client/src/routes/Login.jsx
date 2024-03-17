@@ -31,12 +31,12 @@ function Login() {
       if (response.data.data) {
         login(response.data.data.user, response.data.data.tokens);
         setIsSuccess(true);
+
         setTimeout(() => {
-          navigate('/');
+          navigate('/top-decks');
         }, 2000);
       }
     } catch (error) {
-      console.log(error.response.data.message);
       setError(error.response.data.message);
     }
 

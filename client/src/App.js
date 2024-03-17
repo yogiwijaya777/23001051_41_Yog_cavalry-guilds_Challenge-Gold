@@ -7,8 +7,8 @@ import { AuthProvider } from './contexts/AuthContext';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 function App() {
   return (
-    <AuthProvider>
-      <Router>
+    <Router>
+      <AuthProvider>
         <Routes>
           <Route path="/" element={<h1 className="text-center text-light">Hello World</h1>} />
           <Route path="login" element={<Login />} />
@@ -16,8 +16,8 @@ function App() {
           <Route path="/decks/:id" element={<Deck />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </Router>
-    </AuthProvider>
+      </AuthProvider>
+    </Router>
   );
 }
 
