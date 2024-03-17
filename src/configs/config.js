@@ -16,4 +16,9 @@ module.exports = {
     accessExpirationMinutes: process.env.JWT_ACCESS_EXPIRATION_MINUTES,
     refreshExpirationDays: process.env.JWT_REFRESH_EXPIRATION_DAYS,
   },
+  cloudinary: {
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.CLOUD_API_KEY,
+    api_secret: process.env.CLOUD_API_SECRET,
+  },
 };

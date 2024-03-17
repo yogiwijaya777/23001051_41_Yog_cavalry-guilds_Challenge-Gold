@@ -10,6 +10,8 @@ const YAML = require('yamljs');
 const httpStatus = require('http-status');
 const config = require('./configs/config');
 const morgan = require('./configs/morgan');
+const fileUpload = require('express-fileupload');
+const cloudinary = require('cloudinary').v2;
 const { jwtStrategy } = require('./configs/passport');
 const { authLimiter } = require('./middlewares/rateLimiter');
 const apiRoutes = require('./routes/api-v1/index');
@@ -19,12 +21,27 @@ const ApiError = require('./utils/ApiError');
 
 const app = express();
 
+cloudinary.config({
+  cloud_name: config.cloudinary.cloud_name,
+  api_key: config.cloudinary.api_key,
+  api_secret: config.cloudinary.api_secret,
+});
+
 if (config.env !== 'test') {
   app.use(morgan.successHandler);
   app.use(morgan.errorHandler);
 }
 
 app.use(express.static(path.join(__dirname, '..', 'public')));
+
+// set file upload
+app.use(
+  fileUpload({
+    useTempFiles: true,
+    limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+    abortOnLimit: true, // Aborts the upload if the limit is exceeded
+  })
+);
 
 // set security HTTP headers
 app.use(helmet());
