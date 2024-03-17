@@ -21,7 +21,15 @@ function SingleDeck() {
         <p>
           from {deck.userName} on {new Date(deck.createdAt).toDateString()}
         </p>
-        <p className="">Fun Fact: This text willd become 2 Buttons if you the Owner of this Deck!</p>
+        {userId === deck.userId ? (
+          <>
+            <button className="btn btn-primary me-3">Update</button>
+            <button className="btn btn-danger me-3">Delete</button>
+          </>
+        ) : (
+          <p className="">Fun Fact: This text willd become 2 Buttons if you the Owner of this Deck!</p>
+        )}
+
         <br />
         <br />
       </div>
