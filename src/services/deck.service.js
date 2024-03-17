@@ -66,6 +66,10 @@ const getById = async (id) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'deck not found');
   }
 
+  const { totalFavorites } = await knex('favoriteDecks').count('id', { as: 'totalFavorites' }).where({ deckId: id }).first();
+
+  deck.totalFavorites = totalFavorites;
+
   return deck;
 };
 

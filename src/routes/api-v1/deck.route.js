@@ -11,7 +11,7 @@ router.route('/').post(auth(), validate(deckValidation.create), deckController.c
 
 router
   .route('/:deckId')
-  .get(auth(), validate(deckValidation.getById), deckController.getById)
+  .get(validate(deckValidation.getById), deckController.getById)
   .patch(auth(), validate(deckValidation.update), deckController.update)
   .delete(auth(), validate(deckValidation.del), deckController.del);
 
