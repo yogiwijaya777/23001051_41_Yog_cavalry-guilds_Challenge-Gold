@@ -8,7 +8,6 @@ const passport = require('passport');
 const swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
 const httpStatus = require('http-status');
-const cookieParser = require('cookie-parser');
 const config = require('./configs/config');
 const morgan = require('./configs/morgan');
 const { jwtStrategy } = require('./configs/passport');
@@ -41,11 +40,12 @@ app.use(xss());
 app.use(compression());
 
 // enable cors
-app.use(cors());
+app.use(
+  cors({
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  })
+);
 app.options('*', cors());
-
-// parse cookies
-app.use(cookieParser());
 
 // jwt authentication
 app.use(passport.initialize());

@@ -15,14 +15,6 @@ const register = catchAsync(async (req, res) => {
 
   const tokens = await tokenService.generateAuthTokens(userCreated);
 
-  const cookieOptions = {
-    expires: new Date(Date.now() + config.jwt.accessExpirationMinutes * 60 * 1000),
-    httpOnly: true,
-  };
-  if (config.env === 'production') cookieOptions.secure = true;
-
-  res.cookie('tokens', tokens, cookieOptions);
-
   res.status(httpStatus.CREATED).json({
     status: httpStatus.CREATED,
     message: 'Register Success',
@@ -38,14 +30,6 @@ const login = catchAsync(async (req, res) => {
 
   const tokens = await tokenService.generateAuthTokens(user);
 
-  const cookieOptions = {
-    expires: new Date(Date.now() + config.jwt.accessExpirationMinutes * 60 * 1000),
-    httpOnly: false,
-  };
-  if (config.env === 'production') cookieOptions.secure = true;
-
-  res.cookie('tokens', tokens, cookieOptions);
-
   res.status(httpStatus.OK).json({
     status: httpStatus.OK,
     message: 'Login Success',
@@ -54,16 +38,15 @@ const login = catchAsync(async (req, res) => {
 });
 
 const logout = catchAsync(async (req, res) => {
-  await authService.logout(req.cookies.tokens.refresh.token);
+  await authService.logout(req.headers.authorization.split(' ')[1]);
 
-  res.clearCookie('tokens');
   req.user = null;
 
   res.status(httpStatus.OK).send();
 });
 
 const refreshTokens = catchAsync(async (req, res) => {
-  const tokens = await authService.refreshAuth(req.cookies.tokens.refresh.token);
+  const tokens = await authService.refreshAuth(req.headers.authorization.split(' ')[1]);
   res.send({ ...tokens });
 });
 

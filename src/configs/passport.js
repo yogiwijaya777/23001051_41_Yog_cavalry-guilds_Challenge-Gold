@@ -1,21 +1,13 @@
-const { Strategy: JwtStrategy } = require('passport-jwt');
+const { Strategy: JwtStrategy, ExtractJwt } = require('passport-jwt');
 const httpStatus = require('http-status');
 const config = require('./config');
 const { tokenTypes } = require('./tokens');
 const knex = require('../db/knex');
 const ApiError = require('../utils/ApiError');
 
-const cookieExtractor = (req) => {
-  let token = null;
-  if (req && req.cookies && req.cookies.tokens) {
-    token = req.cookies.tokens.access.token;
-  }
-  return token;
-};
-
 const jwtOptions = {
   secretOrKey: config.jwt.secret,
-  jwtFromRequest: cookieExtractor,
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
 };
 
 const jwtVerify = async (payload, done) => {
