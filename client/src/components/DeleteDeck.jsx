@@ -47,23 +47,25 @@ function DeleteDeck() {
     <Alert variant="danger">{isError}</Alert>
   ) : (
     <>
-      <Button variant="primary" onClick={handleShow}>
+      <Button variant="danger" onClick={handleShow}>
         Delete
       </Button>
 
       <Modal show={show} onHide={handleClose} backdrop="static" animation={false}>
-        <Modal.Header closeButton>
-          <Modal.Title>Confirmation</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>Are you sure you want to delete?</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Cancel
-          </Button>
-          <Button variant="danger" onClick={handleSubmit}>
-            Delete
-          </Button>
-        </Modal.Footer>
+        <div className="bg-black">
+          <Modal.Header closeButton>
+            <Modal.Title>Confirmation</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>Are you sure you want to delete?</Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>
+              Cancel
+            </Button>
+            <Button variant="danger" onClick={handleSubmit}>
+              Delete
+            </Button>
+          </Modal.Footer>
+        </div>
       </Modal>
     </>
   );
