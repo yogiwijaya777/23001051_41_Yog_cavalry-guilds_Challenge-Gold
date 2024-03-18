@@ -1,18 +1,15 @@
 import { useState } from 'react';
 import axios from 'axios';
-import { useLocation, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 import Loading from './Loading';
 import { Alert, Button, Modal } from 'react-bootstrap';
-import { useAuth } from '../contexts/AuthContext';
 
-function DeleteDeck() {
+function DeleteDeck({ token, deckId }) {
   const [show, setShow] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isError, setIsError] = useState(false);
-  const { token } = useAuth();
   const navigate = useNavigate();
-  const deckId = useLocation().pathname.split('/')[2];
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);

@@ -9,16 +9,16 @@ import addFlAttachmentToUrl from '../utils/addFlAttachmentToUrl';
 
 function SingleDeck() {
   const [isUpdate, setIsUpdate] = useState(false);
-  const { user } = useAuth();
+  const { user, token } = useAuth();
 
   if (isUpdate) {
     setIsUpdate(false);
   }
 
   const { pathname } = useLocation();
-  const deckUuid = pathname.split('/')[2];
+  const deckId = pathname.split('/')[2];
 
-  const { data: deck, loading, error } = useFetchData(`${process.env.REACT_APP_API_URL}/decks/${deckUuid}`);
+  const { data: deck, loading, error } = useFetchData(`${process.env.REACT_APP_API_URL}/decks/${deckId}`);
   console.log(deck);
   return loading ? (
     <Loading />
@@ -36,7 +36,7 @@ function SingleDeck() {
             {/* <Modal name="Update Deck" title="Update Deck" color="primary" handler={setIsUpdate}>
               <p>Are you sure you want to update this deck?</p>
             </Modal> */}
-            <DeleteDeck />
+            <DeleteDeck token={token} deckId={deck.id} />
           </>
         ) : (
           <p className="">Fun Fact: This text willd become 2 Buttons if you the Owner of this Deck!</p>
