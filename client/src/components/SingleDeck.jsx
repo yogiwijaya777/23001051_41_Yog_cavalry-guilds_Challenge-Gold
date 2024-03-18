@@ -6,6 +6,7 @@ import Error from './Error';
 import DeleteDeck from './DeleteDeck';
 import { useAuth } from '../contexts/AuthContext';
 import addFlAttachmentToUrl from '../utils/addFlAttachmentToUrl';
+import UpdateDeck from './UpdateDeck';
 
 function SingleDeck() {
   const [isUpdate, setIsUpdate] = useState(false);
@@ -19,7 +20,7 @@ function SingleDeck() {
   const deckId = pathname.split('/')[2];
 
   const { data: deck, loading, error } = useFetchData(`${process.env.REACT_APP_API_URL}/decks/${deckId}`);
-  console.log(deck);
+
   return loading ? (
     <Loading />
   ) : error ? (
@@ -32,12 +33,11 @@ function SingleDeck() {
           from {deck.userName} on {new Date(deck.createdAt).toDateString()}
         </p>
         {user.id === deck.userId ? (
-          <>
-            {/* <Modal name="Update Deck" title="Update Deck" color="primary" handler={setIsUpdate}>
-              <p>Are you sure you want to update this deck?</p>
-            </Modal> */}
+          <div className="container">
+            <UpdateDeck token={token} deckId={deck.id} />
+            &nbsp;
             <DeleteDeck token={token} deckId={deck.id} />
-          </>
+          </div>
         ) : (
           <p className="">Fun Fact: This text willd become 2 Buttons if you the Owner of this Deck!</p>
         )}
