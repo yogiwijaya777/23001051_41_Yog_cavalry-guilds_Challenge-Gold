@@ -10,10 +10,12 @@ import PaginationBar from '../components/PaginationBar';
 import useFetchData from '../utils/useFetchData';
 import UploadDeck from '../components/UploadDeck';
 import { useAuth } from '../contexts/AuthContext';
+import SortingDecks from '../components/SortingDecks';
 
 export default function TopDecks() {
   const [archetypes, setArchetypes] = useState([]);
   const [query, setQuery] = useState('');
+  const [sort, setSort] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [secondArchetypes, setSecondArchetypes] = useState([]);
   const [selectedArchetypeId, setSelectedArchetypeId] = useState(null);
@@ -26,7 +28,7 @@ export default function TopDecks() {
   const { data: archetypeDecks, meta, loading, error } = useFetchData(
     selectedArchetypeId !== null
       ? `${process.env.REACT_APP_API_URL}/archetypes/${selectedArchetypeId}/decks`
-      : `${process.env.REACT_APP_API_URL}/decks?page=${page}`
+      : `${process.env.REACT_APP_API_URL}/decks?page=${page}${sort ? `&sort=${sort}` : ''}`
   );
 
   // Only executed one time only when page is reloaded
@@ -93,6 +95,7 @@ export default function TopDecks() {
             )
           )}
         </div>
+        <SortingDecks sort={sort} onSortChange={setSort} />
         <div className="row">
           {loading ? (
             <Loading />
