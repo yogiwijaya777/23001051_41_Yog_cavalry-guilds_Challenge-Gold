@@ -9,7 +9,7 @@ const uploadCloudinary = async (name, image) => {
       public_id: name,
       folder: 'cavalry/decks',
       resource_type: 'image',
-      image_format: 'jpg',
+      image_format: 'png',
     });
 
     fs.unlinkSync(image.tempFilePath);
@@ -41,6 +41,10 @@ const getById = catchAsync(async (req, res) => {
 });
 
 const update = catchAsync(async (req, res) => {
+  const imgUrl = await uploadCloudinary(req.body.name, req.files.image);
+
+  req.body.imageUrl = imgUrl;
+
   const deckUpdated = await deckService.update(req.user, req.params.deckId, req.body);
 
   res.status(httpStatus.OK).json({
