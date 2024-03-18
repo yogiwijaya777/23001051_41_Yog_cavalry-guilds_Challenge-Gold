@@ -1,4 +1,4 @@
-import SingleDeck from '../components/SingleDeck';
+import SingleDeck from './SingleDeck';
 
 function Deck() {
   return (

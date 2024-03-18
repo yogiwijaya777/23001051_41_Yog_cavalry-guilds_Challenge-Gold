@@ -1,13 +1,12 @@
 import { useLocation } from 'react-router';
 import useFetchData from '../utils/useFetchData';
-import Loading from './Loading';
-import Error from './Error';
-import DeleteDeck from './DeleteDeck';
+import Loading from '../components/Loading';
+import Error from '../components/Error';
+import DeleteDeck from '../components/DeleteDeck';
 import { useAuth } from '../contexts/AuthContext';
 import addFlAttachmentToUrl from '../utils/addFlAttachmentToUrl';
-import UpdateDeck from './UpdateDeck';
-import axios from 'axios';
-import DeckFavorites from './DeckFavorites';
+import UpdateDeck from '../components/UpdateDeck';
+import DeckFavorites from '../components/DeckFavorites';
 
 function SingleDeck() {
   const { user, token } = useAuth();
