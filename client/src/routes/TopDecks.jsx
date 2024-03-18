@@ -69,7 +69,7 @@ export default function TopDecks() {
   };
 
   return (
-    <>
+    <div className="container">
       <Jumbotron
         title="Top Decks"
         text="Welcome to the world of challenge and strategy, where skill in playing Yu-Gi-Oh! cards reigns supreme. Dive into
@@ -80,7 +80,7 @@ export default function TopDecks() {
         <UploadDeck user={user} token={token} />
       </Jumbotron>
       <br />
-      <div className="container text-dark">
+      <div className="text-dark">
         <SearchBar name="Search: " value={query} onQueryChange={setQuery} />
         <div className="row">
           {isLoading ? (
@@ -111,6 +111,6 @@ export default function TopDecks() {
           <PaginationBar totalPages={meta.totalPage} currentPage={meta.currentPage} onPageChange={setPage} />
         )}
       </div>
-    </>
+    </div>
   );
 }
