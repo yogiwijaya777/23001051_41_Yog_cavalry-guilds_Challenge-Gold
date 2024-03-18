@@ -24,7 +24,7 @@ const uploadCloudinary = async (deckName, userId, image) => {
 };
 
 const create = catchAsync(async (req, res) => {
-  const image = req.files.image;
+  const image = req.files.file || req.files.image;
 
   if (image.truncated) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Image is too large');
@@ -54,7 +54,7 @@ const getById = catchAsync(async (req, res) => {
 });
 
 const update = catchAsync(async (req, res) => {
-  const image = req.files.image;
+  const image = req.files.file || req.files.image;
 
   if (image) {
     if (image.truncated) {
