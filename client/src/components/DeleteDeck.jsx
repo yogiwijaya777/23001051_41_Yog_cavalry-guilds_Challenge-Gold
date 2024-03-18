@@ -18,7 +18,7 @@ function DeleteDeck({ token, deckId }) {
     handleClose();
     try {
       setIsLoading(true);
-      await axios.delete(`${process.env.REACT_APP_API_URL}/deScks/${deckId}`, {
+      await axios.delete(`${process.env.REACT_APP_API_URL}/decks/${deckId}`, {
         headers: {
           Authorization: `Bearer ${token.access.token}`,
         },
