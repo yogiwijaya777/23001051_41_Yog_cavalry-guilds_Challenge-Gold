@@ -2,28 +2,29 @@ import { useState } from 'react';
 import axios from 'axios';
 import Loading from './Loading';
 import { Alert, Button, Modal, Form } from 'react-bootstrap';
+import useFetchData from '../utils/useFetchData';
 
 function UpdateDeck({ token, deckId }) {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [archetypeId, setArchetypeId] = useState('');
+  const [archetypeName, setArchetypeName] = useState('');
   const [file, setFile] = useState(null);
   const [show, setShow] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isError, setIsError] = useState(false);
-
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
-    console.log(file);
   };
+
+  const { data: archetypes, loading, error } = useFetchData(`${process.env.REACT_APP_API_URL}/archetypes`);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!name && !description && !archetypeId && !file) {
+    if (!name && !description && !archetypeName && !file) {
       alert('At least one field is required');
       return;
     }
@@ -31,7 +32,19 @@ function UpdateDeck({ token, deckId }) {
 
     if (name) formData.append('name', name);
     if (description) formData.append('description', description);
-    if (archetypeId) formData.append('archetypeId', archetypeId);
+
+    // Check if archetype exists and get ID
+    if (archetypeName) {
+      const findArchetype = archetypes.find((archetype) =>
+        archetype.name.toLowerCase() === archetypeName.toLowerCase() ? true : false
+      );
+
+      if (!findArchetype) {
+        alert('Archetype not found');
+        return;
+      }
+      formData.append('archetypeId', findArchetype.id);
+    }
     if (file) formData.append('file', file);
 
     try {
@@ -72,12 +85,11 @@ function UpdateDeck({ token, deckId }) {
       </Button>
 
       <Modal show={show} onHide={handleClose} backdrop="static" animation={false}>
-        <div className="bg-black">
+        <div className="bg-secondary text-dark">
           <Modal.Header closeButton>
-            <Modal.Title>Confirmation</Modal.Title>
+            <Modal.Title>Update Form</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            {' '}
             <Form onSubmit={handleSubmit}>
               <Form.Group className="mb-3">
                 <Form.Label>Name</Form.Label>
@@ -88,8 +100,21 @@ function UpdateDeck({ token, deckId }) {
                 <Form.Control as="textarea" value={description} onChange={(e) => setDescription(e.target.value)} />
               </Form.Group>
               <Form.Group className="mb-3">
-                <Form.Label>Archetype ID</Form.Label>
-                <Form.Control type="text" value={archetypeId} onChange={(e) => setArchetypeId(e.target.value)} />
+                {loading && <Loading />}
+                {error && <Alert variant="danger">{error}</Alert>}
+                <Form.Label htmlFor="searchInput">Select or Search Archetype</Form.Label>
+                <Form.Control
+                  type="text"
+                  id="searchInput"
+                  list="options"
+                  name="options"
+                  onChange={(e) => setArchetypeName(e.target.value)}
+                />
+                <datalist id="options">
+                  {archetypes.map((archetype) => (
+                    <option key={archetype.id} value={archetype.name} />
+                  ))}
+                </datalist>
               </Form.Group>
               <Form.Group className="mb-3">
                 <Form.Label htmlFor="file-input">Upload File</Form.Label>

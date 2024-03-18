@@ -49,7 +49,7 @@ function DeleteDeck({ token, deckId }) {
       </Button>
 
       <Modal show={show} onHide={handleClose} backdrop="static" animation={false}>
-        <div className="bg-black">
+        <div className="bg-secondary">
           <Modal.Header closeButton>
             <Modal.Title>Confirmation</Modal.Title>
           </Modal.Header>
