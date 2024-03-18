@@ -8,6 +8,8 @@ import Loading from '../components/Loading';
 import Error from '../components/Error';
 import PaginationBar from '../components/PaginationBar';
 import useFetchData from '../utils/useFetchData';
+import UploadDeck from '../components/UploadDeck';
+import { useAuth } from '../contexts/AuthContext';
 
 export default function TopDecks() {
   const [archetypes, setArchetypes] = useState([]);
@@ -18,6 +20,7 @@ export default function TopDecks() {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setisError] = useState(null);
   const [page, setPage] = useState(1);
+  const { user, token } = useAuth();
 
   // To avoid throwing an error when page is reloaded
   const { data: archetypeDecks, meta, loading, error } = useFetchData(
@@ -72,9 +75,7 @@ export default function TopDecks() {
           strategies, and winning card combinations from leading experts. Join a dynamic community and compete for the title
           of the best. Explore the world of Top Decks Yu-Gi-Oh! with us!"
       >
-        <button className="btn btn-primary btn-lg mt-3" type="button">
-          Upload Your Deck
-        </button>
+        <UploadDeck user={user} token={token} />
       </Jumbotron>
       <br />
       <div className="container text-dark">
