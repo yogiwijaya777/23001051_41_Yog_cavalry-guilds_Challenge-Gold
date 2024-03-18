@@ -1,0 +1,18 @@
+extends ../base
+
+block content
+  main.main
+    .register-form
+      form.form.form--register
+       label(for='name') Name:
+       input#name.form__input(type='text' placeholder='John Doe' name='name')
+
+       label(for='email') Email:
+       input#email.form__input(type='email' placeholder='you@example.com' name='email')
+
+       label(for='password') Password:
+       input#password.form__input(type='password' placeholder='********' name='password')
+
+       button.btn Register
+
+

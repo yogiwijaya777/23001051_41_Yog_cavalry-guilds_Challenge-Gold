@@ -1,0 +1,47 @@
+extend ../base
+
+block content
+  .container
+    h1 Dokumentasi Auth API
+    p Auth API bertujuan untuk Autentikasi user dan menyimpan token pada cookies.
+    p Testing API secara langsung, klik link ini di bawah ini.
+    a(href='/api-docs') Swagger Documentation
+    strong  Sistem Auth Swagger menggunakan Bearer Token, jangan lupa untuk memberikan access token pada bagian Authorize.
+
+    h2 Daftar Endpoint :
+    ul.list-group
+      li.list-group-item User Login: POST /v1/auth/login
+      li.list-group-item User Logout: POST /v1/auth/logout
+      li.list-group-item User Register: POST /v1/auth/register
+      li.list-group-item User Refresh Tokens: POST /v1/auth/refresh-tokens
+
+    h2 Detail Endpoint :
+
+
+    h3 Login :
+    img.img-thumbnail(src='/img/docs/auth-login.png')
+    ul.list-group
+      li.list-group-item Menerima request Email dan Password saja.
+      li.list-group-item Jika data benar, login akan berhasil dan mengirimkan pesan "Login Success".
+      li.list-group-item Jika salah satu ada yang salah akan mengirimkan pesan "Incorrect email or password".
+
+    h3 Register :
+    img.img-thumbnail(src='/img/docs/auth-register.png')
+    ul.list-group
+      li.list-group-item Menerima request Name, Email dan Password saja.
+      li.list-group-item Jika data benar, Register akan berhasil dan mengirimkan pesan "Register Success".
+      li.list-group-item Akan mengembalikan Error jika email sudah terdaftar dahulu.
+      li.list-group-item Akan mengembalikan Error jika password tidak lebih dari 8 karakter.
+
+    h3 Logout :
+    img.img-thumbnail(src='/img/docs/auth-logout.png')
+    ul.list-group
+      li.list-group-item Logout akan menggunakan data dari Cookies.
+      li.list-group-item Akan menghapus Refresh Tokens dari database.
+      li.list-group-item Tidak memberi response body apapun, hanya status code 200.
+
+    h3 Refresh Tokens :
+    img.img-thumbnail(src='/img/docs/auth-refresh-tokens.png')
+    ul.list-group
+      li.list-group-item Refresh Token akan menggunakan data dari Cookies untuk mengganti Refresh Tokens dengan yang baru.
+      li.list-group-item Mereturn Acess Tokens dan Refresh Tokens.

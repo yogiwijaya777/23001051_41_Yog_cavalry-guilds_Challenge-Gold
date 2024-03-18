@@ -1,0 +1,15 @@
+extends ../base
+
+block content
+  main.main.text-center
+    .login-form
+      form.form.form--login
+       label(for='email') Email:
+       input#email.form__input(type='email' placeholder='you@example.com' name='email')
+
+       label(for='password') Password:
+       input#password.form__input(type='password' placeholder='********' name='password')
+
+       button.btn Login
+
+
