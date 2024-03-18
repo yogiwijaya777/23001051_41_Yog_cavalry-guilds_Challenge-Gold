@@ -7,6 +7,16 @@ const create = {
     description: Joi.string().required(),
     archetypeId: Joi.string().custom(objectId),
   }),
+  files: Joi.object().keys({
+    image: Joi.object({
+      name: Joi.string().required(),
+      data: Joi.binary().required(),
+      mimetype: Joi.string().valid('image/jpeg', 'image/png', 'image/gif').required(),
+      size: Joi.number()
+        .max(5 * 1024 * 1024)
+        .required(),
+    }).required(),
+  }),
 };
 
 const getById = {
@@ -19,11 +29,21 @@ const update = {
   params: Joi.object().keys({
     deckId: Joi.required().custom(objectId),
   }),
-  body: Joi.object()
+  body: Joi.object().keys({
+    name: Joi.string(),
+    description: Joi.string(),
+    archetypeId: Joi.string().custom(objectId),
+  }),
+  files: Joi.object()
     .keys({
-      name: Joi.string(),
-      description: Joi.string(),
-      archetypeId: Joi.string().custom(objectId),
+      image: Joi.object({
+        name: Joi.string().required(),
+        data: Joi.binary().required(),
+        mimetype: Joi.string().valid('image/jpeg', 'image/png', 'image/gif').required(),
+        size: Joi.number()
+          .max(5 * 1024 * 1024)
+          .required(),
+      }).required(),
     })
     .min(1),
 };
