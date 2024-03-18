@@ -1,6 +1,9 @@
 const httpStatus = require('http-status');
 const { deckService } = require('../../services');
 const catchAsync = require('../../utils/catchAsync');
+const ApiError = require('../../utils/ApiError');
+const cloudinary = require('cloudinary').v2;
+const fs = require('fs');
 
 const uploadCloudinary = async (name, image) => {
   try {
@@ -21,6 +24,16 @@ const uploadCloudinary = async (name, image) => {
 };
 
 const create = catchAsync(async (req, res) => {
+  const image = req.files.image;
+
+  if (image.truncated) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Image is too large');
+  }
+
+  const imgUrl = await uploadCloudinary(req.body.name, image);
+
+  req.body.imageUrl = imgUrl;
+
   const deckCreated = await deckService.create(req.user, req.body);
 
   res.status(httpStatus.CREATED).json({
@@ -41,7 +54,13 @@ const getById = catchAsync(async (req, res) => {
 });
 
 const update = catchAsync(async (req, res) => {
-  const imgUrl = await uploadCloudinary(req.body.name, req.files.image);
+  const image = req.files.image;
+
+  if (image.truncated) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Image is too large');
+  }
+
+  const imgUrl = await uploadCloudinary(req.body.name, image);
 
   req.body.imageUrl = imgUrl;
 
