@@ -16,7 +16,7 @@ Install the depedencies with npm :
 ```bash
 npm install
 
-# You need to install CRA modules at client\ folder
+# You need to install CRA modules to at client\ folder
 cd client\
 
 npm i 
