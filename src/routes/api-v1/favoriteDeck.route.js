@@ -10,4 +10,8 @@ router.route('/').post(auth(), validate(favoriteDeckValidation.create), favorite
 
 router.route('/:favoriteDeckId').delete(auth(), validate(favoriteDeckValidation.del), favoriteDeckController.del);
 
+router
+  .route('/:deckId/:userId')
+  .get(auth(), validate(favoriteDeckValidation.getbyDeckAndUser), favoriteDeckController.getbyDeckAndUser);
+
 module.exports = router;

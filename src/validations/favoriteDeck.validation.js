@@ -24,9 +24,17 @@ const getFollowersDeckByDeck = {
   }),
 };
 
+const getbyDeckAndUser = {
+  params: Joi.object().keys({
+    deckId: Joi.string().custom(objectId).required(),
+    userId: Joi.string().custom(objectId).required(),
+  }),
+};
+
 module.exports = {
   create,
   del,
   getFavoritedDecksByUser,
   getFollowersDeckByDeck,
+  getbyDeckAndUser,
 };

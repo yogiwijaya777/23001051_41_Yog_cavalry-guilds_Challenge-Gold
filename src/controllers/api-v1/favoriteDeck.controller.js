@@ -43,9 +43,20 @@ const getFollowersDeckByDeck = catchAsync(async (req, res) => {
   });
 });
 
+const getbyDeckAndUser = catchAsync(async (req, res) => {
+  const results = await favoriteDeckService.getbyDeckAndUser(req.params.deckId, req.params.userId);
+
+  res.status(httpStatus.OK).json({
+    status: httpStatus.OK,
+    message: 'Get Favorited Decks By User Success',
+    data: results.favoriteDecks,
+  });
+});
+
 module.exports = {
   create,
   del,
   getFavoritedDecksByUser,
   getFollowersDeckByDeck,
+  getbyDeckAndUser,
 };
