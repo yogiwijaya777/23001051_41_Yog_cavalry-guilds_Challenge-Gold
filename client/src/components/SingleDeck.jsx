@@ -4,9 +4,12 @@ import useFetchData from '../utils/useFetchData';
 import Loading from './Loading';
 import Error from './Error';
 import DeleteDeck from './DeleteDeck';
+import { useAuth } from '../contexts/AuthContext';
+import addFlAttachmentToUrl from '../utils/addFlAttachmentToUrl';
 
 function SingleDeck() {
   const [isUpdate, setIsUpdate] = useState(false);
+  const { user } = useAuth();
 
   if (isUpdate) {
     setIsUpdate(false);
@@ -14,10 +17,9 @@ function SingleDeck() {
 
   const { pathname } = useLocation();
   const deckUuid = pathname.split('/')[2];
-  const userId = 'beb60df8-f3ef-453c-9064-8ae8b459f1a6';
 
   const { data: deck, loading, error } = useFetchData(`${process.env.REACT_APP_API_URL}/decks/${deckUuid}`);
-
+  console.log(deck);
   return loading ? (
     <Loading />
   ) : error ? (
@@ -29,7 +31,7 @@ function SingleDeck() {
         <p>
           from {deck.userName} on {new Date(deck.createdAt).toDateString()}
         </p>
-        {userId === deck.userId ? (
+        {user.id === deck.userId ? (
           <>
             {/* <Modal name="Update Deck" title="Update Deck" color="primary" handler={setIsUpdate}>
               <p>Are you sure you want to update this deck?</p>
@@ -39,17 +41,12 @@ function SingleDeck() {
         ) : (
           <p className="">Fun Fact: This text willd become 2 Buttons if you the Owner of this Deck!</p>
         )}
-
         <br />
         <br />
       </div>
       <div className="container row">
         <div className="img--cover col-6 text-center">
-          <img
-            className="img-fluid"
-            src="http://duellinks.gamea.co/file/content/umi92hxs/9m8lhe6k/692680/c0086e8e589b329f2d8b50b056f38d24fea88a24_500.jpg"
-            alt="Deck"
-          />
+          <img className="img-fluid" src={deck.imageUrl} alt="Deck" />
         </div>
         <div className="container deck--detail col-6">
           <p>
@@ -70,7 +67,9 @@ function SingleDeck() {
           <p>Description :</p>
           <p>{deck.description}</p>
           <br />
-          <button className="btn btn-primary">Download</button>
+          <a href={addFlAttachmentToUrl(deck.imageUrl)} rel="noreferrer">
+            Download
+          </a>
         </div>
       </div>
     </div>
