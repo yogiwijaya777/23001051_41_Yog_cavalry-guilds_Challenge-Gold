@@ -1,23 +1,28 @@
-import '../css/DeckList.css';
+import { Link } from 'react-router-dom';
 
 function DeckList({ deck }) {
   return (
-    <div className="card mb-2 ms-4 mt-3 col-lg-2 col-md-4 col-sm-6 bg-white" key={deck.id}>
-      <div>
-        <img src={`/img/archetypes/${deck.archetypeName}.jpg`} className="img-thumbnail img-fluid" alt="..." />
-      </div>
-      <div className="card-body text-center me-4">
-        <a
-          className="icon-link icon-link-hover"
-          style={{ '--bs-icon-link-transform': 'translate3d(0, -.125rem, 0)' }}
-          href={`/decks/${deck.id}`}
-        >
-          <svg className="bi" aria-hidden="true"></svg>
-          {deck.name}
-        </a>
+    <div className="col ">
+      <div className="card bg-dark-subtle" key={deck.id}>
+        <div>
+          <img src={`${deck.imageUrl}`} className="card-img-top" alt="..." />
+        </div>
+        <div className="card-body">
+          <h4 className="card-title text-primary">{deck.name}</h4>
+          <p className="card-text">
+            <small className="text-muted">{deck.userName}</small>
+          </p>
+        </div>
+        <div class="mb-5 d-flex justify-content-around">
+          <h5 className="mt-1">{deck.archetypeName}</h5>
+          <Link to={`/decks/${deck.id}`} className="btn btn-primary me-2">
+            See Details...
+          </Link>
+        </div>
       </div>
     </div>
   );
 }
 
 export default DeckList;
+// mb-2 ms-4 mt-3 col-lg-2 col-md-4 col-sm-6 bg-white

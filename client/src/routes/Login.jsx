@@ -37,7 +37,7 @@ function Login() {
         }, 2000);
       }
     } catch (error) {
-      setError(error.response.data.message);
+      setError(error.response);
     }
 
     setIsLoading(false);
@@ -78,7 +78,7 @@ function Login() {
           Submit
         </button>{' '}
         {isLoading && <Loading />}
-        {error && <Error message={error} />}
+        {error && <Error> {error.data.message}</Error>}
         {isSuccess && <Alert variant="success">Login successful</Alert>}
       </form>
     </div>
