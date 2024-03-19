@@ -6,7 +6,7 @@ const Header = () => {
 
   return (
     <nav className="navbar navbar-expand-lg sticky-top">
-      <div className="container-fluid ">
+      <div className="container-fluid">
         <a className="navbar-brand text-light" href="/">
           Cavalry Guilds
         </a>
