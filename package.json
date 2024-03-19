@@ -26,6 +26,7 @@
   "homepage": "https://github.com/yogiwijaya777/23001051_41_Yog_Card-Shop_Challenge-Gold#readme",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "cloudinary": "^2.0.3",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
@@ -33,6 +34,7 @@
     "dotenv": "^16.4.1",
     "express": "^4.18.2",
     "express-ejs-layouts": "^2.5.1",
+    "express-fileupload": "^1.5.0",
     "express-rate-limit": "^7.1.5",
     "helmet": "^7.1.0",
     "http-status": "^1.7.3",

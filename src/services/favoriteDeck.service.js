@@ -72,9 +72,20 @@ const getFollowersDeckByDeck = async (deckId) => {
   return { followerDecks, meta: { totalFollowersDeck } };
 };
 
+const getbyDeckAndUser = async (deckId, userId) => {
+  const result = await knex('favoriteDecks').where({ deckId, userId }).first();
+
+  if (!result) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Favorite Deck is not exist');
+  }
+
+  return result;
+};
+
 module.exports = {
   create,
   del,
   getFavoritedDecksByUser,
   getFollowersDeckByDeck,
+  getbyDeckAndUser,
 };

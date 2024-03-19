@@ -65,7 +65,7 @@ const del = async (archetypeId) => {
   await knex('archetypes').delete().where({ id: archetypeId });
 };
 
-const search = async (filters, options) => {
+const search = async (filters) => {
   const query = knex('archetypes')
     .select('archetypes.*')
     .leftJoin('decks', 'decks.archetypeId', '=', 'archetypes.id')
@@ -73,22 +73,8 @@ const search = async (filters, options) => {
     .groupBy('archetypes.id');
 
   const { name } = filters;
-  const { page, limit, sort, skip } = options;
 
   if (name) query.where('archetypes.name', 'ilike', `%${name}%`);
-
-  if (Array.isArray(sort)) {
-    sort.forEach((sortParam) => {
-      const [sortBy, sortOrder] = sortParam.split(':');
-      query.orderBy(sortBy, sortOrder);
-    });
-  } else if (sort) {
-    const [sortBy, sortOrder] = sort.split(':');
-    query.orderBy(sortBy, sortOrder);
-  }
-
-  query.limit(limit);
-  query.offset(skip);
 
   const archetypes = await query;
 
@@ -103,11 +89,6 @@ const search = async (filters, options) => {
 
   return {
     archetypes,
-    meta: {
-      currentPage: page,
-      totalPages: Math.ceil(count / limit),
-      totalArchetypes: +count,
-    },
   };
 };
 

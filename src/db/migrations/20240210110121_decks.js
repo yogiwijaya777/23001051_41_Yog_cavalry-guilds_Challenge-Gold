@@ -9,6 +9,7 @@ exports.up = function (knex) {
     table.string('description');
     table.uuid('archetypeId').references('id').inTable('archetypes');
     table.uuid('userId').references('id').inTable('users');
+    table.string('imageUrl');
     table.timestamp('createdAt').defaultTo(knex.raw('CURRENT_TIMESTAMP'));
   });
 };

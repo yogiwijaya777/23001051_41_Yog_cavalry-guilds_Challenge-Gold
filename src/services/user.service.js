@@ -72,7 +72,7 @@ const search = async (filters, options) => {
 
   const users = await query;
 
-  if (!users) {
+  if (!users.length) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Users not found');
   }
 
