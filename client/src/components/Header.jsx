@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
 const Header = () => {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
 
   return (
     <nav className="navbar navbar-expand-lg sticky-top">
@@ -35,7 +35,7 @@ const Header = () => {
             </li>
           </ul>
         </div>
-        <p>{user ? `${user.name}` : <Link to="/login">Login</Link>}</p>
+        <p>{user && token ? `${user.name}` : <Link to="/login">Login</Link>}</p>
       </div>
     </nav>
   );

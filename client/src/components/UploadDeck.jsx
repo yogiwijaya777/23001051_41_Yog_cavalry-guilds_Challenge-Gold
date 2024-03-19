@@ -118,7 +118,7 @@ function UploadDeck({ token }) {
                 </datalist>
               </Form.Group>
               <Form.Group className="mb-3">
-                <Form.Label htmlFor="file-input">Upload File</Form.Label>
+                <Form.Label htmlFor="file-input">Upload Deck Image</Form.Label>
                 <Form.Control id="file-input" type="file" onChange={handleFileChange} />
               </Form.Group>
               {isLoading ? (
