@@ -1,4 +1,4 @@
-import { useLocation } from 'react-router';
+import { useParams } from 'react-router';
 import useFetchData from '../utils/useFetchData';
 import Loading from '../components/Loading';
 import Error from '../components/Error';
@@ -10,8 +10,7 @@ import DeckFavorites from '../components/DeckFavorites';
 
 function SingleDeck() {
   const { user, token } = useAuth();
-  const { pathname } = useLocation();
-  const deckId = pathname.split('/')[2];
+  const { id: deckId } = useParams();
 
   const { data: deck, loading, error } = useFetchData(`${process.env.REACT_APP_API_URL}/decks/${deckId}`);
 
