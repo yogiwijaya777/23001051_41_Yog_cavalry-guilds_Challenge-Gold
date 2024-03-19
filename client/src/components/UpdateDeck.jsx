@@ -72,9 +72,7 @@ function UpdateDeck({ token, deckId }) {
     handleClose();
   };
 
-  return isLoading ? (
-    <Loading />
-  ) : isSuccess ? (
+  return isSuccess ? (
     <Alert variant="success">Deck updated! </Alert>
   ) : isError ? (
     <Alert variant="danger">{isError}</Alert>
@@ -120,9 +118,18 @@ function UpdateDeck({ token, deckId }) {
                 <Form.Label htmlFor="file-input">Upload File</Form.Label>
                 <Form.Control id="file-input" type="file" onChange={handleFileChange} />
               </Form.Group>
-              <Button variant="primary" type="submit">
-                Submit
-              </Button>
+              {isLoading ? (
+                <button class="btn btn-primary" type="button" disabled>
+                  <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                  <span class="visually-hidden" role="status">
+                    Loading...
+                  </span>
+                </button>
+              ) : (
+                <Button variant="primary" type="submit">
+                  Submit
+                </Button>
+              )}
             </Form>
           </Modal.Body>
           <Modal.Footer>
