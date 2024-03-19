@@ -10,7 +10,7 @@ const router = express.Router();
 router
   .route('/')
   .post(auth('manageArchetypes'), validate(archetypeValidation.create), archetypeController.create)
-  .get(auth(), validate(archetypeValidation.search), archetypeController.search);
+  .get(validate(archetypeValidation.search), archetypeController.search);
 
 router
   .route('/:archetypeId')
@@ -18,8 +18,6 @@ router
   .patch(auth('manageArchetypes'), validate(archetypeValidation.update), archetypeController.update)
   .delete(auth('manageArchetypes'), validate(archetypeValidation.del), archetypeController.del);
 
-router
-  .route('/:archetypeId/decks')
-  .get(auth(), validate(deckValidation.getDecksByArchetype), deckController.getDecksByArchetype);
+router.route('/:archetypeId/decks').get(validate(deckValidation.getDecksByArchetype), deckController.getDecksByArchetype);
 
 module.exports = router;
