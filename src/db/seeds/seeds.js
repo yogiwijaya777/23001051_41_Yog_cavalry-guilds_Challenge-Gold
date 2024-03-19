@@ -107,7 +107,7 @@ exports.seed = async function (knex) {
       description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius lectus sed justo consequat.',
       archetypeId: 'ff15bac3-f615-43ac-a9ed-d2a574a2dac2',
       userId: 'beb60df8-f3ef-453c-9064-8ae8b459f1a6',
-      imageUrl: 'https://res.cloudinary.com/dmf8l6plb/image/upload/v1710724938/cavalry/decks/l4pkq7nbdr972admyqft.png',
+      imageUrl: 'https://res.cloudinary.com/dmf8l6plb/image/upload/f_auto,q_auto/v1/cavalry/decks/vzoh3aejly7zghau2xdf',
     },
     {
       id: '3248b507-88e0-4a8c-afbb-669960031cc6',
