@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router';
 import Loading from './Loading';
 import { Alert, Button, Modal } from 'react-bootstrap';
-
+import Error from './Error';
 function DeleteDeck({ token, deckId }) {
   const [show, setShow] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -20,7 +20,7 @@ function DeleteDeck({ token, deckId }) {
       setIsLoading(true);
       await axios.delete(`${process.env.REACT_APP_API_URL}/decks/${deckId}`, {
         headers: {
-          Authorization: `Bearer ${token.access.token}`,
+          Authorization: `Bearer ${token?.access?.token}`,
         },
       });
 
@@ -30,7 +30,7 @@ function DeleteDeck({ token, deckId }) {
         navigate('/top-decks');
       }, 2000);
     } catch (error) {
-      setIsError(error.response.data.message);
+      setIsError(error.response.status);
     } finally {
       setIsLoading(false);
     }
@@ -41,7 +41,7 @@ function DeleteDeck({ token, deckId }) {
   ) : isSuccess ? (
     <Alert variant="success">Deck deleted successfully </Alert>
   ) : isError ? (
-    <Alert variant="danger">{isError}</Alert>
+    <Error code={isError} />
   ) : (
     <>
       <Button variant="danger" onClick={handleShow}>

@@ -3,6 +3,7 @@ import axios from 'axios';
 import Loading from './Loading';
 import { Alert, Button, Modal, Form } from 'react-bootstrap';
 import useFetchData from '../utils/useFetchData';
+import Error from './Error';
 
 function UpdateDeck({ token, deckId }) {
   const [name, setName] = useState('');
@@ -52,7 +53,7 @@ function UpdateDeck({ token, deckId }) {
       const response = await axios.patch(`${process.env.REACT_APP_API_URL}/decks/${deckId}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${token.access.token}`,
+          Authorization: `Bearer ${token?.access?.token}`,
         },
       });
 
@@ -64,7 +65,7 @@ function UpdateDeck({ token, deckId }) {
         }, 1500);
       }
     } catch (error) {
-      setIsError(error.response.data.message);
+      setIsError(error.response.status);
     } finally {
       setIsLoading(false);
     }
@@ -72,12 +73,10 @@ function UpdateDeck({ token, deckId }) {
     handleClose();
   };
 
-  return isLoading ? (
-    <Loading />
-  ) : isSuccess ? (
+  return isSuccess ? (
     <Alert variant="success">Deck updated! </Alert>
   ) : isError ? (
-    <Alert variant="danger">{isError}</Alert>
+    <Error code={isError} />
   ) : (
     <>
       <Button variant="success" onClick={handleShow}>
@@ -120,9 +119,18 @@ function UpdateDeck({ token, deckId }) {
                 <Form.Label htmlFor="file-input">Upload File</Form.Label>
                 <Form.Control id="file-input" type="file" onChange={handleFileChange} />
               </Form.Group>
-              <Button variant="primary" type="submit">
-                Submit
-              </Button>
+              {isLoading ? (
+                <button class="btn btn-primary" type="button" disabled>
+                  <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                  <span class="visually-hidden" role="status">
+                    Loading...
+                  </span>
+                </button>
+              ) : (
+                <Button variant="primary" type="submit">
+                  Submit
+                </Button>
+              )}
             </Form>
           </Modal.Body>
           <Modal.Footer>

@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
 const Header = () => {
-  const [isLogin, setIsLogin] = useState(false);
+  const { user, token } = useAuth();
+
   return (
     <nav className="navbar navbar-expand-lg sticky-top">
-      <div className="container-fluid ">
+      <div className="container-fluid">
         <a className="navbar-brand text-light" href="/">
           Cavalry Guilds
         </a>
@@ -33,7 +35,7 @@ const Header = () => {
             </li>
           </ul>
         </div>
-        <p>{isLogin ? 'Name of User' : ''}</p>
+        <p>{user && token ? `${user.name}` : <Link to="/login">Login</Link>}</p>
       </div>
     </nav>
   );

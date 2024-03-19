@@ -4,6 +4,7 @@ import Loading from './Loading';
 import { Alert, Button, Modal, Form } from 'react-bootstrap';
 import useFetchData from '../utils/useFetchData';
 import { useNavigate } from 'react-router';
+import Error from './Error';
 
 function UploadDeck({ token }) {
   const [name, setName] = useState('');
@@ -55,7 +56,7 @@ function UploadDeck({ token }) {
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/decks/`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${token.access.token}`,
+          Authorization: `Bearer ${token?.access?.token}`,
         },
       });
 
@@ -66,7 +67,7 @@ function UploadDeck({ token }) {
         }, 1000);
       }
     } catch (error) {
-      setIsError(error.response.data.message);
+      setIsError(error.response.status);
     } finally {
       setIsLoading(false);
     }
@@ -74,12 +75,10 @@ function UploadDeck({ token }) {
     handleClose();
   };
 
-  return isLoading ? (
-    <Loading />
-  ) : isSuccess ? (
+  return isSuccess ? (
     <Alert variant="success">Deck uploaded! </Alert>
   ) : isError ? (
-    <Alert variant="danger">{isError}</Alert>
+    <Error code={isError} />
   ) : (
     <>
       <Button variant="success" onClick={handleShow}>
@@ -120,12 +119,21 @@ function UploadDeck({ token }) {
                 </datalist>
               </Form.Group>
               <Form.Group className="mb-3">
-                <Form.Label htmlFor="file-input">Upload File</Form.Label>
+                <Form.Label htmlFor="file-input">Upload Deck Image</Form.Label>
                 <Form.Control id="file-input" type="file" onChange={handleFileChange} />
               </Form.Group>
-              <Button variant="primary" type="submit">
-                Submit
-              </Button>
+              {isLoading ? (
+                <button className="btn btn-primary" type="button" disabled>
+                  <span className="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                  <span className="visually-hidden" role="status">
+                    Loading...
+                  </span>
+                </button>
+              ) : (
+                <Button variant="primary" type="submit">
+                  Submit
+                </Button>
+              )}
             </Form>
           </Modal.Body>
           <Modal.Footer>

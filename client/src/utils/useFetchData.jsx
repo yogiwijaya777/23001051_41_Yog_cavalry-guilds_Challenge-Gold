@@ -19,7 +19,7 @@ const useFetchData = (url) => {
         setData(response.data.data);
         setMeta(response.data.meta);
       } catch (err) {
-        setError(err);
+        setError(err.response);
       } finally {
         setLoading(false);
       }
