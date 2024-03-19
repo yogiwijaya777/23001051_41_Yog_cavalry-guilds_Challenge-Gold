@@ -9,13 +9,13 @@ function DeckList({ deck }) {
           <img src={`${deck.imageUrl}`} className="card-img-top" alt="..." />
         </div>
         <div className="card-body">
-          <h5 className="card-title">{deck.name}</h5>
+          <h5 className="card-title text-primary">{deck.name}</h5>
           <p className="card-text">
-            {deck.description.length > 70 ? deck.description.substring(0, 70) + '...' : deck.description}
+            <small className="text-muted">{deck.userName}</small>
           </p>
         </div>
         <div class="mb-5 d-flex justify-content-around">
-          <h3>{deck.archetypeName}</h3>
+          <h4>{deck.archetypeName}</h4>
           <Link to={`/decks/${deck.id}`} className="btn btn-primary me-2">
             See Details...
           </Link>
