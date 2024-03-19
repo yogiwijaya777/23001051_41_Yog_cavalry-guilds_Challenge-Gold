@@ -4,6 +4,7 @@ import Loading from './Loading';
 import { Alert, Button, Modal, Form } from 'react-bootstrap';
 import useFetchData from '../utils/useFetchData';
 import { useNavigate } from 'react-router';
+import Error from './Error';
 
 function UploadDeck({ token }) {
   const [name, setName] = useState('');
@@ -55,7 +56,7 @@ function UploadDeck({ token }) {
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/decks/`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${token.access.token}`,
+          Authorization: `Bearer ${token?.access?.token}`,
         },
       });
 
@@ -66,7 +67,7 @@ function UploadDeck({ token }) {
         }, 1000);
       }
     } catch (error) {
-      setIsError(error.response.data.message);
+      setIsError(error.response.status);
     } finally {
       setIsLoading(false);
     }
@@ -77,7 +78,7 @@ function UploadDeck({ token }) {
   return isSuccess ? (
     <Alert variant="success">Deck uploaded! </Alert>
   ) : isError ? (
-    <Alert variant="danger">{isError}</Alert>
+    <Error code={isError} />
   ) : (
     <>
       <Button variant="success" onClick={handleShow}>
@@ -122,9 +123,9 @@ function UploadDeck({ token }) {
                 <Form.Control id="file-input" type="file" onChange={handleFileChange} />
               </Form.Group>
               {isLoading ? (
-                <button class="btn btn-primary" type="button" disabled>
-                  <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
-                  <span class="visually-hidden" role="status">
+                <button className="btn btn-primary" type="button" disabled>
+                  <span className="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                  <span className="visually-hidden" role="status">
                     Loading...
                   </span>
                 </button>

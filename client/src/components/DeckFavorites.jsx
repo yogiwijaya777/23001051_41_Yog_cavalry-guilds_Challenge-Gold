@@ -1,10 +1,11 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-
+import Error from './Error';
 function DeckFavorites({ deck, user, token }) {
   const [isFavorited, setIsFavorited] = useState(false);
   const [totalFavorites, setTotalFavorites] = useState(0);
   const [favorite, setFavorite] = useState(null);
+  const [isErrorFavorite, setIsErrorFavorite] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -12,7 +13,7 @@ function DeckFavorites({ deck, user, token }) {
         if (user) {
           const response = await axios.get(`${process.env.REACT_APP_API_URL}/favorite-decks/${deck.id}/${user.id}`, {
             headers: {
-              Authorization: `Bearer ${token.access.token}`,
+              Authorization: `Bearer ${token?.access?.token}`,
             },
           });
           if (response.status === 200) {
@@ -21,11 +22,12 @@ function DeckFavorites({ deck, user, token }) {
           }
         }
       } catch (error) {
-        error.response.status === 404 ? setIsFavorited(false) : alert(error.response.data.message);
+        console.log(error);
+        error.response.status === 404 || 401 ? setIsFavorited(false) : setIsErrorFavorite(error.response.status);
       }
     };
     fetchData();
-  }, [user, token, deck]);
+  }, [user, token, deck, setIsErrorFavorite]);
 
   useEffect(() => {
     if (deck) setTotalFavorites(+deck.totalFavorites);
@@ -37,7 +39,7 @@ function DeckFavorites({ deck, user, token }) {
         if (isFavorited) {
           await axios.delete(`${process.env.REACT_APP_API_URL}/favorite-decks/${favorite.id}`, {
             headers: {
-              Authorization: `Bearer ${token.access.token}`,
+              Authorization: `Bearer ${token?.access?.token}`,
             },
           });
           setTotalFavorites(totalFavorites - 1);
@@ -47,7 +49,7 @@ function DeckFavorites({ deck, user, token }) {
             { deckId: deck.id },
             {
               headers: {
-                Authorization: `Bearer ${token.access.token}`,
+                Authorization: `Bearer ${token?.access?.token}`,
               },
             }
           );
@@ -57,11 +59,16 @@ function DeckFavorites({ deck, user, token }) {
         setIsFavorited(!isFavorited);
       }
     } catch (error) {
-      alert(error.response.data.message);
+      setIsErrorFavorite(error.response.status);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
     }
   };
 
-  return (
+  return isErrorFavorite ? (
+    <Error code={isErrorFavorite} />
+  ) : (
     <div>
       <i
         style={{ cursor: 'pointer' }}

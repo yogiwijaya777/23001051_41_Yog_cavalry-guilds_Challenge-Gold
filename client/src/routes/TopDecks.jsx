@@ -43,7 +43,7 @@ export default function TopDecks() {
         setArchetypes(archetypesResponse.data.data);
         setSecondArchetypes(archetypesResponse.data.data);
       } catch (error) {
-        setisError(error.response);
+        setisError(error.response.status);
       } finally {
         setIsLoading(false);
       }
@@ -100,7 +100,7 @@ export default function TopDecks() {
           {loading ? (
             <Loading />
           ) : error ? (
-            <Error code={error.status} />
+            <Error code={error} />
           ) : isOpen ? (
             archetypeDecks.map((deck) => <DeckList key={deck.id} deck={deck} />)
           ) : (

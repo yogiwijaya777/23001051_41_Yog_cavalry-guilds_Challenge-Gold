@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }) => {
     await axios.post(
       `${process.env.REACT_APP_API_URL}/auth/logout`,
       {},
-      { headers: { Authorization: `Bearer ${token.access.token}` } }
+      { headers: { Authorization: `Bearer ${token?.access?.token}` } }
     );
 
     setUser(null);

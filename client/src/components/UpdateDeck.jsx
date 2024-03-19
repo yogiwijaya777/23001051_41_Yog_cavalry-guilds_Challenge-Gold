@@ -3,6 +3,7 @@ import axios from 'axios';
 import Loading from './Loading';
 import { Alert, Button, Modal, Form } from 'react-bootstrap';
 import useFetchData from '../utils/useFetchData';
+import Error from './Error';
 
 function UpdateDeck({ token, deckId }) {
   const [name, setName] = useState('');
@@ -52,7 +53,7 @@ function UpdateDeck({ token, deckId }) {
       const response = await axios.patch(`${process.env.REACT_APP_API_URL}/decks/${deckId}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${token.access.token}`,
+          Authorization: `Bearer ${token?.access?.token}`,
         },
       });
 
@@ -64,7 +65,7 @@ function UpdateDeck({ token, deckId }) {
         }, 1500);
       }
     } catch (error) {
-      setIsError(error.response.data.message);
+      setIsError(error.response.status);
     } finally {
       setIsLoading(false);
     }
@@ -75,7 +76,7 @@ function UpdateDeck({ token, deckId }) {
   return isSuccess ? (
     <Alert variant="success">Deck updated! </Alert>
   ) : isError ? (
-    <Alert variant="danger">{isError}</Alert>
+    <Error code={isError} />
   ) : (
     <>
       <Button variant="success" onClick={handleShow}>
