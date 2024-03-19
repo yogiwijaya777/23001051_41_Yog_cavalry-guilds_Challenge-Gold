@@ -17,7 +17,7 @@ function SingleDeck() {
   return loading ? (
     <Loading />
   ) : error ? (
-    <Error message={error.message} />
+    <Error code={error.status} />
   ) : (
     <div className="container text-light mt-2">
       <div className="user-hero text-center">
