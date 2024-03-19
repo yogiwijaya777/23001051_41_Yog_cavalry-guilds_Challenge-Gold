@@ -1,0 +1,22 @@
+.card-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.card-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+}
+
+.card-name {
+  font-weight: bold;
+}
+
+.card-level {
+  color: #555;
+}

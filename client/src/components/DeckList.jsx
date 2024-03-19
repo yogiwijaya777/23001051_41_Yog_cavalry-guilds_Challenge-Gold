@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import '../css/DeckList.css';
 
 function DeckList({ deck }) {
   return (

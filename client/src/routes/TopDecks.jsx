@@ -11,6 +11,7 @@ import useFetchData from '../utils/useFetchData';
 import UploadDeck from '../components/UploadDeck';
 import { useAuth } from '../contexts/AuthContext';
 import SortingDecks from '../components/SortingDecks';
+import '../css/TopDecks.css';
 
 export default function TopDecks() {
   const [archetypes, setArchetypes] = useState([]);
