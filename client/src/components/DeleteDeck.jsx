@@ -28,7 +28,7 @@ function DeleteDeck({ token, deckId }) {
 
       setTimeout(() => {
         navigate('/top-decks');
-      }, 2000);
+      }, 500);
     } catch (error) {
       setIsError(error.response.status);
     } finally {

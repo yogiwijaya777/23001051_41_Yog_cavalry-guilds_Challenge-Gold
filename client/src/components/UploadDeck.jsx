@@ -64,7 +64,7 @@ function UploadDeck({ token }) {
         setIsSuccess(true);
         setTimeout(() => {
           navigate(`/decks/${response.data.data.id}`);
-        }, 1000);
+        }, 500);
       }
     } catch (error) {
       setIsError(error.response.status);

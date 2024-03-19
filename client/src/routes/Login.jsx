@@ -34,7 +34,7 @@ function Login() {
 
         setTimeout(() => {
           navigate('/top-decks');
-        }, 2000);
+        }, 200);
       }
     } catch (error) {
       setError(error.response);

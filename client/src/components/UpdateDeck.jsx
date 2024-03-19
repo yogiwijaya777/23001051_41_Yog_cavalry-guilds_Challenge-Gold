@@ -62,7 +62,7 @@ function UpdateDeck({ token, deckId }) {
 
         setTimeout(() => {
           window.location.reload();
-        }, 1500);
+        }, 500);
       }
     } catch (error) {
       setIsError(error.response.status);
