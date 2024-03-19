@@ -95,6 +95,8 @@ npx knex seed:run
 node firstStart.js
 ```
 
+Running App : 
+
 ```bash
 # To Run Back-End APP
 npm run dev
@@ -129,7 +131,7 @@ To run this project, you will need to add the following environment variables to
 
 ```
 # Port number
-PORT=3000
+PORT=5000
 
 # URL of the DB
 DATABASE_URL=postgresql://userName:password@host/databaseName

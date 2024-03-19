@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { createContext, useContext, useState } from 'react';
 
 const AuthContext = createContext();
@@ -12,7 +13,13 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('user', JSON.stringify(user));
     localStorage.setItem('tokens', JSON.stringify(tokens));
   };
-  const logout = () => {
+  const logout = async () => {
+    await axios.post(
+      `${process.env.REACT_APP_API_URL}/auth/logout`,
+      {},
+      { headers: { Authorization: `Bearer ${token.access.token}` } }
+    );
+
     setUser(null);
     setToken(null);
     localStorage.removeItem('user');
