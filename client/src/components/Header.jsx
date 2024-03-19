@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
 const Header = () => {
-  const [isLogin, setIsLogin] = useState(false);
+  const { user } = useAuth();
+
   return (
     <nav className="navbar navbar-expand-lg sticky-top">
       <div className="container-fluid ">
@@ -33,7 +35,7 @@ const Header = () => {
             </li>
           </ul>
         </div>
-        <p>{isLogin ? 'Name of User' : ''}</p>
+        <p>{user ? `${user.name}` : <Link to="/login">Login</Link>}</p>
       </div>
     </nav>
   );
