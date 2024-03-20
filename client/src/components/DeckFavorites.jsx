@@ -62,7 +62,7 @@ function DeckFavorites({ deck, user, token }) {
       setIsErrorFavorite(error.response.status);
       setTimeout(() => {
         window.location.reload();
-      }, 1000);
+      }, 500);
     }
   };
 

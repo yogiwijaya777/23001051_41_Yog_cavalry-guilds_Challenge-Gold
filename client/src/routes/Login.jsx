@@ -1,88 +1,90 @@
 import { useState } from 'react';
 import axios from 'axios';
-import { useAuth } from '../contexts/AuthContext';
-import Loading from '../components/Loading';
-import Error from '../components/Error';
-import { Alert } from 'react-bootstrap';
+import '../css/Login.css';
 import { useNavigate } from 'react-router';
+import { useAuth } from '../contexts/AuthContext';
+import Spinner from '../components/Spinner';
 
-function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+const Login = () => {
+  const [data, setData] = useState({
+    email: '',
+    password: '',
+    error: '',
+    message: '',
+  });
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-  const { login } = useAuth();
 
   const navigate = useNavigate();
-  const handlerSubmit = async (e) => {
+  const { login } = useAuth();
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!email || !password) {
-      return alert('Please enter email and password');
-    }
     try {
       setIsLoading(true);
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/login`, {
-        email,
-        password,
+        email: data.email,
+        password: data.password,
       });
-
-      if (response.data.data) {
+      if (response.status === 200) {
+        setData({ message: response.data.message });
         login(response.data.data.user, response.data.data.tokens);
-        setIsSuccess(true);
-
         setTimeout(() => {
           navigate('/top-decks');
-        }, 2000);
+        }, 200);
+      } else {
+        setData({
+          error: 'Invalid Email or Password!',
+        });
       }
     } catch (error) {
-      setError(error.response);
+      // console.log(error.response.data.message)
+      setData({
+        ...data,
+        error: error.response.data.message,
+      });
     }
-
     setIsLoading(false);
   };
-
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    console.log(name, value);
+    setData((prev) => {
+      return {
+        ...prev,
+        [name]: value,
+      };
+    });
+  };
   return (
-    <div className="container">
-      <form>
-        <div className="mb-3">
-          <label htmlFor="email" className="form-label">
-            Email address
-          </label>
-          <input
-            type="email"
-            className="form-control"
-            id="email"
-            aria-describedby="emailHelp"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <div id="emailHelp" className="form-text">
-            We'll never share your email with anyone else.
+    <div className="auth-wrapper">
+      <div className="auth">
+        <article className="title text-black mb-3">
+          <h1>Login</h1>
+        </article>
+
+        <form className="form" onSubmit={handleSubmit}>
+          <input type="text" placeholder="Enter your email" name="email" onChange={handleChange} />
+          <input type="password" placeholder="Enter your password" name="password" onChange={handleChange} />
+          <div className="error-message">
+            {data.error && <p className="error">{data.error}</p>}
+            {data.message && <p className="message">{data.message}</p>}
+
+            <a href="/" className="link-auth">
+              Forgot Password?
+            </a>
           </div>
-        </div>
-        <div className="mb-3">
-          <label htmlFor="password" className="form-label">
-            Password
-          </label>
-          <input
-            type="password"
-            className="form-control"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-        <button type="submit" className="btn btn-primary" onClick={handlerSubmit}>
-          Submit
-        </button>{' '}
-        {isLoading && <Loading />}
-        {error && <Error> {error.data.message}</Error>}
-        {isSuccess && <Alert variant="success">Login successful</Alert>}
-      </form>
+          {isLoading ? <Spinner /> : <button className="btn-auth">Login</button>}
+          <article className="link-artikel">
+            <p className="text-black">
+              Dont have an account?{' '}
+              <a href="/signup" className="link-auth">
+                &nbsp; Signup
+              </a>
+            </p>
+          </article>
+        </form>
+      </div>
     </div>
   );
-}
+};
 
 export default Login;

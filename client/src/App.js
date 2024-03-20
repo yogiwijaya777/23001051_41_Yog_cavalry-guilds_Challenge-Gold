@@ -6,6 +6,7 @@ import { AuthProvider } from './contexts/AuthContext';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import SingleDeck from './routes/SingleDeck';
 import Header from './components/Header';
+import SignUp from './routes/SignUp';
 function App() {
   return (
     <div className="App">
@@ -15,6 +16,7 @@ function App() {
           <Routes>
             <Route path="/" element={<h1 className="text-center text-light">Hello World</h1>} />
             <Route path="login" element={<Login />} />
+            <Route path="signup" element={<SignUp />} />
             <Route path="/top-decks" element={<TopDecks />} />
             <Route path="/decks/:id" element={<SingleDeck />} />
             <Route path="*" element={<NotFound />} />
