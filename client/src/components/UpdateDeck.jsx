@@ -96,7 +96,12 @@ function UpdateDeck({ token, deckId }) {
               </Form.Group>
               <Form.Group className="mb-3">
                 <Form.Label>Description</Form.Label>
-                <Form.Control as="textarea" value={description} onChange={(e) => setDescription(e.target.value)} />
+                <Form.Control
+                  as="textarea"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  maxLength={500}
+                />
               </Form.Group>
               <Form.Group className="mb-3">
                 {loading && <Loading />}
