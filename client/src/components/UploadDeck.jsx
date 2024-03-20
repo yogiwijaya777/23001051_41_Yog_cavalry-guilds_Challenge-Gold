@@ -5,6 +5,7 @@ import { Alert, Button, Modal, Form } from 'react-bootstrap';
 import useFetchData from '../utils/useFetchData';
 import { useNavigate } from 'react-router';
 import Error from './Error';
+import Spinner from './Spinner';
 
 function UploadDeck({ token }) {
   const [name, setName] = useState('');
@@ -64,7 +65,7 @@ function UploadDeck({ token }) {
         setIsSuccess(true);
         setTimeout(() => {
           navigate(`/decks/${response.data.data.id}`);
-        }, 1000);
+        }, 500);
       }
     } catch (error) {
       setIsError(error.response.status);
@@ -98,7 +99,13 @@ function UploadDeck({ token }) {
               </Form.Group>
               <Form.Group className="mb-3">
                 <Form.Label>Description</Form.Label>
-                <Form.Control as="textarea" value={description} onChange={(e) => setDescription(e.target.value)} required />
+                <Form.Control
+                  as="textarea"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  maxLength={1000}
+                  required
+                />
               </Form.Group>
               <Form.Group className="mb-3">
                 {loading && <Loading />}
@@ -123,12 +130,7 @@ function UploadDeck({ token }) {
                 <Form.Control id="file-input" type="file" onChange={handleFileChange} />
               </Form.Group>
               {isLoading ? (
-                <button className="btn btn-primary" type="button" disabled>
-                  <span className="spinner-border spinner-border-sm" aria-hidden="true"></span>
-                  <span className="visually-hidden" role="status">
-                    Loading...
-                  </span>
-                </button>
+                <Spinner />
               ) : (
                 <Button variant="primary" type="submit">
                   Submit
