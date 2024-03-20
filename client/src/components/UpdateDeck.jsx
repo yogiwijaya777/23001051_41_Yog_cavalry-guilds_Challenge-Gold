@@ -4,6 +4,7 @@ import Loading from './Loading';
 import { Alert, Button, Modal, Form } from 'react-bootstrap';
 import useFetchData from '../utils/useFetchData';
 import Error from './Error';
+import Spinner from './Spinner';
 
 function UpdateDeck({ token, deckId }) {
   const [name, setName] = useState('');
@@ -125,12 +126,7 @@ function UpdateDeck({ token, deckId }) {
                 <Form.Control id="file-input" type="file" onChange={handleFileChange} />
               </Form.Group>
               {isLoading ? (
-                <button class="btn btn-primary" type="button" disabled>
-                  <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
-                  <span class="visually-hidden" role="status">
-                    Loading...
-                  </span>
-                </button>
+                <Spinner />
               ) : (
                 <Button variant="primary" type="submit">
                   Submit
