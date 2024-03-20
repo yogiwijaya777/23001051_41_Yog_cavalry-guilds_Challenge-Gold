@@ -102,7 +102,7 @@ function UploadDeck({ token }) {
                   as="textarea"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  maxLength={500}
+                  maxLength={1000}
                   required
                 />
               </Form.Group>

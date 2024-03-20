@@ -100,7 +100,7 @@ function UpdateDeck({ token, deckId }) {
                   as="textarea"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  maxLength={500}
+                  maxLength={1000}
                 />
               </Form.Group>
               <Form.Group className="mb-3">
