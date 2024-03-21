@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import SingleDeck from './routes/SingleDeck';
 import Header from './components/Header';
 import SignUp from './routes/SignUp';
+import Footer from './components/Footer';
 function App() {
   return (
     <div className="App">
@@ -21,6 +22,7 @@ function App() {
             <Route path="/decks/:id" element={<SingleDeck />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
+          <Footer/>
         </AuthProvider>
       </Router>
     </div>
