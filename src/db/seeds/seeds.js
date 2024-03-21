@@ -159,7 +159,7 @@ exports.seed = async function (knex) {
     },
     {
       id: '8e435ae3-69bd-4277-b0a1-00b10ed278cd',
-      name: 'adipiscing elit. Suspendisse varius lectus sed justo',
+      name: 'adipiscing elit',
       description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius lectus sed justo consequat.',
       archetypeId: '9dfa578e-e6b3-48ff-99ab-972543f4b6c4',
       userId: 'beb60df8-f3ef-453c-9064-8ae8b459f1a6',
