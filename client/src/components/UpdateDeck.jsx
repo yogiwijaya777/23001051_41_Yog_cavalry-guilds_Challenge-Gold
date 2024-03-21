@@ -80,9 +80,9 @@ function UpdateDeck({ token, deckId }) {
     <Error code={isError} />
   ) : (
     <>
-      <Button variant="success" onClick={handleShow}>
-        Update
-      </Button>
+      <button type="button" className="btn btn-outline-secondary" onClick={handleShow}>
+        <i class="bi bi-pencil-fill"></i>
+      </button>
 
       <Modal show={show} onHide={handleClose} backdrop="static" animation={false}>
         <div className="bg-secondary text-dark">

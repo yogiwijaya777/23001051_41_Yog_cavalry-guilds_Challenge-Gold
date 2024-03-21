@@ -44,9 +44,9 @@ function DeleteDeck({ token, deckId }) {
     <Error code={isError} />
   ) : (
     <>
-      <Button variant="danger" onClick={handleShow}>
-        Delete
-      </Button>
+      <button type="button" className="btn btn-outline-secondary" onClick={handleShow}>
+        <i class="bi bi-trash3-fill"></i>
+      </button>
 
       <Modal show={show} onHide={handleClose} backdrop="static" animation={false}>
         <div className="bg-secondary">
