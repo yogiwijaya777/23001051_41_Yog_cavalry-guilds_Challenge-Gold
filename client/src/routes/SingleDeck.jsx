@@ -28,7 +28,7 @@ function SingleDeck() {
           </p>
         </div>
       </div>
-      <div className=" shadow-sm mx-auto" style={{ width: '50%', height: '565px', 'border-radius': '21px 21px ' }}>
+      <div className=" shadow-sm mx-auto" style={{ width: '50%', height: '700px', 'border-radius': '21px 21px ' }}>
         <div className=" row">
           <div className="img--cover col-6 mt-4 text-center">
             <img className="img-fluid" src={deck.imageUrl} alt="Deck" />
