@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 function DeckList({ deck }) {
   return (
-    <div className="col ">
+    <div className="col-md-6 col-lg-3 col-sm-6 ">
       <div className="card bg-dark-subtle" key={deck.id}>
         <div>
           <img src={`${deck.imageUrl}`} className="card-img-top" alt="..." />
