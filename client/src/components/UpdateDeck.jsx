@@ -80,9 +80,9 @@ function UpdateDeck({ token, deckId }) {
     <Error code={isError} />
   ) : (
     <>
-      <Button variant="success" onClick={handleShow}>
-        Update
-      </Button>
+      <button type="button" className="btn btn-outline-secondary" onClick={handleShow}>
+        <i class="bi bi-pencil-fill"></i>
+      </button>
 
       <Modal show={show} onHide={handleClose} backdrop="static" animation={false}>
         <div className="bg-secondary text-dark">
@@ -93,7 +93,7 @@ function UpdateDeck({ token, deckId }) {
             <Form onSubmit={handleSubmit}>
               <Form.Group className="mb-3">
                 <Form.Label>Name</Form.Label>
-                <Form.Control type="text" value={name} onChange={(e) => setName(e.target.value)} maxLength={20} />
+                <Form.Control type="text" value={name} onChange={(e) => setName(e.target.value)} />
               </Form.Group>
               <Form.Group className="mb-3">
                 <Form.Label>Description</Form.Label>
