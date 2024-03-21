@@ -28,7 +28,7 @@ function SingleDeck() {
           </p>
         </div>
       </div>
-      <div className=" shadow-sm mx-auto" style={{ width: '50%', height: '700px', 'border-radius': '21px 21px ' }}>
+      <div className=" shadow-sm mx-auto" style={{ width: '50%', height: '700px', bordeRadius: '21px 21px ' }}>
         <div className=" row">
           <div className="img--cover col-lg-6 col-md-12 col-sm-12 mt-4 text-center">
             <img className="img-fluid" src={deck.imageUrl} alt="Deck" />
@@ -38,11 +38,11 @@ function SingleDeck() {
               </button>
             </a>
             {user.id === deck.userId ? (
-              <>
+              <div className="btn-group">
                 <UpdateDeck token={token} deckId={deck.id} />
                 &nbsp;
                 <DeleteDeck token={token} deckId={deck.id} />
-              </>
+              </div>
             ) : (
               <p className="">Fun Fact: This text willd become 2 Buttons if you the Owner of this Deck!</p>
             )}

@@ -22,7 +22,6 @@ function DeckFavorites({ deck, user, token }) {
           }
         }
       } catch (error) {
-        console.log(error);
         error.response.status === 404 || 401 ? setIsFavorited(false) : setIsErrorFavorite(error.response.status);
       }
     };
