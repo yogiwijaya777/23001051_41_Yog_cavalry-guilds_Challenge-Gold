@@ -30,7 +30,7 @@ function SingleDeck() {
       </div>
       <div className=" shadow-sm mx-auto" style={{ width: '50%', height: '700px', 'border-radius': '21px 21px ' }}>
         <div className=" row">
-          <div className="img--cover col-6 mt-4 text-center">
+          <div className="img--cover col-lg-6 col-md-12 col-sm-12 mt-4 text-center">
             <img className="img-fluid" src={deck.imageUrl} alt="Deck" />
             <a href={addFlAttachmentToUrl(deck.imageUrl)} rel="noreferrer">
               <button className="btn btn-secondary me-1">
