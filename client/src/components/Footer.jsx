@@ -30,7 +30,7 @@ const Footer = () => {
         </button>
       </div>
       <hr></hr>
-      <p>@2024 Calvary Guilds</p>
+      <h5 className="text-center">@{new Date().getFullYear()} Calvary Guilds</h5>
       <ul className="menu">
         <li>
           <a href="/#contact">Contact</a>
