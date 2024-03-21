@@ -96,7 +96,7 @@ export default function TopDecks() {
           )}
         </div>
         <SortingDecks sort={sort} onSortChange={setSort} />
-        <div className="row row-cols-1 row-cols-md-3 g-4 py-5">
+        <div className="row  g-4 py-5">
           {loading ? (
             <Loading />
           ) : error ? (

@@ -95,7 +95,7 @@ function UploadDeck({ token }) {
             <Form onSubmit={handleSubmit}>
               <Form.Group className="mb-3">
                 <Form.Label>Name</Form.Label>
-                <Form.Control type="text" value={name} onChange={(e) => setName(e.target.value)} required />
+                <Form.Control type="text" value={name} onChange={(e) => setName(e.target.value)} maxLength={20} required />
               </Form.Group>
               <Form.Group className="mb-3">
                 <Form.Label>Description</Form.Label>
