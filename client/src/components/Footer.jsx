@@ -33,7 +33,7 @@ const Footer = () => {
       <p>@2024 Calvary Guilds</p>
       <ul className="menu">
         <li>
-          <a href="#contact">Contact</a>
+          <a href="/#contact">Contact</a>
           <a href="/">Home</a>
           <a href="/top-decks">Top Decks</a>
           <a href="/#about">About</a>
