@@ -36,7 +36,6 @@ const Login = () => {
         });
       }
     } catch (error) {
-      // console.log(error.response.data.message)
       setData({
         ...data,
         error: error.response.data.message,
@@ -46,7 +45,6 @@ const Login = () => {
   };
   const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log(name, value);
     setData((prev) => {
       return {
         ...prev,
