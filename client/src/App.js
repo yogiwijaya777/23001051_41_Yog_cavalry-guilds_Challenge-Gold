@@ -8,6 +8,7 @@ import SingleDeck from './routes/SingleDeck';
 import Header from './components/Header';
 import SignUp from './routes/SignUp';
 import Footer from './components/Footer';
+import Home from './routes/Home';
 function App() {
   return (
     <div className="App">
@@ -15,14 +16,14 @@ function App() {
         <AuthProvider>
           <Header />
           <Routes>
-            <Route path="/" element={<h1 className="text-center text-light">Hello World</h1>} />
+            <Route path="/" element={<Home />} />
             <Route path="login" element={<Login />} />
             <Route path="signup" element={<SignUp />} />
             <Route path="/top-decks" element={<TopDecks />} />
             <Route path="/decks/:id" element={<SingleDeck />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
-          <Footer/>
+          <Footer />
         </AuthProvider>
       </Router>
     </div>
