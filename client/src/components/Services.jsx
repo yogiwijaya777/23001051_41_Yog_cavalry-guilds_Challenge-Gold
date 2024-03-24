@@ -6,11 +6,6 @@ function Services() {
           <div className="col-md-12">
             <div className="section-header text-center pb-5">
               <h2>Our Services</h2>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur
-                <br />
-                adipisicing elit. Non, quo.
-              </p>
             </div>
           </div>
         </div>
@@ -19,10 +14,10 @@ function Services() {
             <div className="card text-white text-center bg-dark pb-2">
               <div className="card-body">
                 <i className="bi bi-laptop"></i>
-                <h3 className="card-title">Best Quality</h3>
+                <h3 className="card-title">Sustainability</h3>
                 <p className="lead">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci eligendi modi temporibus alias iste.
-                  Accusantium?
+                  Cavalry Guilds sustains through updated content, community engagement, and ethical advertising, ensuring
+                  longevity for players.
                 </p>
                 <button className="btn bg-warning text-dark">Read More</button>
               </div>
@@ -32,10 +27,10 @@ function Services() {
             <div className="card text-white text-center bg-dark pb-2">
               <div className="card-body">
                 <i className="bi bi-journal"></i>
-                <h3 className="card-title">Sustainability</h3>
+                <h3 className="card-title">Best Quality</h3>
                 <p className="lead">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci eligendi modi temporibus alias iste.
-                  Accusantium?
+                  Cavalry Guilds stands out for its accuracy, depth, and reliability in providing Yu-Gi-Oh! players with
+                  high-quality strategic insights and analysis.
                 </p>
                 <button className="btn bg-warning text-dark">Read More</button>
               </div>
@@ -47,8 +42,8 @@ function Services() {
                 <i className="bi bi-intersect"></i>
                 <h3 className="card-title">Integrity</h3>
                 <p className="lead">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci eligendi modi temporibus alias iste.
-                  Accusantium?
+                  Cavalry Guilds upholds integrity by providing unbiased analysis, transparent sourcing, and ethical
+                  advertising practices, fostering trust among Yu-Gi-Oh! players.
                 </p>
                 <button class="btn bg-warning text-dark">Read More</button>
               </div>
