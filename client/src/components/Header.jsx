@@ -3,7 +3,6 @@ import { useAuth } from '../contexts/AuthContext';
 
 const Header = () => {
   const { user, token, logout } = useAuth();
-  console.log(token);
 
   return (
     <nav className="navbar navbar-expand-lg sticky-top">

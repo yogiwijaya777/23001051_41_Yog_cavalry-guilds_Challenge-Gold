@@ -27,7 +27,6 @@ const SignUp = () => {
         password: data.password,
       });
       if (response.status === 201) {
-        console.log(response.data.data);
         login(response.data.data.userCreated, response.data.data.tokens);
         Swal.fire('Account created !');
         window.setTimeout(() => {
