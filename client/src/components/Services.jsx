@@ -19,7 +19,6 @@ function Services() {
                   Cavalry Guilds sustains through updated content, community engagement, and ethical advertising, ensuring
                   longevity for players.
                 </p>
-                <button className="btn bg-warning text-dark">Read More</button>
               </div>
             </div>
           </div>
@@ -32,7 +31,6 @@ function Services() {
                   Cavalry Guilds stands out for its accuracy, depth, and reliability in providing Yu-Gi-Oh! players with
                   high-quality strategic insights and analysis.
                 </p>
-                <button className="btn bg-warning text-dark">Read More</button>
               </div>
             </div>
           </div>
@@ -45,7 +43,6 @@ function Services() {
                   Cavalry Guilds upholds integrity by providing unbiased analysis, transparent sourcing, and ethical
                   advertising practices, fostering trust among Yu-Gi-Oh! players.
                 </p>
-                <button class="btn bg-warning text-dark">Read More</button>
               </div>
             </div>
           </div>
