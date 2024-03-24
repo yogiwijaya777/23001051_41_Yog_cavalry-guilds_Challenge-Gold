@@ -1,4 +1,3 @@
-import { Button } from 'react-bootstrap';
 function Carousel() {
   return (
     <div id="carouselExampleCaptions" className="carousel slide ">
