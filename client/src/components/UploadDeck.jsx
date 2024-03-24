@@ -7,7 +7,7 @@ import Error from "./Error";
 import Spinner from "./Spinner";
 import instance from "../utils/axios/instance";
 
-function UploadDeck({ token }) {
+function UploadDeck({ user }) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [archetypeName, setArchetypeName] = useState("");
@@ -102,63 +102,69 @@ function UploadDeck({ token }) {
             <Modal.Title>Upload Form</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <Form onSubmit={handleSubmit}>
-              <Form.Group className="mb-3">
-                <Form.Label>Name</Form.Label>
-                <Form.Control
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  maxLength={20}
-                  required
-                />
-              </Form.Group>
-              <Form.Group className="mb-3">
-                <Form.Label>Description</Form.Label>
-                <Form.Control
-                  as="textarea"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  maxLength={1000}
-                  required
-                />
-              </Form.Group>
-              <Form.Group className="mb-3">
-                {loading && <Loading />}
-                {error && <Alert variant="danger">{error}</Alert>}
-                <Form.Label htmlFor="searchInput">
-                  Select or Search Archetype
-                </Form.Label>
-                <Form.Control
-                  type="text"
-                  id="searchInput"
-                  list="options"
-                  name="options"
-                  onChange={(e) => setArchetypeName(e.target.value)}
-                  required
-                />
-                <datalist id="options">
-                  {archetypes.map((archetype) => (
-                    <option key={archetype.id} value={archetype.name} />
-                  ))}
-                </datalist>
-              </Form.Group>
-              <Form.Group className="mb-3">
-                <Form.Label htmlFor="file-input">Upload Deck Image</Form.Label>
-                <Form.Control
-                  id="file-input"
-                  type="file"
-                  onChange={handleFileChange}
-                />
-              </Form.Group>
-              {isLoading ? (
-                <Spinner />
-              ) : (
-                <Button variant="primary" type="submit">
-                  Submit
-                </Button>
-              )}
-            </Form>
+            {!user ? (
+              <Error code={401} />
+            ) : (
+              <Form onSubmit={handleSubmit}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Name</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    maxLength={20}
+                    required
+                  />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <Form.Label>Description</Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    maxLength={1000}
+                    required
+                  />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  {loading && <Loading />}
+                  {error && <Alert variant="danger">{error}</Alert>}
+                  <Form.Label htmlFor="searchInput">
+                    Select or Search Archetype
+                  </Form.Label>
+                  <Form.Control
+                    type="text"
+                    id="searchInput"
+                    list="options"
+                    name="options"
+                    onChange={(e) => setArchetypeName(e.target.value)}
+                    required
+                  />
+                  <datalist id="options">
+                    {archetypes.map((archetype) => (
+                      <option key={archetype.id} value={archetype.name} />
+                    ))}
+                  </datalist>
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <Form.Label htmlFor="file-input">
+                    Upload Deck Image
+                  </Form.Label>
+                  <Form.Control
+                    id="file-input"
+                    type="file"
+                    onChange={handleFileChange}
+                  />
+                </Form.Group>
+                {isLoading ? (
+                  <Spinner />
+                ) : (
+                  <Button variant="primary" type="submit">
+                    Submit
+                  </Button>
+                )}
+              </Form>
+            )}
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>

@@ -1,6 +1,6 @@
+import axios from "axios";
 import { createContext, useContext, useState } from "react";
 import { useNavigate } from "react-router";
-import instance from "../utils/axios/instance";
 
 const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
@@ -19,7 +19,9 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem("tokens", JSON.stringify(tokens));
   };
   const logout = async () => {
-    await instance.get(`/auth/logout`, {});
+    await axios.get(`/auth/logout`, {
+      headers: { Authorization: `Bearer ${token?.refresh?.token}` },
+    });
 
     setUser(null);
     setToken(null);
