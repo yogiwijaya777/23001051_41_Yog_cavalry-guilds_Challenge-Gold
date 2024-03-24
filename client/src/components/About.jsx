@@ -16,10 +16,12 @@ function About() {
                 Decks Ever
               </h2>
               <p>
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Totam, labore reiciendis. Assumenda eos quod animi!
-                Soluta nesciunt inventore dolores excepturi provident, culpa beatae tempora, explicabo corporis quibusdam
-                corrupti. Autem, quaerat. Assumenda quo aliquam vel, nostrum explicabo ipsum dolor, ipsa perferendis porro
-                doloribus obcaecati placeat natus iste odio est non earum?
+                We take pride in offering unparalleled insights for Yu-Gi-Oh! enthusiasts worldwide. Our comprehensive
+                analyses, meticulously curated data, and expert strategies ensure that players receive the most accurate and
+                up-to-date information available. With a commitment to excellence, we strive to empower our community to
+                elevate their gameplay, achieve their goals, and become true masters of the game. Join us on
+                Duellinksmeta.com, where excellence meets expertise, and the best information in the world is at your
+                fingertips.
               </p>
               <a className="btn btn-warning" href="/top-decks">
                 Learn More
