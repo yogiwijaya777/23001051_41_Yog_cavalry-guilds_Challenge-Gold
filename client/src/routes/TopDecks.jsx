@@ -1,21 +1,21 @@
-import { useEffect, useMemo, useState } from 'react';
-import axios from 'axios';
-import Jumbotron from '../components/Jumbotron';
-import SearchBar from '../components/SearchBar';
-import ArchetypeList from '../components/ArchetypeList';
-import DeckList from '../components/DeckList';
-import Loading from '../components/Loading';
-import Error from '../components/Error';
-import PaginationBar from '../components/PaginationBar';
-import useFetchData from '../utils/useFetchData';
-import UploadDeck from '../components/UploadDeck';
-import { useAuth } from '../contexts/AuthContext';
-import SortingDecks from '../components/SortingDecks';
+import { useEffect, useMemo, useState } from "react";
+import axios from "axios";
+import Jumbotron from "../components/Jumbotron";
+import SearchBar from "../components/SearchBar";
+import ArchetypeList from "../components/ArchetypeList";
+import DeckList from "../components/DeckList";
+import Loading from "../components/Loading";
+import Error from "../components/Error";
+import PaginationBar from "../components/PaginationBar";
+import useFetchData from "../hooks/useFetchData";
+import UploadDeck from "../components/UploadDeck";
+import { useAuth } from "../contexts/AuthContext";
+import SortingDecks from "../components/SortingDecks";
 
 export default function TopDecks() {
   const [archetypes, setArchetypes] = useState([]);
-  const [query, setQuery] = useState('');
-  const [sort, setSort] = useState('');
+  const [query, setQuery] = useState("");
+  const [sort, setSort] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [secondArchetypes, setSecondArchetypes] = useState([]);
   const [selectedArchetypeId, setSelectedArchetypeId] = useState(null);
@@ -25,10 +25,17 @@ export default function TopDecks() {
   const { user, token } = useAuth();
 
   // To avoid throwing an error when page is reloaded
-  const { data: archetypeDecks, meta, loading, error } = useFetchData(
+  const {
+    data: archetypeDecks,
+    meta,
+    loading,
+    error,
+  } = useFetchData(
     selectedArchetypeId !== null
       ? `${process.env.REACT_APP_API_URL}/archetypes/${selectedArchetypeId}/decks`
-      : `${process.env.REACT_APP_API_URL}/decks?page=${page}${sort ? `&sort=${sort}` : ''}`
+      : `${process.env.REACT_APP_API_URL}/decks?page=${page}${
+          sort ? `&sort=${sort}` : ""
+        }`
   );
 
   // Only executed one time only when page is reloaded
@@ -55,11 +62,17 @@ export default function TopDecks() {
     if (!query) {
       return secondArchetypes;
     }
-    return secondArchetypes.filter((archetype) => archetype.name.toLowerCase().includes(query.toLowerCase()));
+    return secondArchetypes.filter((archetype) =>
+      archetype.name.toLowerCase().includes(query.toLowerCase())
+    );
   }, [secondArchetypes, query]);
 
   const handlerArchetype = (id) => {
-    isOpen ? setSecondArchetypes(archetypes) : setSecondArchetypes(archetypes.filter((archetype) => archetype.id === id));
+    isOpen
+      ? setSecondArchetypes(archetypes)
+      : setSecondArchetypes(
+          archetypes.filter((archetype) => archetype.id === id)
+        );
     isOpen ? setSelectedArchetypeId(null) : setSelectedArchetypeId(id);
     handlerToggle();
   };
@@ -90,7 +103,13 @@ export default function TopDecks() {
           ) : (
             filteredArchetypes.map((card, index) =>
               card.totalDecks < 1 ? null : (
-                <ArchetypeList key={index} index={index} isOpen={isOpen} onArchetypeClick={handlerArchetype} card={card} />
+                <ArchetypeList
+                  key={index}
+                  index={index}
+                  isOpen={isOpen}
+                  onArchetypeClick={handlerArchetype}
+                  card={card}
+                />
               )
             )
           )}
@@ -108,7 +127,11 @@ export default function TopDecks() {
           )}
         </div>
         {meta.totalPage > 1 && (
-          <PaginationBar totalPages={meta.totalPage} currentPage={meta.currentPage} onPageChange={setPage} />
+          <PaginationBar
+            totalPages={meta.totalPage}
+            currentPage={meta.currentPage}
+            onPageChange={setPage}
+          />
         )}
       </div>
     </div>

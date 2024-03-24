@@ -1,16 +1,16 @@
-import { useState } from 'react';
-import axios from 'axios';
-import Loading from './Loading';
-import { Alert, Button, Modal, Form } from 'react-bootstrap';
-import useFetchData from '../utils/useFetchData';
-import { useNavigate } from 'react-router';
-import Error from './Error';
-import Spinner from './Spinner';
+import { useState } from "react";
+import axios from "axios";
+import Loading from "./Loading";
+import { Alert, Button, Modal, Form } from "react-bootstrap";
+import useFetchData from "../hooks/useFetchData";
+import { useNavigate } from "react-router";
+import Error from "./Error";
+import Spinner from "./Spinner";
 
 function UploadDeck({ token }) {
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [archetypeName, setArchetypeName] = useState('');
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [archetypeName, setArchetypeName] = useState("");
   const [file, setFile] = useState(null);
   const [show, setShow] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -25,41 +25,51 @@ function UploadDeck({ token }) {
     setFile(e.target.files[0]);
   };
 
-  const { data: archetypes, loading, error } = useFetchData(`${process.env.REACT_APP_API_URL}/archetypes`);
+  const {
+    data: archetypes,
+    loading,
+    error,
+  } = useFetchData(`${process.env.REACT_APP_API_URL}/archetypes`);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!name || !description || !archetypeName || !file) {
-      alert('All fields are required');
+      alert("All fields are required");
       return;
     }
     const formData = new FormData();
 
-    if (name) formData.append('name', name);
-    if (description) formData.append('description', description);
+    if (name) formData.append("name", name);
+    if (description) formData.append("description", description);
 
     // Check if archetype exists and get ID
     if (archetypeName) {
       const findArchetype = archetypes.find((archetype) =>
-        archetype.name.toLowerCase() === archetypeName.toLowerCase() ? true : false
+        archetype.name.toLowerCase() === archetypeName.toLowerCase()
+          ? true
+          : false
       );
 
       if (!findArchetype) {
-        alert('Archetype not found');
+        alert("Archetype not found");
         return;
       }
-      formData.append('archetypeId', findArchetype.id);
+      formData.append("archetypeId", findArchetype.id);
     }
-    if (file) formData.append('file', file);
+    if (file) formData.append("file", file);
 
     try {
       setIsLoading(true);
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/decks/`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${token?.access?.token}`,
-        },
-      });
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URL}/decks/`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token?.access?.token}`,
+          },
+        }
+      );
 
       if (response.status === 201) {
         setIsSuccess(true);
@@ -86,7 +96,12 @@ function UploadDeck({ token }) {
         Upload Deck
       </Button>
 
-      <Modal show={show} onHide={handleClose} backdrop="static" animation={false}>
+      <Modal
+        show={show}
+        onHide={handleClose}
+        backdrop="static"
+        animation={false}
+      >
         <div className="bg-secondary text-dark">
           <Modal.Header closeButton>
             <Modal.Title>Upload Form</Modal.Title>
@@ -95,7 +110,13 @@ function UploadDeck({ token }) {
             <Form onSubmit={handleSubmit}>
               <Form.Group className="mb-3">
                 <Form.Label>Name</Form.Label>
-                <Form.Control type="text" value={name} onChange={(e) => setName(e.target.value)} maxLength={20} required />
+                <Form.Control
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  maxLength={20}
+                  required
+                />
               </Form.Group>
               <Form.Group className="mb-3">
                 <Form.Label>Description</Form.Label>
@@ -110,7 +131,9 @@ function UploadDeck({ token }) {
               <Form.Group className="mb-3">
                 {loading && <Loading />}
                 {error && <Alert variant="danger">{error}</Alert>}
-                <Form.Label htmlFor="searchInput">Select or Search Archetype</Form.Label>
+                <Form.Label htmlFor="searchInput">
+                  Select or Search Archetype
+                </Form.Label>
                 <Form.Control
                   type="text"
                   id="searchInput"
@@ -127,7 +150,11 @@ function UploadDeck({ token }) {
               </Form.Group>
               <Form.Group className="mb-3">
                 <Form.Label htmlFor="file-input">Upload Deck Image</Form.Label>
-                <Form.Control id="file-input" type="file" onChange={handleFileChange} />
+                <Form.Control
+                  id="file-input"
+                  type="file"
+                  onChange={handleFileChange}
+                />
               </Form.Group>
               {isLoading ? (
                 <Spinner />
