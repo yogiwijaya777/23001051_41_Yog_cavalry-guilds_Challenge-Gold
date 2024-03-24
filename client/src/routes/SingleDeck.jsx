@@ -12,12 +12,7 @@ function SingleDeck() {
   const { user, token } = useAuth();
   const { id: deckId } = useParams();
 
-  const {
-    data: deck,
-    loading,
-    error,
-  } = useFetchData(`${process.env.REACT_APP_API_URL}/decks/${deckId}`);
-
+  const { data: deck, loading, error } = useFetchData(`/decks/${deckId}`);
   return loading ? (
     <Loading />
   ) : error ? (
@@ -44,7 +39,7 @@ function SingleDeck() {
                 <i className="bi bi-download"></i>
               </button>
             </a>
-            {user.id === deck.userId ? (
+            {user?.id === deck.userId ? (
               <div className="btn-group">
                 <UpdateDeck token={token} deckId={deck.id} />
                 &nbsp;

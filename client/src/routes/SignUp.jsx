@@ -1,17 +1,17 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import Swal from 'sweetalert2';
-import { useAuth } from '../contexts/AuthContext';
-import Spinner from '../components/Spinner';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import { useAuth } from "../contexts/AuthContext";
+import Spinner from "../components/Spinner";
+import instance from "../utils/axios/instance";
 
 const SignUp = () => {
   const navigate = useNavigate();
   const [data, setData] = useState({
-    email: '',
-    password: '',
-    error: '',
-    name: '',
+    email: "",
+    password: "",
+    error: "",
+    name: "",
   });
   const { login } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
@@ -21,20 +21,20 @@ const SignUp = () => {
 
     try {
       setIsLoading(true);
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/register`, {
+      const response = await instance.post(`/auth/register`, {
         name: data.name,
         email: data.email,
         password: data.password,
       });
       if (response.status === 201) {
         login(response.data.data.userCreated, response.data.data.tokens);
-        Swal.fire('Account created !');
+        Swal.fire("Account created !");
         window.setTimeout(() => {
-          navigate('/top-decks');
+          navigate("/top-decks");
         }, 200);
       } else {
         setData({
-          error: 'Something went wrong!',
+          error: "Something went wrong!",
         });
       }
     } catch (error) {
@@ -65,11 +65,30 @@ const SignUp = () => {
         </article>
 
         <form className="form" onSubmit={handleSubmit}>
-          <input type="text" name="name" placeholder="Enter your name" onChange={handleChange} />
-          <input type="text" name="email" placeholder="Enter your email" onChange={handleChange} />
-          <input type="password" placeholder="Create a password" name="password" onChange={handleChange} />
+          <input
+            type="text"
+            name="name"
+            placeholder="Enter your name"
+            onChange={handleChange}
+          />
+          <input
+            type="text"
+            name="email"
+            placeholder="Enter your email"
+            onChange={handleChange}
+          />
+          <input
+            type="password"
+            placeholder="Create a password"
+            name="password"
+            onChange={handleChange}
+          />
 
-          {isLoading ? <Spinner /> : <button className="btn-auth">Signup</button>}
+          {isLoading ? (
+            <Spinner />
+          ) : (
+            <button className="btn-auth">Signup</button>
+          )}
           <article className="link-artikel">
             <p className="text-black">
               Already have an account?

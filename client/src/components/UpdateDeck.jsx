@@ -1,10 +1,10 @@
 import { useState } from "react";
-import axios from "axios";
 import Loading from "./Loading";
 import { Alert, Button, Modal, Form } from "react-bootstrap";
 import useFetchData from "../hooks/useFetchData";
 import Error from "./Error";
 import Spinner from "./Spinner";
+import instance from "../utils/axios/instance";
 
 function UpdateDeck({ token, deckId }) {
   const [name, setName] = useState("");
@@ -22,11 +22,7 @@ function UpdateDeck({ token, deckId }) {
     setFile(e.target.files[0]);
   };
 
-  const {
-    data: archetypes,
-    loading,
-    error,
-  } = useFetchData(`${process.env.REACT_APP_API_URL}/archetypes`);
+  const { data: archetypes, loading, error } = useFetchData(`/archetypes`);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -57,16 +53,11 @@ function UpdateDeck({ token, deckId }) {
 
     try {
       setIsLoading(true);
-      const response = await axios.patch(
-        `${process.env.REACT_APP_API_URL}/decks/${deckId}`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token?.access?.token}`,
-          },
-        }
-      );
+      const response = await instance.patch(`/decks/${deckId}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       if (response.status === 200) {
         setIsSuccess(true);

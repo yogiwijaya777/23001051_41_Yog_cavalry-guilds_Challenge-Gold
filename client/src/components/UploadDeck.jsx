@@ -1,11 +1,11 @@
 import { useState } from "react";
-import axios from "axios";
 import Loading from "./Loading";
 import { Alert, Button, Modal, Form } from "react-bootstrap";
 import useFetchData from "../hooks/useFetchData";
 import { useNavigate } from "react-router";
 import Error from "./Error";
 import Spinner from "./Spinner";
+import instance from "../utils/axios/instance";
 
 function UploadDeck({ token }) {
   const [name, setName] = useState("");
@@ -25,11 +25,7 @@ function UploadDeck({ token }) {
     setFile(e.target.files[0]);
   };
 
-  const {
-    data: archetypes,
-    loading,
-    error,
-  } = useFetchData(`${process.env.REACT_APP_API_URL}/archetypes`);
+  const { data: archetypes, loading, error } = useFetchData(`/archetypes`);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -60,13 +56,12 @@ function UploadDeck({ token }) {
 
     try {
       setIsLoading(true);
-      const response = await axios.post(
+      const response = await instance.post(
         `${process.env.REACT_APP_API_URL}/decks/`,
         formData,
         {
           headers: {
             "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token?.access?.token}`,
           },
         }
       );

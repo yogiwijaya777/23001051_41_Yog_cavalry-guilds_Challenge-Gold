@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from "react";
-import axios from "axios";
 import Jumbotron from "../components/Jumbotron";
 import SearchBar from "../components/SearchBar";
 import ArchetypeList from "../components/ArchetypeList";
@@ -11,6 +10,7 @@ import useFetchData from "../hooks/useFetchData";
 import UploadDeck from "../components/UploadDeck";
 import { useAuth } from "../contexts/AuthContext";
 import SortingDecks from "../components/SortingDecks";
+import instance from "../utils/axios/instance";
 
 export default function TopDecks() {
   const [archetypes, setArchetypes] = useState([]);
@@ -32,10 +32,8 @@ export default function TopDecks() {
     error,
   } = useFetchData(
     selectedArchetypeId !== null
-      ? `${process.env.REACT_APP_API_URL}/archetypes/${selectedArchetypeId}/decks`
-      : `${process.env.REACT_APP_API_URL}/decks?page=${page}${
-          sort ? `&sort=${sort}` : ""
-        }`
+      ? `/archetypes/${selectedArchetypeId}/decks`
+      : `/decks?page=${page}${sort ? `&sort=${sort}` : ""}`
   );
 
   // Only executed one time only when page is reloaded
@@ -43,9 +41,8 @@ export default function TopDecks() {
     async function fetchData() {
       try {
         setIsLoading(true);
-        const URL = process.env.REACT_APP_API_URL;
 
-        const archetypesResponse = await axios.get(`${URL}/archetypes`);
+        const archetypesResponse = await instance.get(`/archetypes`);
 
         setArchetypes(archetypesResponse.data.data);
         setSecondArchetypes(archetypesResponse.data.data);

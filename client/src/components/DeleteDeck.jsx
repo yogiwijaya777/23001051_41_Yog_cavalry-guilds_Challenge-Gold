@@ -1,9 +1,9 @@
-import { useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router';
-import Loading from './Loading';
-import { Alert, Button, Modal } from 'react-bootstrap';
-import Error from './Error';
+import { useState } from "react";
+import { useNavigate } from "react-router";
+import Loading from "./Loading";
+import { Alert, Button, Modal } from "react-bootstrap";
+import Error from "./Error";
+import instance from "../utils/axios/instance";
 function DeleteDeck({ token, deckId }) {
   const [show, setShow] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -18,16 +18,12 @@ function DeleteDeck({ token, deckId }) {
     handleClose();
     try {
       setIsLoading(true);
-      await axios.delete(`${process.env.REACT_APP_API_URL}/decks/${deckId}`, {
-        headers: {
-          Authorization: `Bearer ${token?.access?.token}`,
-        },
-      });
+      await instance.delete(`/decks/${deckId}`);
 
       setIsSuccess(true);
 
       setTimeout(() => {
-        navigate('/top-decks');
+        navigate("/top-decks");
       }, 500);
     } catch (error) {
       setIsError(error.response.status);
@@ -44,11 +40,20 @@ function DeleteDeck({ token, deckId }) {
     <Error code={isError} />
   ) : (
     <>
-      <button type="button" className="btn btn-outline-secondary" onClick={handleShow}>
+      <button
+        type="button"
+        className="btn btn-outline-secondary"
+        onClick={handleShow}
+      >
         <i class="bi bi-trash3-fill"></i>
       </button>
 
-      <Modal show={show} onHide={handleClose} backdrop="static" animation={false}>
+      <Modal
+        show={show}
+        onHide={handleClose}
+        backdrop="static"
+        animation={false}
+      >
         <div className="bg-secondary">
           <Modal.Header closeButton>
             <Modal.Title>Confirmation</Modal.Title>
