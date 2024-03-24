@@ -15,7 +15,6 @@ const cloudinary = require('cloudinary').v2;
 const { jwtStrategy } = require('./configs/passport');
 const { authLimiter } = require('./middlewares/rateLimiter');
 const apiRoutes = require('./routes/api-v1/index');
-const routes = require('./routes/production/index');
 const { errorConverter, errorHandler } = require('./middlewares/error');
 const ApiError = require('./utils/ApiError');
 
@@ -75,9 +74,6 @@ if (config.env === 'production') {
 
 // v1 api routes
 app.use('/v1', apiRoutes);
-
-// production routes
-app.use('/', routes);
 
 const swaggerDocument = YAML.load('./cavalry-guilds-docs.yaml');
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
