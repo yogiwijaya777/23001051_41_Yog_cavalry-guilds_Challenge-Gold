@@ -91,6 +91,8 @@ export default function TopDecks() {
       </Jumbotron>
       <br />
       <div className="text-dark">
+        <title>Cavalry : Top Decks</title>
+
         <SearchBar name="Search: " value={query} onQueryChange={setQuery} />
         <div className="row">
           {isLoading ? (

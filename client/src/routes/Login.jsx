@@ -56,6 +56,8 @@ const Login = () => {
     <div className="auth-wrapper">
       <div className="auth">
         <article className="title text-black mb-3">
+          <title>Cavalry : Login</title>
+
           <h1>Login</h1>
         </article>
 

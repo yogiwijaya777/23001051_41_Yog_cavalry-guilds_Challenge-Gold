@@ -59,6 +59,8 @@ const SignUp = () => {
   };
   return (
     <section className="auth-wrapper">
+      <title>Cavalry : Signup</title>
+
       <section className="auth">
         <article className="title text-black mb-3">
           <h1>Signup</h1>

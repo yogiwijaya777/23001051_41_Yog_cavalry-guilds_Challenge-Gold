@@ -20,6 +20,8 @@ function SingleDeck() {
   ) : (
     <>
       <div className="  me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden">
+        <title>Cavalry : View Deck</title>
+
         <div className="my-3 p-3">
           <h2 className="">{deck.name}</h2>
           <p>
