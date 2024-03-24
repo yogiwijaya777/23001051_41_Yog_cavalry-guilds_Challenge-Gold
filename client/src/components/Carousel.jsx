@@ -18,36 +18,36 @@ function Carousel() {
         <div className="carousel-item active">
           <img src="/img/carousels/Rescue Ace.png" alt="Rescue Ace" className="d-block w-100" />{' '}
           <div className="carousel-caption ">
-            <h5>Do You Need at Building Your Deck?</h5>
-            <p>We are the best place for you</p>
+            <h1>Do You Need at Building Your Deck?</h1>
+            <p>We have so much to offer for free!</p>
             <p>
-              <Button variant="warning" className="mt-2">
+              <a href="/top-decks" className="btn btn-warning">
                 Learn more...
-              </Button>
+              </a>
             </p>
           </div>
         </div>
         <div className="carousel-item">
           <img src="/img/carousels/Exosister.jpg" alt="mikailis" className="d-block w-100" />
           <div className="carousel-caption ">
-            <h5>Are You Want to be a Champion?</h5>
-            <p>We are the best place for you</p>
+            <h1>Are You Want to be a Champion?</h1>
+            <p>We are the best place for you!</p>
             <p>
-              <Button variant="warning" className="mt-2">
+              <a href="/top-decks" className="btn btn-warning">
                 Learn more...
-              </Button>
+              </a>
             </p>
           </div>
         </div>
         <div className="carousel-item">
           <img src="/img/carousels/Mannadium.jpg" alt="Mannadium" className="d-block w-100" />
           <div className="carousel-caption  ">
-            <h5>This Place Only For Champions</h5>
-            <p>We are the best place for you</p>
+            <h1>Ready for The Next Duel?</h1>
+            <p>It's time to ddduel!</p>
             <p>
-              <Button variant="warning" className="mt-2">
+              <a href="/top-decks" className="btn btn-warning">
                 Learn more...
-              </Button>
+              </a>
             </p>
           </div>
         </div>
