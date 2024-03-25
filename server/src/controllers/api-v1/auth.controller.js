@@ -46,8 +46,12 @@ const logout = catchAsync(async (req, res) => {
 });
 
 const refreshTokens = catchAsync(async (req, res) => {
-  const tokens = await authService.refreshAuth(req.headers.authorization.split(' ')[1]);
-  res.send({ ...tokens });
+  const tokens = await authService.refreshAuth(req.body.refreshToken);
+  res.send({
+    status: httpStatus.OK,
+    message: 'Refresh Tokens Success',
+    data: { tokens },
+  });
 });
 
 module.exports = {
