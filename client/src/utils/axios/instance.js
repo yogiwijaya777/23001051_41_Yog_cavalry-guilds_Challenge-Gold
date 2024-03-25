@@ -13,8 +13,6 @@ instance.interceptors.request.use(
       config.headers["Authorization"] = `Bearer ${accessToken}`;
     }
 
-    // config.headers["Cache-Control"] = "no-cache";
-
     return config;
   },
   function (error) {
@@ -34,10 +32,12 @@ instance.interceptors.response.use(
 
         error.config._refreshing = true;
         const refreshResponse = await instance.post("/auth/refresh-tokens", {
-          refresh_token: refreshToken,
+          refreshToken: refreshToken,
         });
-
-        localStorage.setItem("tokens", refreshResponse.data.data.tokens);
+        localStorage.setItem(
+          "tokens",
+          JSON.stringify(refreshResponse.data.data.tokens)
+        );
 
         return instance(error.config);
       }

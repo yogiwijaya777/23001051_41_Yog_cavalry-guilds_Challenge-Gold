@@ -45,6 +45,7 @@ const refreshAuth = async (refreshToken) => {
     await knex('tokens').delete().where('userId', refreshTokenDoc.userId);
     return tokenService.generateAuthTokens(user);
   } catch (error) {
+    console.log(error);
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Please authenticate');
   }
 };

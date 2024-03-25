@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem("tokens", JSON.stringify(tokens));
   };
   const logout = async () => {
-    await axios.get(`/auth/logout`, {
+    await axios.get(`${process.env.REACT_APP_API_URL}/auth/logout`, {
       headers: { Authorization: `Bearer ${token?.refresh?.token}` },
     });
 
