@@ -19,7 +19,6 @@ const useFetchData = (url) => {
         setData(response.data.data);
         setMeta(response.data.meta);
       } catch (err) {
-        console.log(err);
         setError(err.response);
       } finally {
         setLoading(false);
