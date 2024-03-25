@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
 function DeckList({ deck }) {
   return (
@@ -13,7 +13,7 @@ function DeckList({ deck }) {
             <small className="text-muted">{deck.userName}</small>
           </p>
         </div>
-        <div class="mb-5 d-flex justify-content-around">
+        <div className="mb-5 d-flex justify-content-around">
           <h5 className="mt-1">{deck.archetypeName}</h5>
           <Link to={`/decks/${deck.id}`} className="btn btn-primary me-2">
             See Details...

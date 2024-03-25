@@ -1,19 +1,18 @@
-import { useParams } from 'react-router';
-import useFetchData from '../utils/useFetchData';
-import Loading from '../components/Loading';
-import Error from '../components/Error';
-import DeleteDeck from '../components/DeleteDeck';
-import { useAuth } from '../contexts/AuthContext';
-import addFlAttachmentToUrl from '../utils/addFlAttachmentToUrl';
-import UpdateDeck from '../components/UpdateDeck';
-import DeckFavorites from '../components/DeckFavorites';
+import { useParams } from "react-router";
+import useFetchData from "../hooks/useFetchData";
+import Loading from "../components/Loading";
+import Error from "../components/Error";
+import DeleteDeck from "../components/DeleteDeck";
+import { useAuth } from "../contexts/AuthContext";
+import addFlAttachmentToUrl from "../utils/addFlAttachmentToUrl";
+import UpdateDeck from "../components/UpdateDeck";
+import DeckFavorites from "../components/DeckFavorites";
 
 function SingleDeck() {
   const { user, token } = useAuth();
   const { id: deckId } = useParams();
 
-  const { data: deck, loading, error } = useFetchData(`${process.env.REACT_APP_API_URL}/decks/${deckId}`);
-
+  const { data: deck, loading, error } = useFetchData(`/decks/${deckId}`);
   return loading ? (
     <Loading />
   ) : error ? (
@@ -21,6 +20,8 @@ function SingleDeck() {
   ) : (
     <>
       <div className="  me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden">
+        <title>Cavalry : View Deck</title>
+
         <div className="my-3 p-3">
           <h2 className="">{deck.name}</h2>
           <p>
@@ -28,7 +29,10 @@ function SingleDeck() {
           </p>
         </div>
       </div>
-      <div className=" shadow-sm mx-auto" style={{ width: '50%', height: '700px', bordeRadius: '21px 21px ' }}>
+      <div
+        className=" shadow-sm mx-auto"
+        style={{ width: "50%", height: "700px", bordeRadius: "21px 21px " }}
+      >
         <div className=" row">
           <div className="img--cover col-lg-6 col-md-12 col-sm-12 mt-4 text-center">
             <img className="img-fluid" src={deck.imageUrl} alt="Deck" />
@@ -37,14 +41,17 @@ function SingleDeck() {
                 <i className="bi bi-download"></i>
               </button>
             </a>
-            {user.id === deck.userId ? (
+            {user?.id === deck.userId ? (
               <div className="btn-group">
                 <UpdateDeck token={token} deckId={deck.id} />
                 &nbsp;
                 <DeleteDeck token={token} deckId={deck.id} />
               </div>
             ) : (
-              <p className="">Fun Fact: This text willd become 2 Buttons if you the Owner of this Deck!</p>
+              <p className="">
+                Fun Fact: This text willd become 2 Buttons if you the Owner of
+                this Deck!
+              </p>
             )}
           </div>
           <div className=" deck--detail col-6 mt-4">
