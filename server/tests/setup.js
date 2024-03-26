@@ -4,26 +4,23 @@ const config = require('../knexfile').test;
 const db = knex(config);
 
 beforeAll(async () => {
-  const migrate = async () => {
-    await db.migrate.latest();
-  };
-  const seeds = async () => {
-    await db.seed.run();
-  };
-  migrate()
-    .then(seeds)
-    .catch(() => {
-      process.exit(1);
-    });
+  try {
+    await Promise.all([db.migrate.latest()]);
+  } catch (err) {
+    process.exit(1);
+  }
 });
 
 beforeEach(async () => {
+  await db('favoriteDecks').del();
+  await db('follows').del();
+  await db('decks').del();
+  await db('archetypes').del();
   await db('users').del();
   await db('tokens').del();
 });
 
 afterAll(async () => {
-  await db.raw('DROP SCHEMA IF EXISTS testingDb CASCADE');
   await db.destroy();
 });
 
