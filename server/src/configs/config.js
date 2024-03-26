@@ -11,6 +11,9 @@ module.exports = {
   development: {
     CONNECTION_STRING: process.env.DATABASE_URL,
   },
+  test: {
+    CONNECTION_STRING: process.env.TEST_DATABASE_URL,
+  },
   jwt: {
     secret: process.env.JWT_SECRET,
     accessExpirationMinutes: process.env.JWT_ACCESS_EXPIRATION_MINUTES,
