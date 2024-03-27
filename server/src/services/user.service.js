@@ -6,7 +6,7 @@ const ApiError = require('../utils/ApiError');
 const create = async (body) => {
   body.password = bcrypt.hashSync(body.password, 8);
 
-  const user = await knex('users').insert(body, ['id', 'name', 'email', 'createdAt']);
+  const user = await knex('users').insert(body, ['id', 'name', 'email', 'role', 'createdAt']);
 
   const [userObj] = user;
 
@@ -19,7 +19,7 @@ const getByEmail = async (email) => {
   return user;
 };
 const getById = async (id) => {
-  const user = await knex('users').select(['id', 'name', 'email', 'createdAt']).where({ id }).first();
+  const user = await knex('users').select(['id', 'name', 'email', 'role', 'createdAt']).where({ id }).first();
 
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
@@ -37,9 +37,15 @@ const getById = async (id) => {
 const update = async (id, body) => {
   await getById(id);
 
-  const updatedUser = await knex('users').update(body).where({ id }).returning(['id', 'name', 'email', 'createdAt']);
+  const updatedUser = await knex('users').update(body).where({ id }).returning(['id', 'name', 'email', 'role', 'createdAt']);
 
-  return updatedUser;
+  if (!updatedUser.length) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+
+  const [user] = updatedUser;
+
+  return user;
 };
 
 const del = async (id) => {
