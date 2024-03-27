@@ -8,6 +8,7 @@ const { userOneAccessToken, adminAccessToken } = require('../fixtures/token.fixt
 const knex = require('../setup');
 
 describe('User routes', () => {
+  let newUser;
   beforeEach(async () => {
     await insertUsers([userOne]);
     await insertUsers([admin]);
@@ -18,6 +19,86 @@ describe('User routes', () => {
       role: 'user',
       password: 'password1',
     };
+  });
+  describe('POST /v1/users', () => {
+    test('Should return 201 if user is created', async () => {
+      const res = await request(app)
+        .post('/v1/users')
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send(newUser)
+        .expect(httpStatus.CREATED);
+
+      const userData = res.body.data;
+
+      expect(userData).toMatchObject({
+        userCreated: {
+          id: expect.anything(),
+          name: newUser.name,
+          email: newUser.email,
+          role: newUser.role,
+          createdAt: expect.anything(),
+        },
+        tokens: expect.any(Object),
+      });
+
+      const dbUser = await knex('users').where({ id: userData.userCreated.id }).first();
+
+      expect(dbUser).toBeDefined();
+
+      expect(dbUser).toMatchObject({
+        id: expect.anything(),
+        name: newUser.name,
+        email: newUser.email,
+        role: newUser.role,
+        createdAt: expect.anything(),
+      });
+    });
+    test('Should return 400 if email already taken', async () => {
+      await knex('users').insert(newUser);
+
+      await request(app)
+        .post('/v1/users')
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send(newUser)
+        .expect(httpStatus.BAD_REQUEST);
+    });
+    test('Should return 400 if no email given', async () => {
+      delete newUser.email;
+
+      await request(app)
+        .post('/v1/users')
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send(newUser)
+        .expect(httpStatus.BAD_REQUEST);
+    });
+    test('Should return 400 if no name given', async () => {
+      delete newUser.name;
+
+      await request(app)
+        .post('/v1/users')
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send(newUser)
+        .expect(httpStatus.BAD_REQUEST);
+    });
+    test('Should return 400 if no password given', async () => {
+      delete newUser.password;
+
+      await request(app)
+        .post('/v1/users')
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send(newUser)
+        .expect(httpStatus.BAD_REQUEST);
+    });
+    test('Should return 404 if token not an admin', async () => {
+      await request(app)
+        .post('/v1/users')
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .send(newUser)
+        .expect(httpStatus.FORBIDDEN);
+    });
+    test('Should return 401 if access token is missing', async () => {
+      await request(app).post('/v1/users').send(newUser).expect(httpStatus.UNAUTHORIZED);
+    });
   });
   describe('GET /v1/users', () => {
     test('Should return 200 and list of users', async () => {
