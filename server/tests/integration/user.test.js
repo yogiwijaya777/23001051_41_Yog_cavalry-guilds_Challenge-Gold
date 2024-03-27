@@ -19,6 +19,17 @@ describe('User routes', () => {
       password: 'password1',
     };
   });
+  describe('GET /v1/users', () => {
+    test('Should return 200 and list of users', async () => {
+      await request(app).get('/v1/users').set('Authorization', `Bearer ${adminAccessToken}`).expect(httpStatus.OK);
+    });
+    test('Should return 401 if access token is missing', async () => {
+      await request(app).get('/v1/users').expect(httpStatus.UNAUTHORIZED);
+    });
+    test('Should return 401 if token not an admin', async () => {
+      await request(app).get('/v1/users').set('Authorization', `Bearer ${userOneAccessToken}`).expect(httpStatus.FORBIDDEN);
+    });
+  });
   describe('GET /api/v1/users', () => {
     test('Should return 200 and the user object if user is exist', async () => {
       const res = await request(app)
