@@ -39,7 +39,13 @@ const update = async (id, body) => {
 
   const updatedUser = await knex('users').update(body).where({ id }).returning(['id', 'name', 'email', 'role', 'createdAt']);
 
-  return updatedUser;
+  if (!updatedUser.length) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+
+  const [user] = updatedUser;
+
+  return user;
 };
 
 const del = async (id) => {

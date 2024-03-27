@@ -3,14 +3,14 @@ const httpStatus = require('http-status');
 const { faker } = require('@faker-js/faker');
 const { v4 } = require('uuid');
 const app = require('../../src/app');
-const { userOne, admin, insertUsers } = require('../fixtures/user.fixture');
-const { userOneAccessToken, adminAccessToken } = require('../fixtures/token.fixture');
+const { userOne, admin, insertUsers, userTwo } = require('../fixtures/user.fixture');
+const { userOneAccessToken, adminAccessToken, userTwoAccessToken } = require('../fixtures/token.fixture');
 const knex = require('../setup');
 
 describe('User routes', () => {
   let newUser;
   beforeEach(async () => {
-    await insertUsers([userOne]);
+    await insertUsers([userOne, userTwo]);
     await insertUsers([admin]);
 
     newUser = {
@@ -139,6 +139,47 @@ describe('User routes', () => {
         .get('/v1/users/123')
         .set('Authorization', `Bearer ${adminAccessToken}`)
         .expect(httpStatus.BAD_REQUEST);
+    });
+  });
+  describe('PATCH /v1/users/:userId', () => {
+    test('Should return 200 and updated user', async () => {
+      const res = await request(app)
+        .patch(`/v1/users/${userOne.id}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send({ name: 'sir' })
+        .expect(httpStatus.OK);
+
+      expect(res.body.data).toMatchObject({
+        id: expect.anything(),
+        name: 'sir',
+        email: userOne.email,
+        role: userOne.role,
+        createdAt: expect.anything(),
+      });
+    });
+    test('Should return 401 if access token is missing', async () => {
+      await request(app).patch(`/v1/users/${userOne.id}`).send({ name: 'sir' }).expect(httpStatus.UNAUTHORIZED);
+    });
+    test('Should return 404 if user is not found', async () => {
+      await request(app)
+        .patch(`/v1/users/${v4()}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send({ name: 'sir' })
+        .expect(httpStatus.NOT_FOUND);
+    });
+    test('Should return 400 if data given invalid', async () => {
+      await request(app)
+        .patch(`/v1/users/${userOne.id}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send({ name: '' })
+        .expect(httpStatus.BAD_REQUEST);
+    });
+    test('Should return 401 if user trying updating other user', async () => {
+      await request(app)
+        .patch(`/v1/users/${userOne.id}`)
+        .set('Authorization', `Bearer ${userTwoAccessToken}`)
+        .send({ name: 'hello' })
+        .expect(httpStatus.FORBIDDEN);
     });
   });
 });
