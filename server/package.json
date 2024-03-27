@@ -29,6 +29,7 @@
   },
   "homepage": "https://github.com/yogiwijaya777/23001051_41_Yog_Card-Shop_Challenge-Gold#readme",
   "dependencies": {
+    "@faker-js/faker": "^8.4.1",
     "bcryptjs": "^2.4.3",
     "cloudinary": "^2.0.3",
     "compression": "^1.7.4",
@@ -53,12 +54,13 @@
     "pg": "^8.11.3",
     "prettier": "^2.0.5",
     "pug": "^3.0.2",
+    "supertest": "^6.3.4",
     "swagger-ui-express": "^5.0.0",
+    "uuid": "^9.0.1",
     "validator": "^13.11.0",
     "winston": "^3.11.0",
     "xss-clean": "^0.1.4",
-    "yamljs": "^0.3.0",
-       "supertest": "^6.3.4"
+    "yamljs": "^0.3.0"
   },
   "devDependencies": {
     "eslint": "^7.0.0",
