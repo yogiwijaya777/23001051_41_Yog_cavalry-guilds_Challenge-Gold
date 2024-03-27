@@ -182,4 +182,37 @@ describe('User routes', () => {
         .expect(httpStatus.FORBIDDEN);
     });
   });
+  describe('DELETE /v1/users/:userId', () => {
+    test('Should return 200 and no data', async () => {
+      const res = await request(app)
+        .delete(`/v1/users/${userOne.id}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .expect(httpStatus.OK);
+
+      const userData = res.body.data;
+
+      expect(userData).toBeUndefined();
+    });
+    test('Should return 401 if access token is missing', async () => {
+      await request(app).delete(`/v1/users/${userOne.id}`).expect(httpStatus.UNAUTHORIZED);
+    });
+    test('Should return 404 if user is not found', async () => {
+      await request(app)
+        .delete(`/v1/users/${v4()}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .expect(httpStatus.NOT_FOUND);
+    });
+    test('Should return 400 if id given not an UUID', async () => {
+      await request(app)
+        .delete('/v1/users/123')
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .expect(httpStatus.BAD_REQUEST);
+    });
+    test('Should return 401 if user trying deleting other user', async () => {
+      await request(app)
+        .delete(`/v1/users/${userOne.id}`)
+        .set('Authorization', `Bearer ${userTwoAccessToken}`)
+        .expect(httpStatus.FORBIDDEN);
+    });
+  });
 });
