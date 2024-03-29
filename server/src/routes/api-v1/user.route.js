@@ -9,7 +9,10 @@ const { userValidation, deckValidation, followValidation, favoriteDeckValidation
 
 const router = express.Router();
 
-router.route('/').post(validate(userValidation.create), userController.create).get(auth('getUsers'), userController.search);
+router
+  .route('/')
+  .post(auth('manageUsers'), validate(userValidation.create), userController.create)
+  .get(auth('getUsers'), userController.search);
 
 router
   .route('/:userId')

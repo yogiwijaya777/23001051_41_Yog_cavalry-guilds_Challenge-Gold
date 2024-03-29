@@ -1,9 +1,10 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import ArchetypeList from "../ArchetypeList";
+import { v4 } from "uuid";
 
 describe("ArchetypeList component", () => {
   const mockCard = {
-    id: 1,
+    id: v4(),
     name: "Archetype 1",
     totalDecks: 10,
   };
@@ -46,7 +47,7 @@ describe("ArchetypeList component", () => {
     const cardElement = screen.getByTestId("archetypeList");
     fireEvent.click(cardElement);
 
-    expect(mockOnArchetypeClick).toHaveBeenCalledWith(1);
+    expect(mockOnArchetypeClick).toHaveBeenCalledWith(mockCard.id);
   });
 
   test("renders the component with isOpen prop", () => {

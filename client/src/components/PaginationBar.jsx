@@ -1,5 +1,5 @@
-import { Link, useLocation } from 'react-router-dom';
-import { useEffect } from 'react';
+import { Link, useLocation } from "react-router-dom";
+import { useEffect } from "react";
 
 const PaginationBar = ({ totalPages, currentPage, onPageChange }) => {
   const location = useLocation();
@@ -7,7 +7,7 @@ const PaginationBar = ({ totalPages, currentPage, onPageChange }) => {
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
 
-    const pageFromQuery = searchParams.get('page');
+    const pageFromQuery = searchParams.get("page");
 
     if (pageFromQuery) {
       onPageChange(Number(pageFromQuery));
@@ -22,7 +22,10 @@ const PaginationBar = ({ totalPages, currentPage, onPageChange }) => {
 
     for (let page = 1; page <= totalPages; page++) {
       pageLinks.push(
-        <li key={page} className={`page-item ${page === currentPage ? 'active' : ''}`}>
+        <li
+          key={page}
+          className={`page-item ${page === currentPage ? "active" : ""}`}
+        >
           <Link className="page-link" to={`?page=${page}`}>
             {page}
           </Link>
@@ -36,15 +39,31 @@ const PaginationBar = ({ totalPages, currentPage, onPageChange }) => {
   return (
     <nav aria-label="Page navigation">
       <ul className="pagination justify-content-center">
-        <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-          <Link className="page-link" to={`?page=${currentPage - 1}`} aria-label="Previous">
+        <li
+          className={`page-item ${currentPage === 1 ? "disabled" : ""}`}
+          role="link"
+        >
+          <Link
+            className="page-link"
+            to={`?page=${currentPage - 1}`}
+            aria-label="Previous"
+          >
             <span aria-hidden="true">&laquo;</span>
             <span className="sr-only">Previous</span>
           </Link>
         </li>
         {renderPageLinks()}
-        <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-          <Link className="page-link" to={`?page=${currentPage + 1}`} aria-label="Next">
+        <li
+          className={`page-item ${
+            currentPage === totalPages ? "disabled" : ""
+          }`}
+          role="link"
+        >
+          <Link
+            className="page-link"
+            to={`?page=${currentPage + 1}`}
+            aria-label="Next"
+          >
             <span className="sr-only">Next</span>
             <span aria-hidden="true">&raquo;</span>
           </Link>

@@ -14,6 +14,16 @@ module.exports = {
       directory: './src/db/seeds',
     },
   },
+  test: {
+    client: 'pg',
+    connection: config.test.CONNECTION_STRING,
+    migrations: {
+      directory: './src/db/migrations',
+    },
+    seeds: {
+      directory: './src/db/seeds',
+    },
+  },
   production: {
     client: 'postgresql',
     connection: {
