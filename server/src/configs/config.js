@@ -8,6 +8,9 @@ dotenv.config({
 module.exports = {
   env: process.env.NODE_ENV || 'development',
   port: process.env.PORT || 5000,
+  cors: {
+    origin: process.env.NODE_ENV === 'production' ? `${process.env.CORS}` : 'http://localhost:3000',
+  },
   development: {
     CONNECTION_STRING: process.env.DATABASE_URL,
   },

@@ -8,9 +8,9 @@ const passport = require('passport');
 const swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
 const httpStatus = require('http-status');
+const fileUpload = require('express-fileupload');
 const config = require('./configs/config');
 const morgan = require('./configs/morgan');
-const fileUpload = require('express-fileupload');
 const cloudinary = require('cloudinary').v2;
 const { jwtStrategy } = require('./configs/passport');
 const { authLimiter } = require('./middlewares/rateLimiter');
@@ -58,6 +58,7 @@ app.use(compression());
 // enable cors
 app.use(
   cors({
+    origin: config.cors.origin,
     allowedHeaders: ['Content-Type', 'Authorization'],
   })
 );
@@ -77,6 +78,10 @@ app.use('/v1', apiRoutes);
 
 const swaggerDocument = YAML.load('./cavalry-guilds-docs.yaml');
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+app.get('/', (req, res) => {
+  res.send('Hello World!');
+});
 
 // send back a 404 error for any unknown api request
 app.use((req, res, next) => {
