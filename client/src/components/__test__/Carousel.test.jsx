@@ -8,7 +8,7 @@ describe("Carousel component", () => {
     const carouselElement = screen.getByTestId("carousel");
     expect(carouselElement).toBeInTheDocument();
 
-    const indicators = screen.getAllByRole("button", { name: /Slide/ });
+    const indicators = screen.getAllByRole("button", { name: /Slide/i });
     expect(indicators).toHaveLength(3);
 
     const carouselItems = screen.getAllByRole("img");
