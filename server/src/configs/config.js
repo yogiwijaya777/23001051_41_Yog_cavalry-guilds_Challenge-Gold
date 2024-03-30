@@ -11,8 +11,11 @@ module.exports = {
   cors: {
     origin: process.env.NODE_ENV === 'production' ? `${process.env.CORS}` : 'http://localhost:3000',
   },
-  development: {
+  production: {
     CONNECTION_STRING: process.env.DATABASE_URL,
+  },
+  development: {
+    CONNECTION_STRING: process.env.DEV_DATABASE_URL,
   },
   test: {
     CONNECTION_STRING: process.env.TEST_DATABASE_URL,
