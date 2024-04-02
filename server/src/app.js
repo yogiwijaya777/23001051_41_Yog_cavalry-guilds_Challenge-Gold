@@ -76,9 +76,10 @@ if (config.env === 'production') {
 // v1 api routes
 app.use('/v1', apiRoutes);
 
-const swaggerDocument = YAML.load('./cavalry-guilds-docs.yaml');
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-
+if (config.env === 'development') {
+  const swaggerDocument = YAML.load('./cavalry-guilds-docs.yaml');
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+}
 app.get('/', (req, res) => {
   res.send('Hello World!');
 });
