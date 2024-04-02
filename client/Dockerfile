@@ -1,10 +1,25 @@
-# Base Stage: Install Dependencies
-FROM node:20-alpine as development
+FROM node:20-alpine as base
+
 WORKDIR /app
+
 COPY package*.json .
 RUN npm ci
 COPY . .
+
+
+FROM base as development
+
 ENV NODE_ENV=development
-ENV REACT_APP_API_URL=http://localhost:5000/v1
 CMD npm start
+
+
+FROM node:20-alpine AS production
+
+RUN chown -R node:node /app
+USER node
+
+ENV NODE_ENV=production
+
+RUN npm run build
+RUN npx serve -s build
 
