@@ -1,5 +1,5 @@
 // Update with your config settings.
-const config = require('./src/configs/config');
+const config = require('./configs/config');
 /**
  * @type { Object.<string, import("knex").Knex.Config> }
  */

@@ -1,0 +1,38 @@
+version: "3.9"
+
+services:
+  server:
+    build:
+      context: ./server
+      target: development
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./server/src:/app/src
+      - ./server/tests:/app/test
+    env_file:
+      - ./server/.env
+    container_name: server
+    restart: always
+    networks:
+      - cg-network
+  client:
+    build:
+      context: ./client
+      target: development
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./client/src:/app/src
+    env_file:
+      - ./client/.env
+    container_name: client
+    restart: always
+    networks:
+      - cg-network
+    depends_on:
+      - server
+
+networks:
+  cg-network:
+    driver: bridge
