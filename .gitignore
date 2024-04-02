@@ -132,3 +132,4 @@ dist
 coverage
 .vercel
 node_modules
+build

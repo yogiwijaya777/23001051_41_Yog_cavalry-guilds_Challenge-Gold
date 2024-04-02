@@ -3,13 +3,13 @@ FROM node:20-alpine AS base
 WORKDIR /app
 COPY package*.json .
 
-RUN npm install --only=production
+RUN npm ci 
 
 COPY . .
 
 #Development Stage
 FROM base AS development
-RUN npm install --only=development
+
 ENV NODE_ENV=development
 CMD npm run dev
 
@@ -19,13 +19,13 @@ RUN npm run build
 
 #Production Stage
 FROM node:20-alpine AS production
-RUN npm install -g pm2
+
+WORKDIR /app
 
 COPY --from=build /app/dist /app/dist
-COPY --from=build /app/node_modules .
-COPY package*.json .
-COPY knexfile.js .
-COPY ecosystem.config.json .
+COPY package*.json /app
+RUN npm ci --only=production
+COPY ecosystem.config.json /app
 #Change directory ownership
 RUN chown -R node:node /app
 USER node

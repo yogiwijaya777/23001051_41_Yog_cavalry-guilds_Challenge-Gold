@@ -12,9 +12,10 @@ FROM base as build
 RUN npm run build
 
 FROM node:20-alpine as production
+WORKDIR /app
 COPY --from=build /app/build /app/build
-COPY package*.json .
-RUN npm install --only=production
+COPY package*.json /app
+RUN npm ci --only=production
 RUN chown -R node:node /app
 USER node
 ENV NODE_ENV=production

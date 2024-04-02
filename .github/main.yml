@@ -45,5 +45,6 @@ jobs:
           username: ${{ secrets.DROPLET_SSH_USERNAME }}
           key: ${{ secrets.DROPLET_SSH_PRIVATE_KEY }}
           script: |
-            docker-compose -f /path/to/docker-compose.yml pull
-            docker-compose -f /path/to/docker-compose.yml up -d
+            docker-compose -f /app/production-compose.yml pull
+            docker-compose -f /app/production-compose.yml up -d --build
+            docker system prune -a -f
