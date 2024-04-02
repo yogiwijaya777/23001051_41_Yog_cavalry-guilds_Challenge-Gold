@@ -14,7 +14,7 @@ services:
   client:
     image: mikailis/cavalry-guilds:client
     ports:
-      - "3000:3000"
+      - "3000:5000"
     env_file:
       - .env
     container_name: client

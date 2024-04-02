@@ -59,7 +59,7 @@ app.use(compression());
 app.options('*', cors());
 app.use(
   cors({
-    origin: [config.cors.origin, 'http://localhost:3000'],
+    origin: ['https://www.cavalryguilds.my.id', 'https://cavalryguilds.my.id', 'http://localhost:3000', 'localhost:3000'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   })
 );
@@ -80,6 +80,7 @@ if (config.env === 'development') {
   const swaggerDocument = YAML.load('./cavalry-guilds-docs.yaml');
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 }
+
 app.get('/', (req, res) => {
   res.send('Hello World!');
 });
