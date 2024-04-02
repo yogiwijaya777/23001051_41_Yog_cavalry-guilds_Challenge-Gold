@@ -32,7 +32,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@master
 
       - name: Install SSH client
         run: sudo apt-get install -y openssh-client
@@ -40,9 +40,7 @@ jobs:
       - name: SSH into Droplet, pull image, and run container
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ secrets.DROPLET_SSH_HOST }}
-          username: ${{ secrets.DROPLET_SSH_USERNAME }}
-          key: ${{ secrets.DROPLET_SSH_PRIVATE_KEY }}
+          token: ${{ secrets.DIGITAOCEAN_TOKEN }}
           script: |
             docker-compose -f /app/production-compose.yml pull
             docker-compose -f /app/production-compose.yml up -d --build
