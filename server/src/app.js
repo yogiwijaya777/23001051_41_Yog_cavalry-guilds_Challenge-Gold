@@ -56,13 +56,13 @@ app.use(xss());
 app.use(compression());
 
 // enable cors
+app.options('*', cors());
 app.use(
   cors({
     origin: config.cors.origin,
     allowedHeaders: ['Content-Type', 'Authorization'],
   })
 );
-app.options('*', cors());
 
 // jwt authentication
 app.use(passport.initialize());
