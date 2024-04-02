@@ -1,7 +1,8 @@
 const app = require('./app');
 const logger = require('./configs/logger');
 const config = require('./configs/config');
-const knex = require('./db/knex');
+
+const knex = require(`./db/knex`);
 
 let server;
 const checkConnect = async () => {
@@ -12,6 +13,7 @@ const checkConnect = async () => {
       logger.info(`Listening to port ${config.port}`);
     });
   } catch (e) {
+    logger.error(knex);
     logger.error('PostgreSQL not connected');
   }
 };
