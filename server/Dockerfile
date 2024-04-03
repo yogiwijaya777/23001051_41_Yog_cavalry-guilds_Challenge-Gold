@@ -19,15 +19,14 @@ RUN npm run build
 
 #Production Stage
 FROM node:20-alpine AS production
-
+#SET OWNER FIRST FOR FAST REBUILD
+RUN chown -R node:node /app
 WORKDIR /app
-
 COPY --from=build /app/dist /app/dist
 COPY package*.json /app
 RUN npm ci --only=production
 COPY ecosystem.config.json /app
 #Change directory ownership
-RUN chown -R node:node /app
 USER node
 ENV NODE_ENV=production
 CMD npm start
