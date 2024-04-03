@@ -8,16 +8,9 @@ FROM base as development
 ENV NODE_ENV=development
 CMD ["npm", "start"]
 
-FROM base as build
-RUN npm run build
-
-FROM node:20-alpine as production
-WORKDIR /app
-COPY --from=build /app/build /app/build
-COPY package*.json /app
-RUN npm ci --only=production
-RUN chown -R node:node /app
+FROM base as production
+RUN chown -R --no-dereference node:node /app
 USER node
 ENV NODE_ENV=production
-CMD ["npx", "serve", "-s", "build"]
+CMD ["npm", "start"]
 

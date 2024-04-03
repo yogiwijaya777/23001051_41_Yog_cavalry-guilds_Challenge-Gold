@@ -59,7 +59,16 @@ app.use(compression());
 app.options('*', cors());
 app.use(
   cors({
-    origin: ['https://www.cavalryguilds.my.id', 'https://cavalryguilds.my.id', 'http://localhost:3000', 'localhost:3000'],
+    origin: [
+      'https://www.cavalryguilds.my.id',
+      'https://cavalryguilds.my.id',
+      'http://localhost:3000',
+      'localhost:3000',
+      '128.199.239.54',
+      '128.199.239.54:3000',
+      'http://cavalryguilds.my.id',
+      'cavalryguilds.my.id',
+    ],
     allowedHeaders: ['Content-Type', 'Authorization'],
   })
 );
