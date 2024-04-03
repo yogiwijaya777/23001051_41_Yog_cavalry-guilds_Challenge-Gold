@@ -19,9 +19,9 @@ RUN npm run build
 
 #Production Stage
 FROM node:20-alpine AS production
+WORKDIR /app
 #SET OWNER FIRST FOR FAST REBUILD
 RUN chown -R node:node /app
-WORKDIR /app
 COPY --from=build /app/dist /app/dist
 COPY package*.json /app
 RUN npm ci --only=production
