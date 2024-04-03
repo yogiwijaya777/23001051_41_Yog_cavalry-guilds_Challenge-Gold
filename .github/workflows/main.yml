@@ -24,7 +24,7 @@ jobs:
       - name: Build and Push Docker Image of Client
         run: |
           TAG="mikailis/cavalry-guilds:client"
-          docker build --target production -t $TAG ./client
+          docker build --build-arg REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }} --target production -t $TAG ./client
           docker push $TAG
 
   deploy-to-droplet:
