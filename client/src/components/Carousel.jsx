@@ -30,7 +30,7 @@ function Carousel() {
       <div className="carousel-inner">
         <div className="carousel-item active">
           <img
-            src="/img/carousels/Rescue Ace.png"
+            src="/img/carousels/Rescue Ace.webp"
             alt="Rescue Ace"
             className="d-block w-100"
           />{" "}
@@ -46,7 +46,7 @@ function Carousel() {
         </div>
         <div className="carousel-item">
           <img
-            src="/img/carousels/Exosister.jpg"
+            src="/img/carousels/Exosister.webp"
             alt="mikailis"
             className="d-block w-100"
           />
@@ -62,7 +62,7 @@ function Carousel() {
         </div>
         <div className="carousel-item">
           <img
-            src="/img/carousels/Mannadium.jpg"
+            src="/img/carousels/Mannadium.webp"
             alt="Mannadium"
             className="d-block w-100"
           />
