@@ -34,7 +34,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@master
 
-
       - name: SSH into Droplet, pull image, and run container
         uses: appleboy/ssh-action@master
         with:
@@ -45,4 +44,3 @@ jobs:
             cd /app/
             docker compose -f /app/production-compose.yaml pull
             docker compose -f /app/production-compose.yaml up -d --build
-            docker system prune -a -f
