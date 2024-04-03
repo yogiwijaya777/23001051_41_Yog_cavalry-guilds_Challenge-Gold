@@ -86,7 +86,7 @@ function UpdateDeck({ token, deckId }) {
         className="btn btn-outline-secondary"
         onClick={handleShow}
       >
-        <i class="bi bi-pencil-fill"></i>
+        <i className="bi bi-pencil-fill"></i>
       </button>
 
       <Modal
