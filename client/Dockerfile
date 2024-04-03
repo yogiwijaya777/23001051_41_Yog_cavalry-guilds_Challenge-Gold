@@ -14,9 +14,9 @@ ENV REACT_APP_API_URL=$REACT_APP_API_URL
 RUN npm run build
 
 FROM node:20-alpine as production
+WORKDIR /app
 #SET OWNER FIRST FOR FAST REBUILD
 RUN chown -R node:node /app
-WORKDIR /app
 COPY --from=build /app/build /app/build
 COPY package*.json /app
 RUN npm ci --only=production && npm cache clean --force
