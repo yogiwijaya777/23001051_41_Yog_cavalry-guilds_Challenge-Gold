@@ -18,7 +18,7 @@
     "test:watch": "jest -i --watchAll",
     "coverage": "jest -i --coverage --forceExit",
     "coverage:coveralls": "jest -i --coverage --coverageReporters=text-lcov | coveralls",
-    "build": "npm run transpile && parcel build dist/index.js --out-dir dist/app --target node",
+    "build": "npm run transpile && parcel build dist/index.js --out-dir dist/app --target node && cp ecosystem.config.json dist/ && cp knexfile.js dist/",
     "transpile": "babel src --out-dir dist --copy-files"
   },
   "repository": {
