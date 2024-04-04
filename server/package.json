@@ -14,9 +14,9 @@
     "lint:fix": "eslint . --fix",
     "prettier": "prettier --check **/*.js",
     "prettier:fix": "prettier --write **/*.js",
-    "test": "jest -i --colors --verbose --detectOpenHandles",
+    "test": "jest -i --colors --verbose --detectOpenHandles --forceExit ",
     "test:watch": "jest -i --watchAll",
-    "coverage": "jest -i --coverage",
+    "coverage": "jest -i --coverage --forceExit",
     "coverage:coveralls": "jest -i --coverage --coverageReporters=text-lcov | coveralls",
     "build": "npm run transpile && parcel build dist/index.js --out-dir dist/app --target node",
     "transpile": "babel src --out-dir dist --copy-files"
