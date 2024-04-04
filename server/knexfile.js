@@ -4,33 +4,9 @@ const config = require('./src/configs/config');
  * @type { Object.<string, import("knex").Knex.Config> }
  */
 module.exports = {
-  development: {
-    client: 'pg',
-    connection: config.development.CONNECTION_STRING,
-    migrations: {
-      directory: './src/db/migrations',
-    },
-    seeds: {
-      directory: './src/db/seeds',
-    },
-  },
   test: {
     client: 'pg',
     connection: config.test.CONNECTION_STRING,
-    migrations: {
-      directory: './src/db/migrations',
-    },
-    seeds: {
-      directory: './src/db/seeds',
-    },
-  },
-  production: {
-    client: 'pg',
-    connection: config.production.CONNECTION_STRING,
-    pool: {
-      min: 2,
-      max: 10,
-    },
     migrations: {
       directory: './src/db/migrations',
     },

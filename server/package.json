@@ -8,7 +8,7 @@
     "main": false
   },
   "scripts": {
-    "start": "pm2 start ecosystem.config.json --no-daemon",
+    "start": "pm2 start ./dist/app/ecosystem.config.json --no-daemon",
     "dev": "cross-env NODE_ENV=development nodemon src/index.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -18,7 +18,7 @@
     "test:watch": "jest -i --watchAll",
     "coverage": "jest -i --coverage --forceExit",
     "coverage:coveralls": "jest -i --coverage --coverageReporters=text-lcov | coveralls",
-    "build": "npm run transpile && parcel build dist/index.js --out-dir dist/app --target node && cp ecosystem.config.json dist/ && cp knexfile.js dist/",
+    "build": "npm run transpile && parcel build dist/index.js --out-dir dist/app --target node && cp ecosystem.config.json dist/app ",
     "transpile": "babel src --out-dir dist --copy-files"
   },
   "repository": {

@@ -24,9 +24,7 @@ WORKDIR /app
 RUN chown -R node:node /app
 COPY --from=build /app/dist /app/dist
 COPY package*.json /app
-COPY knexfile.js /app/dist
 RUN npm ci --only=production
-COPY ecosystem.config.json /app
 #Change directory ownership
 USER node
 ENV NODE_ENV=production
