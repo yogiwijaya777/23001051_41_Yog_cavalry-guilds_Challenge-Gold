@@ -5,7 +5,19 @@ on:
 
 jobs:
   test-build-and-push:
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -15,15 +27,25 @@ jobs:
         with:
           node-version: 20
 
+      - name: Install dependencies & Testing Server
+        env:
+          TESTING_DATABASE_URL: postgresql://postgres:postgres@postgres:5432/postgres
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          JWT_ACCESS_EXPIRATION_MINUTES: ${{ secrets.JWT_ACCESS_EXPIRATION_MINUTES }}
+          JWT_REFRESH_EXPIRATION_DAYS: ${{ secrets.JWT_REFRESH_EXPIRATION_DAYS }}
+          CLOUD_NAME: ${{ secrets.CLOUD_NAME }}
+          CLOUD_API_KEY: ${{ secrets.CLOUD_API_KEY }}
+          CLOUD_API_SECRET: ${{ secrets.CLOUD_API_SECRET }}
+
+        run: |
+          cd server/
+          npm ci
+          npx knex migrate:latest --env test
+          npm run test
+
       - name: Install dependencies & Testing Client
         run: |
           cd client/
-          npm ci
-          npm run test
-
-      - name: Install dependencies & Testing Server
-        run: |
-          cd server/
           npm ci
           npm run test
 
@@ -32,6 +54,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+
       - name: Build and Push Docker Image of Server
         run: |
           TAG="mikailis/cavalry-guilds:server"
