@@ -31,7 +31,7 @@ jobs:
 
       - name: Install dependencies & Testing Server
         env:
-          TESTING_DATABASE_URL: postgresql://postgres:postgres@postgres:5432/postgres
+          TESTING_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
           JWT_ACCESS_EXPIRATION_MINUTES: ${{ secrets.JWT_ACCESS_EXPIRATION_MINUTES }}
           JWT_REFRESH_EXPIRATION_DAYS: ${{ secrets.JWT_REFRESH_EXPIRATION_DAYS }}
