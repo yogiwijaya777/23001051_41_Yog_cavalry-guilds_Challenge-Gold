@@ -1,12 +1,14 @@
 const knex = require('knex');
-const config = require('../src/knexfile').test;
+const logger = require('../src/configs/logger');
+const config = require('../knexfile').test;
 
 const db = knex(config);
 
 beforeAll(async () => {
   try {
-    await Promise.all([db.migrate.latest()]);
+    await db.migrate.latest();
   } catch (err) {
+    logger.error(err);
     process.exit(1);
   }
 });
