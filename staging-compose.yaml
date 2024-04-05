@@ -22,7 +22,7 @@ services:
     networks:
       - cg-network
     depends_on:
-      - staging-server
+      - server
 
 networks:
   cg-network:
