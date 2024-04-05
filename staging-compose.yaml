@@ -7,7 +7,7 @@ services:
       - "6000:5000"
     env_file:
       - .env
-    container_name: server
+    container_name: staging-server
     restart: always
     networks:
       - cg-network
@@ -17,12 +17,12 @@ services:
       - "7000:5000"
     env_file:
       - .env
-    container_name: client
+    container_name: staging-client
     restart: always
     networks:
       - cg-network
     depends_on:
-      - server
+      - staging-server
 
 networks:
   cg-network:
