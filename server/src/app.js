@@ -57,26 +57,16 @@ app.use(compression());
 
 // enable cors
 app.options('*', cors());
-const cavalryGuildsRegex = /^https?:\/\/(www\.)?cavalryguilds\.my\.id(:\d+)?$/;
-
 app.use(
   cors({
-    origin: (origin, callback) => {
-      if (
-        cavalryGuildsRegex.test(origin) ||
-        origin === 'http://localhost:3000' ||
-        origin === 'localhost:3000' ||
-        origin === '128.199.239.54' ||
-        origin === '128.199.239.54:3000' ||
-        origin === '128.199.239.54:7000' ||
-        origin === 'http://localhost:8080' ||
-        origin === 'http://localhost:7000'
-      ) {
-        callback(null, true);
-      } else {
-        callback(new ApiError(httpStatus.FORBIDDEN, 'Not allowed by CORS'));
-      }
-    },
+    origin: [
+      'https://www.cavalryguilds.my.id',
+      'https://cavalryguilds.my.id',
+      'https://staging.cavalryguilds.my.id',
+      'http://localhost:3000',
+      'http://localhost:8080',
+      'http://localhost:7000',
+    ],
     allowedHeaders: ['Content-Type', 'Authorization'],
   })
 );
