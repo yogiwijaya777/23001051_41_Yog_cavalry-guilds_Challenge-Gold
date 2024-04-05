@@ -57,16 +57,18 @@ app.use(compression());
 
 // enable cors
 app.options('*', cors());
+
+const originProduction = [
+  'https://www.cavalryguilds.my.id',
+  'https://cavalryguilds.my.id',
+  'https://staging.cavalryguilds.my.id',
+];
+
+const originLocal = ['http://localhost:3000', 'http://localhost:8080', 'http://localhost:7000', 'http://localhost:5000'];
+
 app.use(
   cors({
-    origin: [
-      'https://www.cavalryguilds.my.id',
-      'https://cavalryguilds.my.id',
-      'https://staging.cavalryguilds.my.id',
-      'http://localhost:3000',
-      'http://localhost:8080',
-      'http://localhost:7000',
-    ],
+    origin: config.env === 'production' ? originProduction : originLocal,
     allowedHeaders: ['Content-Type', 'Authorization'],
   })
 );
