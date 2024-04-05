@@ -85,8 +85,8 @@ jobs:
           script: |
             if [ "${{ github.ref }}" == "refs/heads/staging" ]; then
               cd /staging-app/
-              docker compose -f /app/staging-compose.yaml pull
-              docker compose -f /app/staging-compose.yaml up -d --build
+              docker compose -f /staging-app/staging-compose.yaml pull
+              docker compose -f /staging-app/staging-compose.yaml up -d --build
             else
               cd /app/
               docker compose -f /app/production-compose.yaml pull
