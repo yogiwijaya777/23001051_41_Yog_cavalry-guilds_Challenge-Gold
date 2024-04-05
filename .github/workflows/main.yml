@@ -1,7 +1,7 @@
 name: CI/CD
 on:
   push:
-    branches: [main]
+    branches: [main, staging]
 
 jobs:
   test-build-and-push:
@@ -83,6 +83,12 @@ jobs:
           username: ${{secrets.DROPLET_SSH_USERNAME}}
           key: ${{secrets.DROPLET_SSH_PRIVATE_KEY}}
           script: |
-            cd /app/
-            docker compose -f /app/production-compose.yaml pull
-            docker compose -f /app/production-compose.yaml up -d --build
+            if [ "${{ github.ref }}" == "refs/heads/staging" ]; then
+              cd /staging-app/
+              docker compose -f /app/staging-compose.yaml pull
+              docker compose -f /app/staging-compose.yaml up -d --build
+            else
+              cd /app/
+              docker compose -f /app/production-compose.yaml pull
+              docker compose compose -f /app/production-compose.yaml up -d --build
+            fi

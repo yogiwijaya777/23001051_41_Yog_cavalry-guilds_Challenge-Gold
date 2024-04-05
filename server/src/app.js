@@ -68,6 +68,7 @@ app.use(
       '128.199.239.54:3000',
       'http://cavalryguilds.my.id',
       'cavalryguilds.my.id',
+      'http://localhost:8080',
     ],
     allowedHeaders: ['Content-Type', 'Authorization'],
   })
