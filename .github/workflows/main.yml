@@ -63,14 +63,18 @@ jobs:
           docker build --target production -t $TAG ./server
           docker push $TAG
 
-      - name: Build and Push Docker Image of Client
+      - name: Build and Push Docker Image of Client for Staging
+        if: ${{ github.ref == 'refs/heads/staging' }}
         run: |
           TAG="mikailis/cavalry-guilds:client"
-          if [ "${{ github.ref }}" == "refs/heads/staging" ]; then
-            docker build --build-arg REACT_APP_API_URL=${{ secrets.STAGING_REACT_APP_API_URL }} --target production -t $TAG ./client
-          else
-            docker build --build-arg REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }} --target production -t $TAG ./client
-          fi  
+          docker build --build-arg REACT_APP_API_URL=${{ secrets.STAGING_REACT_APP_API_URL }} --target production -t $TAG ./client
+          docker push $TAG
+
+      - name: Build and Push Docker Image of Client for Production
+        if: ${{ github.ref == 'refs/heads/main' }}
+        run: |
+          TAG="mikailis/cavalry-guilds:client"
+          docker build --build-arg REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }} --target production -t $TAG ./client
           docker push $TAG
 
   deployment:
