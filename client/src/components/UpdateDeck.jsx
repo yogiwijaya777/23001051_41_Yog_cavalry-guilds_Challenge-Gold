@@ -142,6 +142,7 @@ function UpdateDeck({ token, deckId }) {
                 <Form.Control
                   id="file-input"
                   type="file"
+                  accept="image/*"
                   onChange={handleFileChange}
                 />
               </Form.Group>
