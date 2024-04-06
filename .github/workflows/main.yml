@@ -98,5 +98,5 @@ jobs:
             else
               cd /app/
               docker compose -f /app/production-compose.yaml pull
-              docker compose compose -f /app/production-compose.yaml up -d --build
+              docker compose -f /app/production-compose.yaml up -d --build
             fi
