@@ -13,7 +13,7 @@ const config = require('./configs/config');
 const morgan = require('./configs/morgan');
 const cloudinary = require('cloudinary').v2;
 const { jwtStrategy } = require('./configs/passport');
-const { authLimiter } = require('./middlewares/rateLimiter');
+const { authLimiter, apiLimiter } = require('./middlewares/rateLimiter');
 const apiRoutes = require('./routes/api-v1/index');
 const { errorConverter, errorHandler } = require('./middlewares/error');
 const ApiError = require('./utils/ApiError');
@@ -79,11 +79,25 @@ passport.use('jwt', jwtStrategy);
 
 // limit repeated failed requests to auth endpoints
 if (config.env === 'production') {
+  // apply apiLimiter to all v1 routes except /v1/auth
+  app.use(
+    '/v1',
+    (req, res, next) => {
+      if (req.path !== '/auth') {
+        apiLimiter(req, res, next);
+      } else {
+        next();
+      }
+    },
+    apiRoutes
+  );
+
   app.use('/v1/auth', authLimiter);
 }
-
-// v1 api routes
-app.use('/v1', apiRoutes);
+// v1 api routes for not production
+if (config.env !== 'production') {
+  app.use('/v1', apiRoutes);
+}
 
 if (config.env === 'development') {
   const swaggerDocument = YAML.load('./cavalry-guilds-docs.yaml');
