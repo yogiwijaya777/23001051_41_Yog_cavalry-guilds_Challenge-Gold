@@ -5,7 +5,7 @@ function Carousel() {
       data-testid="carousel"
       className="carousel slide "
     >
-      <div className="carousel-indicators">
+      <div className="carousel-indicators mt-auto">
         <button
           type="button"
           data-bs-target="#carouselExampleCaptions"
