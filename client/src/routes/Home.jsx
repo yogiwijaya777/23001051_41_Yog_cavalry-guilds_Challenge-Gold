@@ -38,7 +38,7 @@ function Home() {
               <img
                 className="img-fluid w-100 h-100 object-fit-cover"
                 loading="lazy"
-                src="./img/carousels/Rescue Ace.webp"
+                src="https://res.cloudinary.com/dmf8l6plb/image/upload/v1713853273/cavalry/decks/Mikailis-2b6a980f-435e-4044-af05-32331f65aedb.webp"
                 alt=""
               />
             </div>
