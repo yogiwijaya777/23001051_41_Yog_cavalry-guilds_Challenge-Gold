@@ -11,6 +11,7 @@ const checkConnect = async () => {
     logger.info('PostgreSQL connected');
     server = app.listen(config.port, () => {
       logger.info(`Listening to port ${config.port}`);
+      config.env = 'development' && logger.info(`Docs available at http://localhost:${config.port}/v1/api-docs`);
     });
   } catch (e) {
     logger.error(knex);
