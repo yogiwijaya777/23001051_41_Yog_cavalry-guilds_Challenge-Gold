@@ -19,13 +19,14 @@ npm install
 # You need to install CRA modules to at client\ folder
 cd client\
 
-npm i 
+npm i
 
 ```
 
 Set the environment variables :
 
 ```bash
+# ON client/server directory
 cp .env.example .env
 
 # open .env and modify the environment variables (if needed)
@@ -74,7 +75,7 @@ npm install
 # You need to install CRA modules to at client\ folder
 cd client\
 
-npm i 
+npm i
 
 ```
 
@@ -95,7 +96,7 @@ npx knex seed:run
 node firstStart.js
 ```
 
-Running App : 
+Running App :
 
 ```bash
 # To Run Back-End APP
@@ -106,8 +107,6 @@ npm run dev
 cd ~\client\
 npm start
 ```
-
-
 
 Linting:
 
@@ -129,23 +128,42 @@ npm run prettier:fix
 
 To run this project, you will need to add the following environment variables to your .env file
 
+### Server Environment Variables
+
 ```
 # Port number
 PORT=5000
 
 # URL of the DB
-DATABASE_URL=postgresql://userName:password@host/databaseName
+DATABASE_URL=postgres://postgres:postgres@localhost:5432/prod-db
+TEST_DATABASE_URL=postgres://postgres:postgres@localhost:5432/test-db
+DEV_DATABASE_URL=postgres://postgres:postgres@localhost:5432/dev-db
 
-# JWT
+
 # JWT secret key
-JWT_SECRET=thisisasamplesecret
+JWT_SECRET=somemagickkey
 # Number of minutes after which an access token expires
 JWT_ACCESS_EXPIRATION_MINUTES=30
 # Number of days after which a refresh token expires
 JWT_REFRESH_EXPIRATION_DAYS=30
+
+
+# Cloudinary Secret Key & API KEY
+CLOUD_NAME=name
+CLOUD_API_KEY=0000000000000
+CLOUD_API_SECRET=apisecret
+```
+
+### Client Environment Variables
+
+```
+# API URL
+REACT_APP_API_URL=http://localhost:5000/v1
 ```
 
 ## Project Structure
+
+### Server Project Structure
 
 ```
 public\
@@ -166,22 +184,12 @@ src\
  |--app.js          # Express app
  |--index.js        # App entry point
 
- views\
-  |--archetypes\
-  |--auth\
-  |--decks\
-  |--docs\
-  |--users\
-  |--_footer.pug
-  |--_header.pug
-  |--base.pug
-  |--overview.pug
 
 ```
 
 ## API Documentation
 
-To view the list of available APIs and their specifications, run the server on and go to `http://localhost:3000/api-docs` in your browser. This documentation page is automatically generated using the [swagger](https://swagger.io/) definitions written as comments in the route files.
+To view the list of available APIs and their specifications, run the server on and go to `http://localhost:5000/api-docs` in your browser. This documentation page is automatically generated using the [swagger](https://swagger.io/) definitions written as comments in the route files.
 
 ### API Endpoints
 
@@ -241,11 +249,11 @@ The app has a centralized error handling mechanism.
 Controllers should try to catch the errors and forward them to the error handling middleware (by calling `next(error)`). For convenience, you can also wrap the controller inside the catchAsync utility wrapper, which forwards the error.
 
 ```javascript
-const catchAsync = require('../utils/catchAsync');
+const catchAsync = require("../utils/catchAsync");
 
 const controller = catchAsync(async (req, res) => {
   // this error will be forwarded to the error handling middleware
-  throw new Error('Something wrong happened');
+  throw new Error("Something wrong happened");
 });
 ```
 
@@ -265,14 +273,14 @@ The app has a utility ApiError class to which you can attach a response code and
 For example, if you are trying to get a user from the DB who is not found, and you want to send a 404 error, the code should look something like:
 
 ```javascript
-const httpStatus = require('http-status');
-const ApiError = require('../utils/ApiError');
-const knex = require('../db/knex');
+const httpStatus = require("http-status");
+const ApiError = require("../utils/ApiError");
+const knex = require("../db/knex");
 
 const getUser = async (userId) => {
-  const user = await knex('users').where({ id: userId }).first();
+  const user = await knex("users").where({ id: userId }).first();
   if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+    throw new ApiError(httpStatus.NOT_FOUND, "User not found");
   }
 };
 ```
@@ -284,14 +292,18 @@ Request data is validated using [Joi](https://joi.dev/). Check the [documentatio
 The validation schemas are defined in the `src/validations` directory and are used in the routes by providing them as parameters to the `validate` middleware.
 
 ```javascript
-const express = require('express');
-const validate = require('../../middlewares/validate');
-const userValidation = require('../../validations/user.validation');
-const userController = require('../../controllers/user.controller');
+const express = require("express");
+const validate = require("../../middlewares/validate");
+const userValidation = require("../../validations/user.validation");
+const userController = require("../../controllers/user.controller");
 
 const router = express.Router();
 
-router.post('/users', validate(userValidation.createUser), userController.createUser);
+router.post(
+  "/users",
+  validate(userValidation.createUser),
+  userController.createUser
+);
 ```
 
 ## Authentication
@@ -299,13 +311,13 @@ router.post('/users', validate(userValidation.createUser), userController.create
 To require authentication for certain routes, you can use the `auth` middleware.
 
 ```javascript
-const express = require('express');
-const auth = require('../../middlewares/auth');
-const userController = require('../../controllers/user.controller');
+const express = require("express");
+const auth = require("../../middlewares/auth");
+const userController = require("../../controllers/user.controller");
 
 const router = express.Router();
 
-router.post('/users', auth(), userController.createUser);
+router.post("/users", auth(), userController.createUser);
 ```
 
 These routes require a valid JWT access token in the Authorization request header using the Bearer schema. If the request does not contain a valid access token, an Unauthorized (401) error is thrown.
@@ -327,14 +339,14 @@ A refresh token is valid for 30 days. You can modify this expiration time by cha
 Use `auth` middleware to require certain rights/permissions to access a route.
 
 ```javascript
-const express = require('express');
-const auth = require('../../middlewares/auth');
-const userController = require('../../controllers/api-v1/user.controller');
+const express = require("express");
+const auth = require("../../middlewares/auth");
+const userController = require("../../controllers/api-v1/user.controller");
 
 const router = express.Router();
 
-router.post('/users', auth(), userController.create);
-router.delete('/users', auth('admin'), userController.delete);
+router.post("/users", auth(), userController.create);
+router.delete("/users", auth("admin"), userController.delete);
 ```
 
 In the example above, an authenticated user can access this route only if that user has the `Admin` permission.
@@ -348,14 +360,14 @@ Import the logger from `src/config/logger.js`. It is using the [Winston](https:/
 Logging should be done according to the following severity levels (ascending order from most important to least important):
 
 ```javascript
-const logger = require('<path to src>/config/logger');
+const logger = require("<path to src>/config/logger");
 
-logger.error('message'); // level 0
-logger.warn('message'); // level 1
-logger.info('message'); // level 2
-logger.http('message'); // level 3
-logger.verbose('message'); // level 4
-logger.debug('message'); // level 5
+logger.error("message"); // level 0
+logger.warn("message"); // level 1
+logger.info("message"); // level 2
+logger.http("message"); // level 3
+logger.verbose("message"); // level 4
+logger.debug("message"); // level 5
 ```
 
 In development mode, log messages of all severity levels will be printed to the console.
