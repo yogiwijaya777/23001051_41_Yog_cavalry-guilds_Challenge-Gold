@@ -7,8 +7,8 @@ This project will help Member Management, Deck Data Tracking, and for more helpf
 Clone the project :
 
 ```bash
-https://github.com/yogiwijaya777/23001051_41_Yog_cavalry-guilds_Challenge-Gold.git
-cd 23001051_41_Yog_cavalry-guilds_Challenge-Gold
+https://github.com/cavalry-guild.git
+cd cavalry-guild
 ```
 
 Install the depedencies with npm :
