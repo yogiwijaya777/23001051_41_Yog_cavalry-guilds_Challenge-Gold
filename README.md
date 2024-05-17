@@ -7,7 +7,7 @@ This project will help Member Management, Deck Data Tracking, and for more helpf
 Clone the project :
 
 ```bash
-https://github.com/cavalry-guild.git
+git clome https://github.com/yogiwijaya777/cavalry-guild.git
 cd cavalry-guild
 ```
 
